@@ -1,0 +1,265 @@
+body.footerbody{
+width:100%;
+height:100%;
+padding:0px;
+margin:0px;
+overflow:hidden;
+font-family: 'Open Sans', sans-serif;
+text-align:left;
+}
+
+section.footersection{
+overflow:hidden;
+max-height:300px;
+}
+
+#footercontainer{
+width:100%;
+min-height:300px;
+}
+
+.col-md-2{
+padding:0px;
+margin:0px;
+ width:20%;
+}
+.box{
+float:left;
+text-align:center;
+min-height:200px;
+padding-bottom:10px;
+position: relative;
+overflow:hidden;
+}
+
+.footer2{
+position: absolute;
+bottom:5%;
+left:0px;
+right:0px;
+font-size:25px;
+font-weight:200;
+color:#fff;
+}
+
+.footer3{
+position: absolute;
+top:5%;
+left:5%;
+right:60%;
+font-size:30px;
+text-transform:uppercase;
+color:#fff;
+}
+
+.footer5{
+text-align:center;
+font-size:14px;
+margin:0px;
+margin-top:10px;
+font-weight:400;
+text-transform:uppercase;
+color:#fff;
+}
+
+span.date{
+font-weight:400;
+font-size:14px;
+text-transform:uppercase;
+}
+p.footerp{
+padding:50px;
+font-size:20px;
+font-weight:100px;
+color:#fff;
+
+}
+
+.weather-icon{
+text-align: center;
+display:inline-block;
+}
+
+.weather-icon>i{
+left:30%;
+}
+
+.background-Clear{
+background: #ff6f61;
+}
+.background-Clouds{
+background: #B5BAB6;
+}
+.background-Rain{
+background: #007CB7;
+}
+.background-Thunderstorm{
+background: #7b8085;
+}
+.background-Snow{
+background: #9e9d9b;
+}
+
+
+@media (max-width: 1264px) {
+.box{
+  width:15%;
+  transition: width ease-in-out 1s;
+   cursor:pointer;
+  transform-origin: left;
+  position: relative;
+  text-align: center
+}
+.box h3{
+  transform: rotate(90deg);
+  transform-origin: left;
+  font-size: 20px;
+  text-align: right;
+  height: 30px;
+  left: 50%;
+  top: 60%;
+}
+.box h2{
+display:none;
+}
+
+.box > .weather-icon > i {
+max-width:80px;
+max-height:80px;
+transition-delay:4s;
+transition: width ease-in-out 3s;
+}
+
+.weather-icon > i{
+  transition-delay: 4s;
+transition: width ease-in-out 3s;
+left: 15%;
+}
+.box.active > .weather-icon > i{
+max-width:80px;
+max-height:80px;
+transition-delay: 4s;
+transition: width ease-in-out 3s;
+left: 35%
+}
+
+.active {
+  width:40%;
+}
+.active h3{
+  font-size:30px;
+  display:inherit;
+  transform: rotate(0deg);
+  transform-origin: inherit;
+  text-align:center;
+  animation: fadein 2s;
+  left: 0px;
+  top: 5%;
+}
+ .active h2{
+  font-size:25px;
+  display:inherit;
+  animation: fadein 2s;
+  bottom: 10%;
+}
+.fullwidth{
+  width:100% !important;
+  left:0px;
+  position:absolute;
+  animation: anim 3.5s 1;
+  z-index:500;
+}
+
+.rotate{
+ animation:spin 1s linear;
+ animation-fill-mode: forwards;
+}
+}
+
+
+@media (max-width: 600px) {
+.box{
+  width:15%;
+  transition: width ease-in-out 1s;
+   cursor:pointer;
+  transform-origin: left;
+  position: relative;
+  text-align: center
+}
+.active {
+  width:100%;
+}
+.active h3{
+  font-size:30px;
+  display:inherit;
+  transform: rotate(0deg);
+  transform-origin: inherit;
+  text-align:left;
+  animation: fadein 2s;
+  left: 13%;
+  top: 10%;
+
+}
+.active h2{
+  font-size:25px;
+  display:inherit;
+  animation: fadein 2s;
+  text-align:center;
+}
+
+.box.active > .weather-icon > i{
+max-width:80px;
+max-height:80px;
+transition-delay: 4s;
+transition: width ease-in-out 3s;
+}
+
+.fullwidth{
+  width:100% !important;
+  left:0px;
+  position:absolute;
+  animation: anim 3.5s 1;
+  z-index:500;
+}
+
+.rotate{
+ animation:spin 1s linear;
+ animation-fill-mode: forwards;
+}
+
+@keyframes fadein {
+  from {
+      opacity:0;
+  }
+  to {
+      opacity:1;
+  }
+}
+@keyframes fadeout {
+  from {
+      opacity:1;
+  }
+  to {
+      opacity:0;
+  }
+}
+
+@-webkit-keyframes anim {
+0% {
+  transform: translateX(100%);
+}
+14.28% {
+  transform: translateX(0);
+}
+85.71% {
+  transform: translateX(0);
+}
+100% {
+  transform: translateX(0);
+}
+}
+
+@-moz-keyframes spin { 100% { -moz-transform: rotate(90deg); } }
+@-webkit-keyframes spin { 100% { -webkit-transform: rotate(90deg); } }
+@keyframes spin { 100% { -webkit-transform: rotate(90deg);             transform:rotate(90deg); }
+}

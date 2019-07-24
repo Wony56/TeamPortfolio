@@ -5,6 +5,7 @@ import PostPage from './views/PostPage.vue'
 import PortfolioPage from './views/PortfolioPage.vue'
 import PortfolioWriterPage from './views/PortfolioWriterPage.vue'
 import PostWriterPage from './views/PostWriterPage.vue'
+import Adminpage from './views/AdminPage.vue'
 
 Vue.use(Router)
 
@@ -41,6 +42,11 @@ export default new Router({
 			path: '/postwriterpage',
 			name: 'postwriterpage',
 			component: PostWriterPage
+		},
+		{
+			path: '/adminpage',
+			name: 'adminpage',
+			component: Adminpage
 		}
   ]
 })

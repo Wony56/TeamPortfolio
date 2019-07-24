@@ -2,17 +2,21 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 import auth from "./store/modules/auth";
 import images from "./store/modules/images";
-import user from './store/modules/user';
-import modal from './store/modules/modal';
-import notification from './store/modules/notification';
-
+import firebaseService from './services/FirebaseService'
 
 Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
+		accessToken: '',
+    user: '',
     imageToggle: false,
     banner: '',
+    logon: false,
+    loginDialog: false,
+    signupDialog: false,
+    snackbar: false,
+    snackbarText: '',
 
     memberData: [
       {
@@ -74,9 +78,134 @@ export default new Vuex.Store({
   },
   modules: {
     auth,
-    images,
-    user,
-    modal,
-    notification
+    images
+  },
+  getters: {
+    getLoginDialog: function(state) {
+      return state.loginDialog;
+    },
+    getSignupDialog: function(state) {
+      return state.signupDialog;
+    },
+    getLogState: function(state) {
+      return state.logon;
+    },
+    getSnackbar: function(state){
+      return state.snackbar;
+    },
+    getSnackText: function(state){
+      return state.snackbarText;
+    }
+  },
+  mutations: {
+    openLoginModal: function(state) {
+      state.loginDialog = true;
+    },
+    closeLoginModal: function(state) {
+      state.loginDialog = false;
+    },
+    openSignupModal: function(state) {
+      state.signupDialog = true;
+    },
+    closeSignupModal: function(state) {
+      state.signupDialog = false;
+    },
+    closeSnackbar: function(state){
+      state.snackbar = false;
+    },
+    loginWithGoogle: async function(state) {
+      let result = await firebaseService.loginWithGoogle();
+
+      if (result) {
+        state.accessToken = result.credential.accessToken;
+        state.user = result.user;
+
+        state.loginDialog = false;
+
+        state.logon = true;
+
+        state.snackbarText = state.user.displayName +"님, 환영합니다."
+
+        state.snackbar = true;
+
+        await firebaseService.postLogData(state.user, 'Log in');
+      }
+    },
+    loginWithFacebook: async function(state) {
+      let result = await firebaseService.loginWithFacebook();
+
+      if (result) {
+        state.accessToken = result.credential.accessToken;
+        state.user = result.user;
+
+        state.loginDialog = false;
+
+        state.logon = true;
+
+        state.snackbarText = state.user.displayName +"님, 환영합니다."
+
+        state.snackbar = true;
+
+        await firebaseService.postLogData(state.user, 'Log in');
+      }
+    },
+    loginWithEmail: async function(state, payload) {
+      let result = await firebaseService.loginWithEmail(
+        payload.email,
+        payload.password
+      );
+
+      if (result) {
+        state.user = result.user;
+
+        state.loginDialog = false;
+
+        state.logon = true;
+
+        state.snackbarText = state.user.displayName +"님, 환영합니다."
+
+        state.snackbar = true;
+
+        await firebaseService.postLogData(state.user, 'Log in');
+      }
+    },
+    signupWithEmail: async function(state, payload){
+      let result = await firebaseService.signUpEmail(
+        payload.email,
+        payload.name,
+        payload.password
+      );
+
+      if(result){
+        state.user = result.user;
+
+        state.signupDialog = false;
+
+        state.logon = true;
+
+        state.snackbarText = payload.name +"님, 환영합니다."
+
+        state.snackbar = true;
+
+        await firebaseService.postLogData(state.user, 'Log in');
+      }
+    },
+    logout: async function(state) {
+      if(state.user){
+        await firebaseService.postLogData(state.user, 'Log out');
+
+        state.logon = false;
+        state.user = null;
+        state.accessToken = null;
+        state.snackbar = true;
+        state.snackbarText = "로그아웃되었습니다.";
+
+        await firebaseService.logout();
+      }
+    },
+    checkLogState: function(state, payload){
+      state.logon = payload.status;
+      state.user = payload.user;
+    },
   }
 });

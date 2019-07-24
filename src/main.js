@@ -16,13 +16,10 @@ import FlagIcon from 'vue-flag-icon'
 import VueScrollProgress from 'vue-scroll-progress'
 import ToggleButton from 'vue-js-toggle-button'
 import Autocomplete from 'v-autocomplete'
-
 // VueSmoothScrollbar
 import SmoothScrollbar from 'vue-smooth-scrollbar'
 
-Vue.use(VueScrollProgress);
-Vue.use(SmoothScrollbar)
-Vue.use(ToggleButton)
+
 Vue.config.productionTip = false
 Vue.use(FlagIcon);
 Vue.use(Vuetify, {
@@ -36,7 +33,6 @@ Vue.use(Vuetify, {
 })
 
 Vue.use(VueSimplemde)
-
 Vue.use(Autocomplete)
 
 Vue.use(VueMq,{
@@ -59,12 +55,20 @@ new Vue({
 
 	await firebase.auth().onAuthStateChanged(user=>{
 		if(user){
-			store.state.user.user = user;
-			store.state.user.loggedIn = true;
+			this.$store.commit('checkLogState', {
+				status: true,
+				user: user
+			})
 		}else{
-			store.state.user.loggedIn = false;
+			this.$store.commit('checkLogState', {
+				status: false
+			})
 		}
 	})
   },
   render: h => h(App)
 }).$mount('#app')
+
+Vue.use(VueScrollProgress);
+Vue.use(SmoothScrollbar)
+Vue.use(ToggleButton)

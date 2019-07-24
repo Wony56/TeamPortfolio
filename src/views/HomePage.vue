@@ -40,6 +40,7 @@
                 <v-dialog :v-model="element.dialogNumber" width="500">
                   <template v-slot:activator="{ on }">
                     <v-btn
+                    class="notranslate"
                       color="white"
                       dark
                       v-on="on"
@@ -49,18 +50,18 @@
                       @click="getRepositories(element.id, element.token, element.color)"
                     ></v-btn>
                   </template>
+
                     <v-card-title style="background-color:#ff6f61; color:#ffff">Git</v-card-title>
-                    <v-card v-for="(data, i) in datas" :key="i">
-                      <v-card-title>
-                        <h1>{{data.name_with_namespace}}</h1>
-                      </v-card-title>
+                      <v-card v-for="(data, i) in datas" :key="i">
+                        <v-card-title>
+                          <h1>{{data.name_with_namespace}}</h1>
+                        </v-card-title>
 
-                    <v-card-text>
-                      {{data.created_at}}
-                      <v-btn style="background-color:#ff6f61; color:#ffff" flat @click="showRepoPage(data.web_url)">open</v-btn>
-                    </v-card-text>
-
-                  </v-card>
+                      <v-card-text>
+                        {{data.created_at}}
+                        <v-btn style="background-color:#ff6f61; color:#ffff" flat @click="showRepoPage(data.web_url)">open</v-btn>
+                      </v-card-text>
+                    </v-card>
                 </v-dialog>
               </div>
               </div>

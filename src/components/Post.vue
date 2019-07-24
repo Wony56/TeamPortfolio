@@ -10,16 +10,7 @@
           flat
           :to="{ name: 'postview', params: { postInfo : {date: this.date, title: this.title, content: this.content, id: this.id }}}"
         >
-          <!-- <PostViewPage
-
-            
-            :date="date"
-            :title="title"
-            :content="content"
-            :id="id"
-          >
-          </PostViewPage> -->
-          <!-- <font color="white">자세히 보기</font>  -->
+        자세히 보기
         </v-btn>
     </v-flex>
   </v-layout>

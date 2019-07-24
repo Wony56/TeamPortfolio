@@ -101,7 +101,7 @@
 
 <script>
 import ImgBanner from "../components/ImgBanner";
-import Gridimage from "../components/GridImage";
+import GridImage from "../components/GridImages";
 import PostList from "../components/PostList";
 //Gitlab API
 import GitlabAPI from "../components/GitlabApi.vue";
@@ -125,7 +125,7 @@ export default {
     ImgBanner,
     PostList,
 
-    Gridimage,
+    GridImage,
     GitlabAPI
   },
   methods: {

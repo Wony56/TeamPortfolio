@@ -19,9 +19,11 @@ import Autocomplete from 'v-autocomplete'
 // VueSmoothScrollbar
 import SmoothScrollbar from 'vue-smooth-scrollbar'
 
-
 Vue.config.productionTip = false
-Vue.use(FlagIcon);
+Vue.use(VueScrollProgress)
+Vue.use(SmoothScrollbar)
+Vue.use(ToggleButton)
+Vue.use(FlagIcon)
 Vue.use(Vuetify, {
 	iconfont: 'fa',
 	theme: {
@@ -68,7 +70,3 @@ new Vue({
   },
   render: h => h(App)
 }).$mount('#app')
-
-Vue.use(VueScrollProgress);
-Vue.use(SmoothScrollbar)
-Vue.use(ToggleButton)

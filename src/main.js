@@ -59,14 +59,10 @@ new Vue({
 
 	await firebase.auth().onAuthStateChanged(user=>{
 		if(user){
-			this.$store.commit('checkLogState', {
-				status: true,
-				user: user
-			})
+			store.state.user.user = user;
+			store.state.user.loggedIn = true;
 		}else{
-			this.$store.commit('checkLogState', {
-				status: false
-			})
+			store.state.user.loggedIn = false;
 		}
 	})
   },

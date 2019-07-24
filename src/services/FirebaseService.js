@@ -5,6 +5,7 @@ import 'firebase/auth'
 const POSTS = 'posts'
 const PORTFOLIOS = 'portfolios'
 const WEBLOGS = 'weblogs';
+const USERS = 'users';
 const IMAGES = 'images'
 
 // Setup Firebase
@@ -22,10 +23,40 @@ firebase.initializeApp(config)
 const firestore = firebase.firestore()
 
 export default {
+	postUser(user){
+		return firestore.collection(USERS).doc(user.uid).set({
+			uid: user.uid,
+			name: user.displayName,
+			email: user.email,
+			tier: 'bronze',
+			created_at: firebase.firestore.FieldValue.serverTimestamp()
+		})
+	},
+	getUsers(){
+		const postsCollection = firestore.collection(USERS)
+		return postsCollection.orderBy('created_at', 'desc').get().then(docSnapshots => {
+			return docSnapshots;
+		})
+	},
+	getUser(user){
+		const postsCollection = firestore.collection(USERS)
+		return postsCollection.doc(user.uid).get().then(doc=>{
+			if(doc.exists){
+				let data = doc.data();
+				data.created_at = new Date(data.created_at.toDate());
+				console.log(doc);
+				return data;
+			}
+			return;
+		}).catch(error=>{
+			console.log(error)
+		})
+	},
 	postLogData(user, type){
 		return firestore.collection(WEBLOGS).add({
 			type: type,
-			email: user.email,
+			uid: user.uid,
+			name: user.name,
 			date: firebase.firestore.FieldValue.serverTimestamp()
 		})
 	},
@@ -98,8 +129,7 @@ export default {
 	},
 	loginWithGoogle() {
 		let provider = new firebase.auth.GoogleAuthProvider()
-		return firebase.auth().signInWithPopup(provider).then(function(result) {
-
+		return firebase.auth().signInWithPopup(provider).then(result => {
 			return result
 		}).catch(function(error) {
 			console.error('[Google Login Error]', error)
@@ -108,7 +138,7 @@ export default {
 	loginWithFacebook(){
 		let provider = new firebase.auth.FacebookAuthProvider();
 
-		return firebase.auth().signInWithPopup(provider).then(function(result) {
+		return firebase.auth().signInWithPopup(provider).then(result => {
 			return result;
 		  }).catch(function(error) {
 			console.error('[Facebook Login Error]', error)

@@ -20,7 +20,7 @@
           <div
             class="box col-md-2 active"
             v-bind:class="'background-'+info.list[0].weather[0].main"
-          > 
+          >
             <div class="weather-icon" style="width:100% height:100%">
               <i v-bind:class="info.list[0].weather[0].main"></i>
             </div>

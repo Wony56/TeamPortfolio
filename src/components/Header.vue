@@ -38,6 +38,7 @@
             </v-list-tile-content>
           </v-list-tile>
         </template>
+
         <template v-else>
           <v-list-tile @click="logout">
             <v-list-tile-action>
@@ -89,6 +90,7 @@
         <signup-modal />
       </v-dialog>
     </v-toolbar>
+
     <v-snackbar
       v-model="snackbar"
       :color="'#ff6f61'"
@@ -108,8 +110,6 @@
 import LoginModal from "./LoginModal";
 import SignupModal from "./SignupModal";
 import { mapState } from "vuex";
-
-
 
 var el;
 

@@ -5,13 +5,14 @@ import PostPage from './views/PostPage.vue'
 import PortfolioPage from './views/PortfolioPage.vue'
 import PortfolioWriterPage from './views/PortfolioWriterPage.vue'
 import PostWriterPage from './views/PostWriterPage.vue'
+import PostViewPage from './views/PostViewPage.vue'
 
 Vue.use(Router)
 
 export default new Router({
-  mode: 'history',
-  base: process.env.BASE_URL,
-  routes: [
+	mode: 'history',
+	base: process.env.BASE_URL,
+	routes: [
 		{
 			path: '/',
 			name: 'home',
@@ -54,8 +55,8 @@ export default new Router({
 			name: 'postview',
 			component: PostViewPage
 		}
-  ],
-  scrollBehavior(to, from, savedPosition){
-	  return {x:0, y:0};
-  }
+	],
+	scrollBehavior(to, from, savedPosition) {
+		return { x: 0, y: 0 };
+	}
 })

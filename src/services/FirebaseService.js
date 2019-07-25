@@ -23,7 +23,28 @@ firebase.initializeApp(config)
 const firestore = firebase.firestore()
 
 export default {
-	postUser(user){
+	addReply(articleId, userId, content) {
+
+		const postCollection = firestore.collection(POSTS).doc(articleId)
+		return postCollection
+			.get()
+			.then((doc) => {
+
+				console.log(doc.id);
+				let data = doc.data();
+				let temp = data.reply;
+
+				console.log("REPLY ", temp);
+				temp.push({'userId': userId, 'content': content});
+
+				console.log("REPLY ", temp);
+				return data;
+			})
+			.catch(err => {
+				console.log('Error getting document', err);
+			});
+	},
+	postUser(user) {
 		return firestore.collection(USERS).doc(user.uid).set({
 			uid: user.uid,
 			name: user.displayName,
@@ -32,23 +53,23 @@ export default {
 			created_at: firebase.firestore.FieldValue.serverTimestamp()
 		})
 	},
-	getUsers(){
+	getUsers() {
 		const postsCollection = firestore.collection(USERS)
 		return postsCollection.orderBy('created_at', 'desc').get().then(docSnapshots => {
 			return docSnapshots;
 		})
 	},
-	getUser(user){
+	getUser(user) {
 		const postsCollection = firestore.collection(USERS)
-		return postsCollection.doc(user.uid).get().then(doc=>{
-			if(doc.exists){
+		return postsCollection.doc(user.uid).get().then(doc => {
+			if (doc.exists) {
 				let data = doc.data();
 				data.created_at = new Date(data.created_at.toDate());
 				console.log(doc);
 				return data;
 			}
 			return;
-		}).catch(error=>{
+		}).catch(error => {
 			console.log(error)
 		})
 	},
@@ -68,17 +89,19 @@ export default {
 			.get()
 			.then((doc) => {
 
-				if (!doc.exists) {
-					console.log('No such document!');
-				} else {
-					console.log('Document data:', doc.data());
-					return doc.data();
-				}
+				console.log(doc.id);
+				let data = doc.data();
+				data.created_at = new Date(data.created_at.toDate());
+				data.articleId = doc.id;
+
+				console.log('Document data:', data);
+				console.log('Articel ID: ', data.id);
+				return data;
 			})
 			.catch(err => {
 				console.log('Error getting document', err);
 			});
-	} ,
+	},
 	getPosts() {
 		const postsCollection = firestore.collection(POSTS)
 		return postsCollection
@@ -91,14 +114,18 @@ export default {
 
 					data.created_at = new Date(data.created_at.toDate())
 					data.id = doc.id;
+					console.log(data.id);
 					return data
 				})
 			})
 	},
-	postPost(title, content) {
+	postPost(title, content, reply, author, identifier) {
 		return firestore.collection(POSTS).add({
 			title,
 			content,
+			reply,
+			author,
+			identifier,
 			created_at: firebase.firestore.FieldValue.serverTimestamp()
 		}).catch(function (error) {
 

@@ -2,7 +2,7 @@
   <div style="margin: 150px;">
     <ImgBanner>
       <div style="line-height:1.2em;font-size:1.2em;" slot="text">
-        <span style="color:black;">Portfolio</span>
+        <span style="color:black;">Post</span>
       </div>
     </ImgBanner>
 

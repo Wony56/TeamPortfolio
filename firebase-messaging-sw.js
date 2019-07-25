@@ -2,13 +2,14 @@ importScripts('https://www.gstatic.com/firebasejs/4.8.1/firebase-app.js');
 importScripts('https://www.gstatic.com/firebasejs/4.8.1/firebase-messaging.js');
  
 // Initialize Firebase
-var config = {
-  apiKey: "enter api key",
-    authDomain: "test-4e9a6.firebaseapp.com",
-    databaseURL: "https://test-4e9a6.firebaseio.com",
-    projectId: "test-4e9a6",
-    storageBucket: "test-4e9a6.appspot.com",
-    messagingSenderId: "90275796882"
+const config = {
+	apiKey: "AIzaSyD4WyDVLvJV1ZXAH2KOUQDs2JFtQjqv3Do",
+	authDomain: "ssafy-web-pjt.firebaseapp.com",
+	databaseURL: "https://ssafy-web-pjt.firebaseio.com",
+	projectId: "ssafy-web-pjt",
+	storageBucket: "ssafy-web-pjt.appspot.com",
+	messagingSenderId: "363817638878",
+	appId: "1:363817638878:web:aea49aa578e86b59"
 };
 firebase.initializeApp(config);
  

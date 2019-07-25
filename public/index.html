@@ -92,6 +92,39 @@
   </noscript>
   <div id="app"></div>
   <!-- built files will be auto injected -->
+
+  <script src="https://www.gstatic.com/firebasejs/5.5.9/firebase.js"></script>
+  <script>
+      // Initialize Firebase
+      // var config = {
+      //     apiKey: "AAAA4Ou6Me8:APA91bFVpTAhgAcaA76LDHASgpfacjIlyFOyY0R0RBkLOUUsJ3cMMuV5xM1kJCbqSXVDuuf6iUb3rSlQruFLfZU0aP6WdEeie96MoWE6eQxraA7fQt5DhgGrYdOFc-Hzdr7a5TsyvkrR",
+      //     authDomain: "test-4e9a6.firebaseapp.com",
+      //     databaseURL: "https://test-4e9a6.firebaseio.com",
+      //     projectId: "test-4e9a6",
+      //     storageBucket: "test-4e9a6.appspot.com",
+      //     messagingSenderId: "90275796882"
+      // };
+      firebase.initializeApp(config);
+  
+      const messaging = firebase.messaging();
+  
+      //token값 알아내기
+      messaging.requestPermission()
+          .then(function(){
+              console.log("Have permission");
+              return messaging.getToken();
+          })
+          .then(function(token){
+              console.log(token);
+          })
+          .catch(function(arr){
+              console.log("Error Occured");
+          });
+  
+  
+  </script>
+
+
 </body>
 
 </html>

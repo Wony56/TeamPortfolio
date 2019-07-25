@@ -38,7 +38,6 @@
             </v-list-tile-content>
           </v-list-tile>
         </template>
-
         <template v-else>
           <v-list-tile @click="logout">
             <v-list-tile-action>
@@ -90,7 +89,6 @@
         <signup-modal />
       </v-dialog>
     </v-toolbar>
-
     <v-snackbar
       v-model="$store.state.snackbar"
       :color="'#ff6f61'"
@@ -109,6 +107,8 @@
 <script>
 import LoginModal from "./LoginModal";
 import SignupModal from "./SignupModal";
+
+
 
 var el;
 

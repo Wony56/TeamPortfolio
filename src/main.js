@@ -59,7 +59,10 @@ new Vue({
 
 	await firebase.auth().onAuthStateChanged(user=>{
 		if(user){
-			store.state.user.user = user;
+			store.state.user.user.uid = user.uid;
+			store.state.user.user.name = user.displayName;
+			store.state.user.user.email = user.email;
+
 			store.state.user.loggedIn = true;
 		}else{
 			store.state.user.loggedIn = false;

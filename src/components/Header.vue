@@ -20,7 +20,7 @@
             </v-list-tile-content>
           </v-list-tile>
         </template>
-        <template v-if="!$store.getters.getLogState">
+        <template v-if="!loggedIn">
           <v-list-tile @click="openLoginModal">
             <v-list-tile-action>
               <v-icon light>input</v-icon>
@@ -161,9 +161,6 @@ export default {
       if (this.$mq !== "mobile") {
         this.drawer = false;
       }
-    },
-    moveTop() {
-      window.scrollTo(0, 0);
     },
     openLoginModal() {
       this.$store.commit("openLoginModal");

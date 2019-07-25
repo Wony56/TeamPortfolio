@@ -9,6 +9,8 @@ const state = {
 
 const mutations = {
     loginWithGoogle: async function(state) {
+      notification.state.snackbar = false;
+
         let result = await firebaseService.loginWithGoogle();
   
         if (result) {
@@ -30,6 +32,8 @@ const mutations = {
         }
       },
       loginWithFacebook: async function(state) {
+        notification.state.snackbar = false;
+
         let result = await firebaseService.loginWithFacebook();
   
         if (result) {
@@ -51,6 +55,8 @@ const mutations = {
         }
       },
       loginWithEmail: async function(state, payload) {
+        notification.state.snackbar = false;
+
         let result = await firebaseService.loginWithEmail(
           payload.email,
           payload.password
@@ -72,6 +78,8 @@ const mutations = {
         }
       },
       signupWithEmail: async function(state, payload){
+        notification.state.snackbar = false;
+
         let result = await firebaseService.signUpEmail(
           payload.email,
           payload.name,
@@ -97,6 +105,8 @@ const mutations = {
         }
       },
       logout: async function(state) {
+        notification.state.snackbar = false;
+
         if(state.user){
           await firebaseService.postLogData(state.user, 'Log out');
   

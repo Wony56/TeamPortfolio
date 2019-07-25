@@ -1,11 +1,12 @@
-import firebase from 'firebase/app'
-import 'firebase/firestore'
-import 'firebase/auth'
+import firebase from 'firebase/app';
+import 'firebase/firestore';
+import 'firebase/auth';
 
-const POSTS = 'posts'
-const PORTFOLIOS = 'portfolios'
+const POSTS = 'posts';
+const PORTFOLIOS = 'portfolios';
 const WEBLOGS = 'weblogs';
-const IMAGES = 'images'
+const USERS = 'users';
+const IMAGES = 'images';
 
 // Setup Firebase
 const config = {
@@ -52,6 +53,7 @@ export default {
 		})
 	},
 	postLogData(user, type) {
+		console.log(JSON.stringify(user));
 		return firestore.collection(WEBLOGS).add({
 			type: type,
 			uid: user.uid,

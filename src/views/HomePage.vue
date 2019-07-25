@@ -83,7 +83,7 @@
         </v-flex>
       </v-layout>
 
-      <Gridimage></Gridimage>
+      <GridImage></Gridimage>
 
       <!-- Post -->
       <v-layout my-5 justify-center>

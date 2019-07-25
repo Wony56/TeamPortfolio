@@ -44,7 +44,7 @@ export default new Router({
 			component: PostWriterPage
 		},
 		{
-			path: '/postview/:postInfo',
+			path: '/postview/:postIndex',
 			name: 'postview',
 			component: PostViewPage
 		}

@@ -28,26 +28,32 @@ export default {
   name: "PostViewPage",
   data() {
     return {
+
       date: "",
       title: "",
       content: ""
     };
   },
   mounted() {
-    this.date = this.$route.params.postInfo.date;
-    this.date = `${this.date.getFullYear()}년 ${this.date.getMonth() +
-      1}월 ${this.date.getDate()}일`;
-    this.title = this.$route.params.postInfo.title;
-    this.content = this.$route.params.postInfo.content;
+    let temp = this.$route.params.postIndex;
+    console.log("ID" + temp);
+
+    let temp2 = FirebaseService.getPostById(this.$route.params.postIndex);
+    console.log("adfasfasdfasdf" + temp2);
+    console.log(temp2);
+    // this.date = `${this.date.getFullYear()}년 ${this.date.getMonth() +
+    //   1}월 ${this.date.getDate()}일`;
+    // this.title = this.$route.params.postInfo.title;
+    // this.content = this.$route.params.postInfo.content;
 
     console.log(
-      this.$route.params.postInfo.id +
+      temp2.id +
         " " +
-        this.$route.params.postInfo.title +
+        temp2.title +
         " " +
-        this.$route.params.postInfo.content
+        temp2.content
     );
-    let temp = FirebaseService.getPostById(this.$route.params.postInfo.id);
+    //let temp = FirebaseService.getPostById(this.$route.params.postInfo.id);
     console.log(temp);
   }
 };

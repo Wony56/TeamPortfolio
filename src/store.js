@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
-import auth from "./store/modules/auth";
-import images from "./store/modules/images";
+import auth from './store/modules/auth'
+import images from './store/modules/images'
 import firebaseService from './services/FirebaseService'
 
 Vue.use(Vuex)

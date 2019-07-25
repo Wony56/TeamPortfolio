@@ -5,7 +5,7 @@
         :date="element.created_at"
         :title="element.title"
         :content="element.content"
-		:id="element.id"
+		    :id="element.id"
       ></Post>
       <v-divider></v-divider>
     </v-flex>

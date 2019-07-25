@@ -82,11 +82,11 @@
         <v-icon @click.stop="drawer = !drawer" class="notranslate">dehaze</v-icon>
       </mq-layout>
       <!--로그인 모달-->
-      <v-dialog v-model="loginDialog" max-width="350">
+      <v-dialog v-model="$store.state.modal.loginDialog" max-width="350">
         <LoginModal />
       </v-dialog>
       <!--회원가입 모달-->
-      <v-dialog v-model="signupDialog" max-width="400">
+      <v-dialog v-model="$store.state.modal.signupDialog" max-width="400">
         <signup-modal />
       </v-dialog>
     </v-toolbar>
@@ -109,7 +109,7 @@
 <script>
 import LoginModal from "./LoginModal";
 import SignupModal from "./SignupModal";
-import { mapState } from "vuex";
+import { mapState, mapMutations } from "vuex";
 
 var el;
 
@@ -162,18 +162,6 @@ export default {
         this.drawer = false;
       }
     },
-    openLoginModal() {
-      this.$store.commit("openLoginModal");
-    },
-    openSignupModal() {
-      this.$store.commit("openSignupModal");
-    },
-    closeSnackbar() {
-      this.$store.commit("closeSnackbar");
-    },
-    logout() {
-      this.$store.commit("logout");
-    },
     click1: function() {
       this.check = false;
     },
@@ -186,7 +174,8 @@ export default {
       } else {
         el.style.backgroundColor = "#ffffff";
       }
-    }
+    },
+    ...mapMutations(["openLoginModal", "openSignupModal", "logout"])
   }
 };
 </script>

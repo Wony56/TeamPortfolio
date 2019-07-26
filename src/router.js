@@ -6,6 +6,7 @@ import PortfolioPage from './views/PortfolioPage.vue'
 import PortfolioWriterPage from './views/PortfolioWriterPage.vue'
 import PostWriterPage from './views/PostWriterPage.vue'
 import PostViewPage from './views/PostViewPage.vue'
+import Adminpage from './views/AdminPage.vue'
 
 Vue.use(Router)
 
@@ -54,6 +55,11 @@ export default new Router({
 			path: '/postview/:postIndex',
 			name: 'postview',
 			component: PostViewPage
+		},
+		{
+			path: '/adminpage',
+			name: 'adminpage',
+			component: Adminpage
 		}
 	],
 	scrollBehavior(to, from, savedPosition) {

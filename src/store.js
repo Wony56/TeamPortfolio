@@ -6,7 +6,6 @@ import user from './store/modules/user';
 import modal from './store/modules/modal';
 import notification from './store/modules/notification';
 
-
 Vue.use(Vuex)
 
 export default new Vuex.Store({

@@ -23,7 +23,8 @@ export default new Router({
 			path: '/post',
 			name: 'post',
 			component: PostPage,
-			children: [
+			children: 
+			[
 				{
 					path: "write",
 					component: PostWriterPage
@@ -34,7 +35,8 @@ export default new Router({
 			path: '/portfolio',
 			name: 'portfolio',
 			component: PortfolioPage,
-			children: [
+			children: 
+			[
 				{
 					path: "write",
 					component: PortfolioWriterPage

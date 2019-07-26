@@ -1,14 +1,12 @@
 <template>
   <v-layout mt-5 wrap>
-    <v-flex flat v-for="i in portfolios.length > limits ? limits : portfolios.length" :key="i" xs12 sm6>
-      <Portfolio flat
-        class="ma-3"
-        :date="portfolios[i - 1].created_at.toString()"
-        :title="portfolios[i - 1].title"
-        :body="portfolios[i - 1].body"
-        :imgItems="portfolios[i - 1].img"
-      ></Portfolio>
-    </v-flex>
+    <Portfolio flat v-for="i in portfolios.length > limits ? limits : portfolios.length" :key="i" xs12 sm6
+    class="ma-3"
+    :date="portfolios[i - 1].created_at.toString()"
+    :title="portfolios[i - 1].title"
+    :body="portfolios[i - 1].body"
+    :imgItems="portfolios[i - 1].img"
+    ></Portfolio>
 
     <v-flex xs12 text-xs-center round my-5 v-if="loadMore">
       <v-btn style="background-color:#ff6f61; color:#ffff" to="/portfoliowriter">

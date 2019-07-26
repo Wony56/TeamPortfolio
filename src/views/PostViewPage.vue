@@ -40,7 +40,7 @@
             :readonly="toggles[index]"
             v-model="reply.content"
           ></v-text-field>
-
+          
           <v-card-actions>
             <v-btn text flat>Reply</v-btn>
             <v-btn text flat @click="checkReplyAuthority(index)">Modify</v-btn>
@@ -154,8 +154,7 @@ export default {
 
         console.log("다름!");
       }
-
-      console.log(index + " " +this.toggles[index]);
+      console.log(index + " " + this.toggles[index]);
     },
     modifyReply(index) {
 

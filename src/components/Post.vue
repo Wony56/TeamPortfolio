@@ -8,7 +8,7 @@
         <v-btn
           style="background-color:#ff6f61; color:#ffff"
           flat
-          :to="{ name: 'postview', params: { postInfo : {date: this.date, title: this.title, content: this.content, id: this.id }}}"
+          :to="{ name: 'postview', params: { postIndex: this.id }}"
         >
         자세히 보기
         </v-btn>

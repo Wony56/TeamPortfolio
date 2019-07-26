@@ -3,7 +3,7 @@ import 'firebase/firestore';
 import 'firebase/auth';
 
 const POSTS = 'posts';
-const PORTFOLIOS = 'portfolios';
+const PORTFOLIOS = 'portfolgitios';
 const WEBLOGS = 'weblogs';
 const USERS = 'users';
 const IMAGES = 'images';
@@ -219,8 +219,6 @@ export default {
 			await result.user.updateProfile({
 				displayName: name
 			});
-
-			alert(result.user.displayName);
 
 			return result;
 		}).catch(err => {

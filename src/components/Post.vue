@@ -1,7 +1,7 @@
 <template>
   <v-layout py-4 h-100>
     <v-flex row>
-      <div class="caption">{{formatedDate}}</div>
+      <div class="caption">{{date}}</div>
       <h2 class="color-333 headline font-weight-light" v-line-clamp="1">{{title}}</h2>
       <h2 class="color-333 headline font-weight-light" v-line-clamp="1">{{id}}</h2>
 
@@ -25,13 +25,14 @@ export default {
     title: { type: String },
     content: { type: String },
     id: { type: String }
-  },
-  computed: {
-    formatedDate() {
-      return `${this.date.getFullYear()}년 ${this.date.getMonth() +
-        1}월 ${this.date.getDate()}일`;
-    }
   }
+  // ,
+  // computed: {
+  //   formatedDate() {
+  //     return `${this.date.getFullYear()}년 ${this.date.getMonth() +
+  //       1}월 ${this.date.getDate()}일`;
+  //   }
+  // }
 };
 </script>
 

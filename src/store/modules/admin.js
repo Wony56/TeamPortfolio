@@ -13,14 +13,10 @@ const mutations = {
     },
     countPost: async function(state){
         let posts = await firebaseService.getPosts();
-        console.log('안되누');
-        console.log(posts);
         state.postCount = posts['length'];
     },
     countPortfolio: async function(state){
         let portfolios = await firebaseService.getPortfolios();
-        console.log('되누');
-        console.log(portfolios)
         state.portfolioCount = portfolios['length'];
     }
 }

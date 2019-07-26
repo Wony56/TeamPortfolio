@@ -23,7 +23,7 @@ firebase.initializeApp(config)
 const firestore = firebase.firestore()
 
 export default {
-	addReply(articleId, userId, content) {
+	getReplyInfo(articleId) {
 
 		const postCollection = firestore.collection(POSTS).doc(articleId)
 		return postCollection
@@ -32,17 +32,25 @@ export default {
 
 				console.log(doc.id);
 				let data = doc.data();
-				let temp = data.reply;
-
-				console.log("REPLY ", temp);
-				temp.push({'userId': userId, 'content': content});
-
-				console.log("REPLY ", temp);
-				return data;
+				return data.reply;
 			})
 			.catch(err => {
 				console.log('Error getting document', err);
+				return 'error';
 			});
+	},
+	addReply(articleId, postInfo, replyContent) {
+
+		postInfo.reply.push({ 'uid': postInfo.identifier, 'author': postInfo.author, 'content': replyContent, 'created_at': this.getCurrentDate() })
+
+		return firestore.collection(POSTS).doc(articleId).set({
+			title: postInfo.title,
+			content: postInfo.content,
+			reply: postInfo.reply,
+			author: postInfo.author,
+			identifier: postInfo.identifier,
+			created_at: postInfo.created_at
+		})
 	},
 	postUser(user) {
 		return firestore.collection(USERS).doc(user.uid).set({
@@ -70,7 +78,7 @@ export default {
 			if (doc.exists) {
 				let data = doc.data();
 				data.created_at = new Date(data.created_at.toDate());
-				console.log(doc);
+				
 				return data;
 			}
 			return;
@@ -96,7 +104,6 @@ export default {
 
 				console.log(doc.id);
 				let data = doc.data();
-				data.created_at = new Date(data.created_at.toDate());
 				data.articleId = doc.id;
 
 				console.log('Document data:', data);
@@ -116,7 +123,6 @@ export default {
 				return docSnapshots.docs.map((doc) => {
 					let data = doc.data();
 
-					data.created_at = new Date(data.created_at.toDate());
 					data.id = doc.id;
 					console.log(data.id);
 					return data
@@ -124,13 +130,14 @@ export default {
 			})
 	},
 	postPost(title, content, reply, author, identifier) {
+
 		return firestore.collection(POSTS).add({
 			title,
 			content,
 			reply,
 			author,
 			identifier,
-			created_at: firebase.firestore.FieldValue.serverTimestamp()
+			created_at: this.getCurrentDate()
 		}).catch(function (error) {
 
 			return "fail";
@@ -208,10 +215,12 @@ export default {
 		})
 	},
 	signUpEmail(email, name, password) {
-		return firebase.auth().createUserWithEmailAndPassword(email, password).then(result => {
-			result.user.updateProfile({
+		return firebase.auth().createUserWithEmailAndPassword(email, password).then(async result =>  {
+			await result.user.updateProfile({
 				displayName: name
 			});
+
+			alert(result.user.displayName);
 
 			return result;
 		}).catch(err => {
@@ -234,5 +243,19 @@ export default {
 		}).catch(err => {
 			console.log(err);
 		});
+	},
+	getCurrentDate() {
+
+		let currentDate = new Date();
+		return currentDate.getFullYear() +
+			"년 " +
+			currentDate.getMonth() +
+			"월 " +
+			currentDate.getDate() +
+			"일 " +
+			currentDate.getHours() +
+			"시 " +
+			currentDate.getMinutes() +
+			"분";
 	}
 }

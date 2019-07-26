@@ -64,7 +64,12 @@ export default {
 	getUsers() {
 		const postsCollection = firestore.collection(USERS)
 		return postsCollection.orderBy('created_at', 'desc').get().then(docSnapshots => {
-			return docSnapshots;
+			return docSnapshots.docs.map(doc => {
+				let data = doc.data();
+				data.created_at = new Date(data.created_at.toDate());
+
+				return data;
+			});
 		})
 	},
 	getUser(user) {
@@ -73,7 +78,7 @@ export default {
 			if (doc.exists) {
 				let data = doc.data();
 				data.created_at = new Date(data.created_at.toDate());
-				console.log(doc);
+				
 				return data;
 			}
 			return;
@@ -116,7 +121,6 @@ export default {
 			.get()
 			.then((docSnapshots) => {
 				return docSnapshots.docs.map((doc) => {
-
 					let data = doc.data();
 
 					data.id = doc.id;
@@ -211,10 +215,12 @@ export default {
 		})
 	},
 	signUpEmail(email, name, password) {
-		return firebase.auth().createUserWithEmailAndPassword(email, password).then(result => {
-			result.user.updateProfile({
+		return firebase.auth().createUserWithEmailAndPassword(email, password).then(async result =>  {
+			await result.user.updateProfile({
 				displayName: name
 			});
+
+			alert(result.user.displayName);
 
 			return result;
 		}).catch(err => {

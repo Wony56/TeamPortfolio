@@ -41,6 +41,9 @@
   <!-- Smooth Scroll -->
   <script src="https://unpkg.com/vue2-smooth-scroll"></script>
 
+  <!-- PUSH -->
+  <script src="https://www.gstatic.com/firebasejs/5.5.9/firebase.js"></script>
+
   <style type="text/css">
     iframe.goog-te-banner-frame {
       display: none !important;
@@ -92,8 +95,50 @@
   </noscript>
   <div id="app"></div>
   <!-- built files will be auto injected -->
-</body>
+  <div id="frogue-container" class="position-right-bottom"
+      data-chatbot="f2653702-4c1d-4def-b64c-62ae0d1023db"
+      data-user="사용자ID"
+      data-init-key="value"
+      ></div>
+  <!-- data-init-식별키=값 으로 셋팅하면 챗플로우에 파라미터와 연동가능. 식별키는 소문자만 가능 -->
+  <script>
+  (function(d, s, id){
+      var js, fjs = d.getElementsByTagName(s)[0];
+      if (d.getElementById(id)) {return;}
+      js = d.createElement(s); js.id = id;
+      js.src = "https:\/\/danbee.ai/js/plugins/frogue-embed/frogue-embed.min.js";
+      fjs.parentNode.insertBefore(js, fjs);
+  }(document, 'script', 'frogue-embed'));
+  </script>
 
+  
+  <script>
+      const config = {
+        apiKey: "AIzaSyD4WyDVLvJV1ZXAH2KOUQDs2JFtQjqv3Do",
+        authDomain: "ssafy-web-pjt.firebaseapp.com",
+        databaseURL: "https://ssafy-web-pjt.firebaseio.com",
+        projectId: "ssafy-web-pjt",
+        storageBucket: "ssafy-web-pjt.appspot.com",
+        messagingSenderId: "363817638878",
+        appId: "1:363817638878:web:aea49aa578e86b59"
+      };
+      firebase.initializeApp(config);
+  
+      const messaging = firebase.messaging();
+  
+      messaging.requestPermission()
+          .then(function(){
+              console.log("Have permission");
+              return messaging.getToken();
+          })
+          .then(function(token){
+              console.log(token);
+          })
+          .catch(function(arr){
+              console.log("Error Occured");
+          });
+  </script>
+</body>
 </html>
 
 <style>

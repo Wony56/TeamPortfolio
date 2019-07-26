@@ -16,6 +16,7 @@ import FlagIcon from 'vue-flag-icon'
 import VueScrollProgress from 'vue-scroll-progress'
 import ToggleButton from 'vue-js-toggle-button'
 import Autocomplete from 'v-autocomplete'
+import { Laue } from 'laue';
 
 // VueSmoothScrollbar
 import SmoothScrollbar from 'vue-smooth-scrollbar'
@@ -34,7 +35,7 @@ Vue.use(Vuetify, {
 		error: '#b71c1c'
 	}
 })
-
+Vue.use(Laue);
 Vue.use(VueSimplemde)
 
 Vue.use(Autocomplete)

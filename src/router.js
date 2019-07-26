@@ -5,13 +5,15 @@ import PostPage from './views/PostPage.vue'
 import PortfolioPage from './views/PortfolioPage.vue'
 import PortfolioWriterPage from './views/PortfolioWriterPage.vue'
 import PostWriterPage from './views/PostWriterPage.vue'
+import PostViewPage from './views/PostViewPage.vue'
+import Adminpage from './views/AdminPage.vue'
 
 Vue.use(Router)
 
 export default new Router({
-  mode: 'history',
-  base: process.env.BASE_URL,
-  routes: [
+	mode: 'history',
+	base: process.env.BASE_URL,
+	routes: [
 		{
 			path: '/',
 			name: 'home',
@@ -21,7 +23,8 @@ export default new Router({
 			path: '/post',
 			name: 'post',
 			component: PostPage,
-			children: [
+			children: 
+			[
 				{
 					path: "write",
 					component: PostWriterPage
@@ -32,7 +35,8 @@ export default new Router({
 			path: '/portfolio',
 			name: 'portfolio',
 			component: PortfolioPage,
-			children: [
+			children: 
+			[
 				{
 					path: "write",
 					component: PortfolioWriterPage
@@ -48,9 +52,19 @@ export default new Router({
 			path: '/postwriterpage',
 			name: 'postwriterpage',
 			component: PostWriterPage
+		},
+		{
+			path: '/postview/:postIndex',
+			name: 'postview',
+			component: PostViewPage
+		},
+		{
+			path: '/adminpage',
+			name: 'adminpage',
+			component: Adminpage
 		}
-  ],
-  scrollBehavior(to, from, savedPosition){
-	  return {x:0, y:0};
-  }
+	],
+	scrollBehavior(to, from, savedPosition) {
+		return { x: 0, y: 0 };
+	}
 })

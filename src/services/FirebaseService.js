@@ -3,7 +3,7 @@ import 'firebase/firestore';
 import 'firebase/auth';
 
 const POSTS = 'posts';
-const PORTFOLIOS = 'portfolios';
+const PORTFOLIOS = 'portfolgitios';
 const WEBLOGS = 'weblogs';
 const USERS = 'users';
 const IMAGES = 'images';
@@ -23,7 +23,36 @@ firebase.initializeApp(config)
 const firestore = firebase.firestore()
 
 export default {
-	postUser(user){
+	getReplyInfo(articleId) {
+
+		const postCollection = firestore.collection(POSTS).doc(articleId)
+		return postCollection
+			.get()
+			.then((doc) => {
+
+				console.log(doc.id);
+				let data = doc.data();
+				return data.reply;
+			})
+			.catch(err => {
+				console.log('Error getting document', err);
+				return 'error';
+			});
+	},
+	addReply(articleId, postInfo, replyContent) {
+
+		postInfo.reply.push({ 'uid': postInfo.identifier, 'author': postInfo.author, 'content': replyContent, 'created_at': this.getCurrentDate() })
+
+		return firestore.collection(POSTS).doc(articleId).set({
+			title: postInfo.title,
+			content: postInfo.content,
+			reply: postInfo.reply,
+			author: postInfo.author,
+			identifier: postInfo.identifier,
+			created_at: postInfo.created_at
+		})
+	},
+	postUser(user) {
 		return firestore.collection(USERS).doc(user.uid).set({
 			uid: user.uid,
 			name: user.displayName,
@@ -32,23 +61,28 @@ export default {
 			created_at: firebase.firestore.FieldValue.serverTimestamp()
 		})
 	},
-	getUsers(){
+	getUsers() {
 		const postsCollection = firestore.collection(USERS)
 		return postsCollection.orderBy('created_at', 'desc').get().then(docSnapshots => {
-			return docSnapshots;
-		})
-	},
-	getUser(user){
-		const postsCollection = firestore.collection(USERS)
-		return postsCollection.doc(user.uid).get().then(doc=>{
-			if(doc.exists){
+			return docSnapshots.docs.map(doc => {
 				let data = doc.data();
 				data.created_at = new Date(data.created_at.toDate());
-				console.log(doc);
+
+				return data;
+			});
+		})
+	},
+	getUser(user) {
+		const postsCollection = firestore.collection(USERS)
+		return postsCollection.doc(user.uid).get().then(doc => {
+			if (doc.exists) {
+				let data = doc.data();
+				data.created_at = new Date(data.created_at.toDate());
+				
 				return data;
 			}
 			return;
-		}).catch(error=>{
+		}).catch(error => {
 			console.log(error)
 		})
 	},
@@ -68,12 +102,13 @@ export default {
 			.get()
 			.then((doc) => {
 
-				if (!doc.exists) {
-					console.log('No such document!');
-				} else {
-					console.log('Document data:', doc.data());
-					return doc.data();
-				}
+				console.log(doc.id);
+				let data = doc.data();
+				data.articleId = doc.id;
+
+				console.log('Document data:', data);
+				console.log('Articel ID: ', data.id);
+				return data;
 			})
 			.catch(err => {
 				console.log('Error getting document', err);
@@ -86,20 +121,23 @@ export default {
 			.get()
 			.then((docSnapshots) => {
 				return docSnapshots.docs.map((doc) => {
-
 					let data = doc.data();
 
-					data.created_at = new Date(data.created_at.toDate())
 					data.id = doc.id;
+					console.log(data.id);
 					return data
 				})
 			})
 	},
-	postPost(title, content) {
+	postPost(title, content, reply, author, identifier) {
+
 		return firestore.collection(POSTS).add({
 			title,
 			content,
-			created_at: firebase.firestore.FieldValue.serverTimestamp()
+			reply,
+			author,
+			identifier,
+			created_at: this.getCurrentDate()
 		}).catch(function (error) {
 
 			return "fail";
@@ -177,8 +215,8 @@ export default {
 		})
 	},
 	signUpEmail(email, name, password) {
-		return firebase.auth().createUserWithEmailAndPassword(email, password).then(result => {
-			result.user.updateProfile({
+		return firebase.auth().createUserWithEmailAndPassword(email, password).then(async result =>  {
+			await result.user.updateProfile({
 				displayName: name
 			});
 
@@ -203,5 +241,19 @@ export default {
 		}).catch(err => {
 			console.log(err);
 		});
+	},
+	getCurrentDate() {
+
+		let currentDate = new Date();
+		return currentDate.getFullYear() +
+			"년 " +
+			currentDate.getMonth() +
+			"월 " +
+			currentDate.getDate() +
+			"일 " +
+			currentDate.getHours() +
+			"시 " +
+			currentDate.getMinutes() +
+			"분";
 	}
 }

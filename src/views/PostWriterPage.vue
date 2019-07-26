@@ -37,8 +37,7 @@
 import ImgBanner from "../components/ImgBanner";
 import MarkdownEditor from "vue-simplemde/src/markdown-editor";
 import FirebaseService from "@/services/FirebaseService";
-import UserInfo from "firebase";
-import { Promise } from 'q';
+import {mapState} from 'vuex';
 
 export default {
   data: () => ({
@@ -50,13 +49,19 @@ export default {
     ImgBanner,
     MarkdownEditor
   },
+  computed: mapState({
+    user: state => state.user.user
+  }),
   methods: {
     postPost() {
-      console.log(this.title + " !!!! " + this.content);
+      console.log(this.title + " !!!!! " + this.content + "!!!!!" + this.user.name + "!!!!!" + this.user.uid);
+      
       let msg = FirebaseService.postPost(
         this.title,
         this.content,
-        UserInfo.auth().currentUser.email
+        new Array(),
+        this.user.name,
+        this.user.uid
       );
 
       if(msg == 'fail')

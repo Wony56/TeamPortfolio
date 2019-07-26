@@ -55,6 +55,7 @@ export default {
   methods: {
     postPost() {
       console.log(this.title + " !!!!! " + this.content + "!!!!!" + this.user.name + "!!!!!" + this.user.uid);
+      
       let msg = FirebaseService.postPost(
         this.title,
         this.content,

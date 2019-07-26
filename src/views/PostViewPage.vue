@@ -3,7 +3,7 @@
     <v-card>
       <v-card-title>제목 : {{title}}</v-card-title>
       <v-divider></v-divider>
-      <v-card-text class="text--primary">작성일 : {{date}}</v-card-text>
+      <v-card-text class="text--primary">작성일 : {{created_at}}</v-card-text>
       <v-divider></v-divider>
       <v-card-text>
         작성자 :
@@ -24,10 +24,10 @@
       <v-divider></v-divider>
       <v-card-title>Reply</v-card-title>
       <!-- ========================================================================================== -->
-      <v-flex>
+      <!-- <v-flex>
         <v-card>
           <v-list two-line>
-            <template v-for="(item, index) in items.slice(0, 6)">
+            <template v-for="(reply, index) in replies">
               <v-subheader v-if="item.header" :key="item.header">{{ item.header }}</v-subheader>
               <v-divider v-else-if="item.divider" :key="index" :inset="item.inset"></v-divider>
               <v-list-item v-else :key="item.title">
@@ -41,12 +41,35 @@
             </template>
           </v-list>
         </v-card>
+      </v-flex>-->
+      <v-flex>
+        <v-card color="#385F73" dark v-for="(reply, index) in replies" :key="index">
+          <v-card-text class="white--text">
+            <div class="headline mb-2">{{reply.author}}</div>
+            <div>{{reply.created_at}}</div>
+            {{reply.content}}
+          </v-card-text>
+
+          <v-card-actions>
+            <v-btn text flat>Reply</v-btn>
+            <v-btn text flat>Modify</v-btn>
+            <v-btn text flat @click="removeReply(index)">Delete</v-btn>
+          </v-card-actions>
+        </v-card>
       </v-flex>
       <!-- ========================================================================================== -->
 
       <v-card>
         <v-flex xs12 sm6>
-          <v-textarea label="댓글입력" auto-grow outlined rows="3" row-height="25" shaped></v-textarea>
+          <v-textarea
+            v-model="replyContent"
+            label="댓글입력"
+            auto-grow
+            outlined
+            rows="3"
+            row-height="25"
+            shaped
+          ></v-textarea>
         </v-flex>
       </v-card>
 
@@ -63,21 +86,15 @@ export default {
   name: "PostViewPage",
   data() {
     return {
-      date: "",
+      replies: [],
+      replyContent: "",
+
       title: "",
       content: "",
       author: "",
       identifier: "",
       articleId: "",
-
-      items: [
-        { header: "Today" },
-        {
-          avatar: "https://cdn.vuetifyjs.com/images/lists/1.jpg",
-          content:
-            "<span class='text--primary'>Ali Connors</span> &mdash; I'll be in your neighborhood doing errands this weekend. Do you want to hang out?"
-        }
-      ]
+      created_at: "",
     };
   },
   computed: mapState({
@@ -87,27 +104,46 @@ export default {
     async loadPost(id) {
       let ret = await FirebaseService.getPostById(this.$route.params.postIndex);
 
-      this.date =
-        new Date(ret.created_at).getFullYear() +
-        "년 " +
-        new Date(ret.created_at).getMonth() +
-        "월 " +
-        new Date(ret.created_at).getDate() +
-        "일 " +
-        new Date(ret.created_at).getHours() +
-        "시 " +
-        new Date(ret.created_at).getMinutes() +
-        "분";
       this.title = ret.title;
       this.content = ret.content;
       this.author = ret.author;
       this.identifier = ret.identifier;
       this.articleId = ret.articleId;
+      this.created_at = ret.created_at;
+
+      this.replies = ret.reply;
     },
     addReply() {
+
+      let temp = this.replyContent;
+      console.log(this.replyContent);
       console.log(this.user.uid + "!!!" + this.articleId);
 
-      FirebaseService.addReply(this.articleId, this.identifier, "asdfasfasdfasfsf");
+      console.log("BEFORE PUSH ", this.replies);
+      FirebaseService.addReply(this.articleId, {
+        author: this.author,
+        content: this.content,
+        created_at: this.created_at,
+        identifier: this.identifier,
+        reply: this.replies,
+        title: this.title
+      }, temp);
+      this.replyContent = "";
+    },
+    removeReply(index) {
+
+      if(this.replies[index].uid == this.user.uid) {
+
+        this.replies.splice(index, 1);
+      }
+      else {
+
+        console.log("다름!");
+      }
+    },
+    modifyReply(index) {
+
+      
     }
   },
   mounted() {

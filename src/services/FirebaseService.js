@@ -3,7 +3,7 @@ import 'firebase/firestore';
 import 'firebase/auth';
 
 const POSTS = 'posts';
-const PORTFOLIOS = 'portfolgitios';
+const PORTFOLIOS = 'portfolios';
 const WEBLOGS = 'weblogs';
 const USERS = 'users';
 const IMAGES = 'images';
@@ -42,6 +42,9 @@ export default {
 	addReply(articleId, postInfo, replyContent) {
 
 		postInfo.reply.push({ 'uid': postInfo.identifier, 'author': postInfo.author, 'content': replyContent, 'created_at': this.getCurrentDate() })
+		this.modifyReply(articleId, postInfo);
+	},
+	modifyReply(articleId, postInfo) {
 
 		return firestore.collection(POSTS).doc(articleId).set({
 			title: postInfo.title,

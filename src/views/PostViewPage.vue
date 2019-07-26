@@ -106,7 +106,7 @@ export default {
       this.replies = ret.reply;
 
       for(let i = 0; i < this.replies.length; i++)
-        this.toggles[i] = false;
+        this.toggles[i] = true;
     },
     getPostInfo() {
 
@@ -154,7 +154,6 @@ export default {
 
         console.log("다름!");
       }
-
       console.log(index + " " + this.toggles[index]);
     },
     modifyReply(index) {

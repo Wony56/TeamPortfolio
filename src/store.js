@@ -5,6 +5,7 @@ import images from "./store/modules/images";
 import user from './store/modules/user';
 import modal from './store/modules/modal';
 import notification from './store/modules/notification';
+import admin from './store/modules/admin';
 
 Vue.use(Vuex)
 
@@ -76,6 +77,7 @@ export default new Vuex.Store({
     images,
     user,
     modal,
-    notification
+    notification,
+    admin
   }
 });

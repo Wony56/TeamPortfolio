@@ -155,7 +155,7 @@ export default {
 
 <style>
 * {
-  font-family: "Titillium Web", sans-serif;
+ font-family: 'Nanum Gothic', sans-serif;
 }
 
 .link-portfolio:hover {

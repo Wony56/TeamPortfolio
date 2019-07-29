@@ -1,17 +1,19 @@
 <template>
-  <v-layout row wrap mw-700>
-    <v-flex v-for="(element, i) in posts[focusPage - 1]" :key="i" xs12 sm12 px-3>
-      <Post
+  <v-layout row wrap>
+    <v-flex v-for="(element, i) in posts[focusPage - 1]" :key="i" xs12 md4>
+      <v-card flat >
+         <Post
         :date="element.created_at"
         :title="element.title"
         :content="element.content"
         :id="element.id"
-      ></Post>
-      <v-divider></v-divider>
+        ></Post>
+        <v-divider/>
+      </v-card>
     </v-flex>
 
-    <v-flex xs12 text-xs-center round my-5>
-      <v-btn style="background-color:#ff6f61; color:#ffff" to="/postwriterpage" v-show="loggedIn">
+    <v-flex xs12 text-xs-right round my-5>
+      <v-btn flat style="background-color:#ff6f61; color:#ffff" to="/postwriterpage" v-show="loggedIn">
         <v-icon size="25" class="mr-2 notranslate">fa-pencil</v-icon>글쓰기
       </v-btn>
     </v-flex>
@@ -76,8 +78,15 @@ export default {
 </script>
 
 <style>
-.mw-700 {
-  max-width: 700px;
-  margin: auto;
+
+*{
+  font-family: 'Nanum Gothic', sans-serif;
+}
+.class1 {
+  background-color:#fff;
+}
+
+.class2 {
+  background-color:#ff6f61;
 }
 </style>

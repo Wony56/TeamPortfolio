@@ -181,6 +181,9 @@ export default {
 </script>
 
 <style>
+*{
+  font-family: 'Nanum Gothic', sans-serif;
+}
 nav:not(.snack) {
   font-family: "Do Hyeon", sans-serif;
 }

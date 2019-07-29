@@ -1,7 +1,12 @@
 <template>
-  <div style="margin: 150px;">
-    <v-card>
-      <v-card-title>제목 : {{title}}</v-card-title>
+<div>
+  <ImgBanner>
+        <span color="#fff">Post</span>
+    </ImgBanner>
+    <v-layout justify-center align-center style="margin-top:-600px">
+      <v-flex xs11 md10>
+    <v-card >
+      <v-card-title>제목 : {{title}} <v-btn flat right style="background-color:#ff6f61; color:#fff">댓글</v-btn></v-card-title>
       <v-divider></v-divider>
       <v-card-text class="text--primary">작성일 : {{created_at}}</v-card-text>
       <v-divider></v-divider>
@@ -15,7 +20,7 @@
       <v-card-text>{{content}}</v-card-text>
       <v-divider></v-divider>
 
-      <v-card-actions>
+      <v-card-actions text-xs-right jusitfy-right align-right>
         <v-btn class="text-right" text @click="$router.go(-1)">뒤로</v-btn>
         <v-btn class="text-right" text>수정</v-btn>
         <v-btn class="text-right" text>삭제</v-btn>
@@ -70,11 +75,14 @@
         <v-pagination v-model="focusPage" :length="totalPage" :total-visible="7" color="#ff6616"></v-pagination>
       </v-flex>
     </v-card>
+      </v-flex>
+    </v-layout>
   </div>
 </template>
 
 <script>
 import FirebaseService from "@/services/FirebaseService";
+import ImgBanner from "../components/ImgBanner";
 import { mapState } from "vuex";
 
 export default {
@@ -96,6 +104,9 @@ export default {
       focusPage: 1,
       totalPage: 10
     };
+  },
+  components:{
+    ImgBanner
   },
   computed: {
 
@@ -175,3 +186,8 @@ export default {
   }
 };
 </script>
+<style>
+*{
+  font-family: 'Nanum Gothic', sans-serif;
+}
+</style>

@@ -1,11 +1,13 @@
 <template>
-  <v-layout py-4 h-100>
-    <v-flex row>
-      <div class="caption">{{date}}</div>
-      <h2 class="color-333 headline font-weight-light" v-line-clamp="1">{{title}}</h2>
-      <h2 class="color-333 headline font-weight-light" v-line-clamp="1">{{id}}</h2>
-
-        <v-btn
+  <v-layout  py-4 px-4 justify-center align-center row wrap>
+    <v-flex xs10>
+      <h2 class="title" v-line-clamp="1">{{title}}</h2>
+      <!-- <h2 style="color:gray" class="title" v-line-clamp="1"> {{id}}</h2> -->
+      <div  style="color:gray" class="caption">{{date}}</div>
+    </v-flex>
+    <v-flex xs2 fill-height fill-width>
+        <v-btn text-xs-right
+         block
           style="background-color:#ff6f61; color:#ffff"
           flat
           :to="{ name: 'postview', params: { postIndex: this.id }}"
@@ -37,6 +39,9 @@ export default {
 </script>
 
 <style>
+*{
+  font-family: 'Nanum Gothic', sans-serif;
+}
 .color-666 {
   color: #666;
 }
@@ -45,8 +50,10 @@ export default {
 }
 .h-100 {
   height: 100%;
+  left:30px;
 }
 .h-content {
   height: 96px;
+  left:30px;
 }
 </style>

@@ -54,17 +54,40 @@ Vue.use(lineClamp,{
 
 })
 
-firebase.auth().onAuthStateChanged(async user => {
-	store.state.notification.snackbar = false;
+router.beforeEach(async (to, from, next) => {
+	const currentUser = firebase.auth().currentUser;
+	const requiresAuth = to.matched.some(record => record.meta.requiresAuth);
 
-	if(user){
+	if(currentUser){
+		store.state.user.user = await firebaseService.getUser(currentUser);
 		store.state.user.loggedIn = true;
-		store.state.user.user = await firebaseService.getUser(user);
 	}else{
-		store.state.user.loggedIn = false;
 		store.state.user.user = {};
+		store.state.user.loggedIn = false;
 	}
 
+	if(requiresAuth && !currentUser){
+		alert("접근권한이 없습니다.");
+		next("home");
+	}else if(requiresAuth && currentUser){
+		if(store.state.user.user.tier !== 'diamond'){
+			alert("접근권한이 없습니다.");
+			next("home");
+		}else{
+			next();
+		}
+	}else{
+		next();
+	}
+})
+
+firebase.auth().onAuthStateChanged(async user => {
+	
+	if(user){
+		store.state.user.loggedIn = true;
+	}else{
+		store.state.user.loggedIn = false;
+	}
 	new Vue({
 		router,
 		store,

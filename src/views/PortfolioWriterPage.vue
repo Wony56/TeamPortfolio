@@ -61,6 +61,10 @@ export default {
       } else {
         try {
           await FirebaseService.postPortfolio(
+            {
+              uid: this.$store.state.user.user.uid,
+              name: this.$store.state.user.user.displayName
+            },
             this.title,
             this.content,
             this.image

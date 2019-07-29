@@ -33,7 +33,12 @@
             </v-flex>
 
             <v-flex>
-              <v-btn block flat style="background-color:#ff6f61; color:#ffff" @click="signupWithEmail">
+              <v-btn
+                block
+                flat
+                style="background-color:#ff6f61; color:#ffff"
+                @click="signupWithEmail"
+              >
                 <i class="far fa-envelope"></i>&nbsp; Sign up with email
               </v-btn>
             </v-flex>
@@ -48,6 +53,8 @@
 </template>
 
 <script>
+import firebaseService from "../services/FirebaseService";
+
 export default {
   name: "SignUpModal",
   data() {
@@ -78,11 +85,8 @@ export default {
   methods: {
     signupWithEmail() {
       if (this.$refs.form.validate()) {
-        this.$store.commit("signupWithEmail", {
-          email: this.email,
-          name: this.name,
-          password: this.password
-        });
+        firebaseService.signUpEmail(this.email, this.name, this.password);
+        this.$store.commit("closeSignupModal");
         this.$refs.form.reset();
       }
     },

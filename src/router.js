@@ -1,5 +1,8 @@
 import Vue from 'vue'
 import Router from 'vue-router'
+import store from './store';
+import firebaseService from './services/FirebaseService';
+
 import HomePage from './views/HomePage.vue'
 import PostPage from './views/PostPage.vue'
 import PortfolioPage from './views/PortfolioPage.vue'
@@ -7,7 +10,6 @@ import PortfolioWriterPage from './views/PortfolioWriterPage.vue'
 import PostWriterPage from './views/PostWriterPage.vue'
 import PostViewPage from './views/PostViewPage.vue'
 import Adminpage from './views/AdminPage.vue'
-import user from './store/modules/user'
 
 Vue.use(Router)
 
@@ -66,10 +68,15 @@ export default new Router({
 		{
 			path: '/adminpage',
 			name: 'adminpage',
-			component: Adminpage
+			component: Adminpage,
+			meta: {
+				requiresAuth: true
+			}
 		}
 	],
 	scrollBehavior(to, from, savedPosition) {
 		return { x: 0, y: 0 };
 	}
 })
+
+

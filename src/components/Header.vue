@@ -40,7 +40,7 @@
         </template>
 
         <template v-else>
-          <v-list-tile @click="logout">
+          <v-list-tile @click="logOut">
             <v-list-tile-action>
               <v-icon light></v-icon>
             </v-list-tile-action>
@@ -64,8 +64,8 @@
 
       <mq-layout mq="tablet+" style="height: 100%;">
         <v-toolbar-items>
-          <v-btn class="menu-item" flat to="/post" v-on:click.native="moveTop">게시판</v-btn>
-          <v-btn class="menu-item" flat to="/portfolio" v-on:click.native="moveTop">포트폴리오</v-btn>
+          <v-btn class="menu-item" flat to="/post">게시판</v-btn>
+          <v-btn class="menu-item" flat to="/portfolio">포트폴리오</v-btn>
           <template v-if="!loggedIn">
             <!--로그인-->
             <v-btn class="menu-item" flat @click="openLoginModal">로그인</v-btn>
@@ -73,7 +73,13 @@
             <v-btn class="menu-item" flat @click="openSignupModal">회원가입</v-btn>
           </template>
           <template v-else>
-            <v-btn class="menu-item" flat @click="logout">로그아웃</v-btn>
+            <v-btn
+              class="menu-item"
+              flat
+              to="/adminpage"
+              v-show="$store.state.user.user.tier === 'diamond'"
+            >관리자페이지</v-btn>
+            <v-btn class="menu-item" flat @click="logOut">로그아웃</v-btn>
           </template>
         </v-toolbar-items>
       </mq-layout>
@@ -107,6 +113,7 @@
 </template>
 
 <script>
+import firebaseService from "../services/FirebaseService";
 import LoginModal from "./LoginModal";
 import SignupModal from "./SignupModal";
 import { mapState, mapMutations } from "vuex";
@@ -162,20 +169,24 @@ export default {
         this.drawer = false;
       }
     },
-    click1: function() {
+    click1() {
       this.check = false;
     },
-    click2: function() {
+    click2() {
       this.check = true;
     },
-    onScroll: function() {
+    onScroll() {
       if (window.pageYOffset < 50) {
         el.style.backgroundColor = "#00ff0000";
       } else {
         el.style.backgroundColor = "#ffffff";
       }
     },
-    ...mapMutations(["openLoginModal", "openSignupModal", "logout"])
+    logOut() {
+      alert("로그아웃되었습니다.");
+      firebaseService.logout();
+    },
+    ...mapMutations(["openLoginModal", "openSignupModal"])
   }
 };
 </script>

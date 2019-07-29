@@ -1,27 +1,20 @@
 <template>
-  <div>
-    <v-app id="inspire">
-    <v-card>
-      <v-list three-line>
-        <template>
-          <v-divider />
-          <v-list-item>
-            <v-list-item-avatar tile size="144">
-              <v-carousel class="notranslate" hide-delimiters show-arrows-on-hover height="150" width="150">
-                <v-carousel-item v-for="(imgItem,i) in imgItems" :key="i" :src="imgItem"></v-carousel-item>
-              </v-carousel>
-            </v-list-item-avatar>
-
-            <v-list-item-content>
-              <v-list-item-title v-html="title" v-line-clamp="1"></v-list-item-title>
-              <v-list-item-subtitle v-html="body" v-line-clamp="4"></v-list-item-subtitle>
-            </v-list-item-content>
-          </v-list-item>
-        </template>
-      </v-list>
-    </v-card>
-    </v-app>
-  </div>
+  <v-card
+  :loading="loading"
+  class="mx-auto my-3"
+  width="500"
+  height="100%">
+    <v-carousel class="notranslate" hide-delimiters>
+      <v-carousel-item v-for="(imgItem,i) in imgItems" :key="i" :src="imgItem"></v-carousel-item>
+    </v-carousel>
+    <v-card-title primary-title>
+      <div class="headline" v-line-clamp="1">{{title}}</div>
+    </v-card-title>
+    <v-divider class="mx-4"></v-divider>
+    <v-card-text>
+      <span class="grey--text" v-line-clamp="4">{{body}}</span>
+    </v-card-text>
+  </v-card>
 </template>
 
 <script>
@@ -33,11 +26,9 @@ export default {
     body: { type: String },
     imgItems: []
   },
-  data() {
-    return {
-
-    };
-  }
+  data: () => ({
+    loading: false,
+    selection: 1,
+  }),
 };
-
 </script>

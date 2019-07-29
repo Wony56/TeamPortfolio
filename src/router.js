@@ -7,6 +7,7 @@ import PortfolioWriterPage from './views/PortfolioWriterPage.vue'
 import PostWriterPage from './views/PostWriterPage.vue'
 import PostViewPage from './views/PostViewPage.vue'
 import Adminpage from './views/AdminPage.vue'
+import user from './store/modules/user'
 
 Vue.use(Router)
 
@@ -14,6 +15,10 @@ export default new Router({
 	mode: 'history',
 	base: process.env.BASE_URL,
 	routes: [
+		{
+			path: '*',
+			redirect: '/'
+		},
 		{
 			path: '/',
 			name: 'home',

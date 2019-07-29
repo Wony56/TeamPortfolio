@@ -12,6 +12,7 @@ import router from './router'
 import store from './store'
 import './registerServiceWorker'
 import firebase from 'firebase';
+import firebaseService from './services/FirebaseService';
 import FlagIcon from 'vue-flag-icon'
 import VueScrollProgress from 'vue-scroll-progress'
 import ToggleButton from 'vue-js-toggle-button'
@@ -53,22 +54,21 @@ Vue.use(lineClamp,{
 
 })
 
-new Vue({
-  router,
-  store,
-  async created(){
+firebase.auth().onAuthStateChanged(async user => {
+	store.state.notification.snackbar = false;
 
-	await firebase.auth().onAuthStateChanged(user=>{
-		if(user){
-			store.state.user.user.uid = user.uid;
-			store.state.user.user.name = user.displayName;
-			store.state.user.user.email = user.email;
+	if(user){
+		store.state.user.loggedIn = true;
+		store.state.user.user = await firebaseService.getUser(user);
+	}else{
+		store.state.user.loggedIn = false;
+		store.state.user.user = {};
+	}
 
-			store.state.user.loggedIn = true;
-		}else{
-			store.state.user.loggedIn = false;
-		}
-	})
-  },
-  render: h => h(App)
-}).$mount('#app')
+	new Vue({
+		router,
+		store,
+		render: h => h(App)
+	  }).$mount('#app')
+})
+

@@ -2,6 +2,9 @@ import firebase from 'firebase/app';
 import 'firebase/firestore';
 import 'firebase/auth';
 
+import store from '../store';
+import router from '../router';
+
 const POSTS = 'posts';
 const PORTFOLIOS = 'portfolios';
 const WEBLOGS = 'weblogs';
@@ -58,7 +61,7 @@ export default {
 	postUser(user) {
 		return firestore.collection(USERS).doc(user.uid).set({
 			uid: user.uid,
-			name: user.displayName,
+			displayName: user.displayName,
 			email: user.email,
 			tier: 'bronze',
 			created_at: firebase.firestore.FieldValue.serverTimestamp()
@@ -94,7 +97,7 @@ export default {
 		return firestore.collection(WEBLOGS).add({
 			type: type,
 			uid: user.uid,
-			name: user.name,
+			name: user.displayName,
 			date: firebase.firestore.FieldValue.serverTimestamp()
 		})
 	},
@@ -189,24 +192,57 @@ export default {
 	},
 	loginWithGoogle() {
 		let provider = new firebase.auth.GoogleAuthProvider()
-		return firebase.auth().signInWithPopup(provider).then(result => {
+		return firebase.auth().signInWithPopup(provider).then(async result => {
+			if(!await this.getUser(result.user)){
+				await this.postUser(result.user);
+			}
+			store.state.user.user = await this.getUser(result.user);
 
-			return result
+			store.state.notification.snackbar = false;
+			store.state.notification.snackbarText = store.state.user.user.displayName + "님, 환영합니다.";
+			store.state.notification.snackbar = true;
+
+			this.postLogData(result.user, 'Log in');
+			return result;
 		}).catch(function (error) {
-			console.error('[Google Login Error]', error)
+			console.error('[Google Login Error]', error);
 		})
 	},
 	loginWithFacebook() {
 		let provider = new firebase.auth.FacebookAuthProvider();
 
-		return firebase.auth().signInWithPopup(provider).then(result => {
+		return firebase.auth().signInWithPopup(provider).then(async result => {
+			if(!await this.getUser(result.user)){
+				await this.postUser(result.user);
+			}
+
+			store.state.user.user = await this.getUser(result.user);
+
+			store.state.notification.snackbar = false;
+			store.state.notification.snackbarText = store.state.user.user.displayName + "님, 환영합니다.";
+			store.state.notification.snackbar = true;
+
+			this.postLogData(result.user, 'Log in');
 			return result;
 		}).catch(function (error) {
 			console.error('[Facebook Login Error]', error)
 		});
 	},
 	loginWithEmail(email, password) {
-		return firebase.auth().signInWithEmailAndPassword(email, password).catch(err => {
+		return firebase.auth().signInWithEmailAndPassword(email, password).then(async result => {
+			if(!await this.getUser(result.user)){
+				await this.postUser(result.user);
+			}
+
+			store.state.user.user = await this.getUser(result.user);
+
+			store.state.notification.snackbar = false;
+			store.state.notification.snackbarText = store.state.user.user.displayName + "님, 환영합니다.";
+			store.state.notification.snackbar = true;
+
+			this.postLogData(result.user, 'Log in');
+			return result;
+		}).catch(err => {
 			let errorCode = err.code;
 
 			if (errorCode == 'auth/invalid-email') {
@@ -223,6 +259,17 @@ export default {
 				displayName: name
 			});
 
+			if(!await this.getUser(result.user)){
+				await this.postUser(result.user);
+			}
+
+			store.state.user.user = await this.getUser(result.user);
+
+			store.state.notification.snackbar = false;
+			store.state.notification.snackbarText = store.state.user.user.displayName + "님, 환영합니다.";
+			store.state.notification.snackbar = true;
+
+			this.postLogData(result.user, 'Log in');
 			return result;
 		}).catch(err => {
 			let errorCode = err.code;
@@ -240,13 +287,13 @@ export default {
 	},
 	logout() {
 		firebase.auth().signOut().then(() => {
-			console.log("[Success] logout");
+			this.postLogData(store.state.user.user, 'Log out');
+			router.replace('/');
 		}).catch(err => {
 			console.log(err);
 		});
 	},
 	getCurrentDate() {
-
 		let currentDate = new Date();
 		return currentDate.getFullYear() +
 			"년 " +

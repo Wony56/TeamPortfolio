@@ -157,17 +157,18 @@ export default {
 			.then((docSnapshots) => {
 				return docSnapshots.docs.map((doc) => {
 					let data = doc.data()
-					data.created_at = new Date(data.created_at.toDate())
+					
 					return data
 				})
 			})
 	},
-	postPortfolio(title, body, img) {
+	postPortfolio(author, title, body, img) {
 		return firestore.collection(PORTFOLIOS).add({
+			author,
 			title,
 			body,
 			img,
-			created_at: firebase.firestore.FieldValue.serverTimestamp()
+			created_at: this.getCurrentDate()
 		})
 	},
 	getImage() {

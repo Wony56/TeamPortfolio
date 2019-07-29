@@ -73,6 +73,12 @@
             <v-btn class="menu-item" flat @click="openSignupModal">회원가입</v-btn>
           </template>
           <template v-else>
+            <v-btn
+              class="menu-item"
+              flat
+              to="/adminpage"
+              v-show="$store.state.user.user.tier === 'diamond'"
+            >관리자페이지</v-btn>
             <v-btn class="menu-item" flat @click="logOut">로그아웃</v-btn>
           </template>
         </v-toolbar-items>
@@ -177,7 +183,7 @@ export default {
       }
     },
     logOut() {
-      alert("로그아웃되었습니다.")
+      alert("로그아웃되었습니다.");
       firebaseService.logout();
     },
     ...mapMutations(["openLoginModal", "openSignupModal"])

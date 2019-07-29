@@ -22,15 +22,12 @@ export default {
     dialog: false,
     headers: [
       {
-        text: "UID",
-        align: "center",
-        value: "uid",
-        sortable: false
+        text: "작성자",
+        align: "left",
+        value: "name"
       },
-      { text: "이름", align: "center", value: "title", sortable: false },
-      { text: "email", align: "center", value: "email", sortable: false },
-      { text: "가입일", align: "center", value: "date", sortable: false },
-      { text: "등급", align: "center", value: "tier", sortable: false }
+      { text: "글제목", value: "title" },
+      { text: "작성일", value: "date" }
     ],
     desserts: []
   }),

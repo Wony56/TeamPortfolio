@@ -1,59 +1,65 @@
 <template>
   <div style="margin: 150px;">
     <v-card>
-      <v-card-title>제목 : {{title}}</v-card-title>
-      <v-divider></v-divider>
-      <v-card-text class="text--primary">작성일 : {{created_at}}</v-card-text>
-      <v-divider></v-divider>
-      <v-card-text>
-        작성자 :
-        {{author}}
-      </v-card-text>
-      <v-divider></v-divider>
-      <v-card-text>내용></v-card-text>
+      <form>
+        <v-textarea
+          style="font-size: 30px;"
+          v-model="title"
+          auto-grow
+          filled
+          color="black"
+          label="Title"
+          rows="1"
+        ></v-textarea>
+        <v-card v-model="title"></v-card>
+        <v-divider></v-divider>
+        <v-card-text class="text--primary">작성일 : {{created_at}}</v-card-text>
+        <v-divider></v-divider>
+        <v-card-text>
+          작성자 :
+          {{author}}
+        </v-card-text>
+        <v-divider></v-divider>
 
-      <v-card-text>{{content}}</v-card-text>
-      <v-divider></v-divider>
+        <div v-if="!flag">
+          <v-card-text>내용></v-card-text>
+          <v-card-text>{{content}}</v-card-text>
+          <v-divider></v-divider>
+        </div>
+
+        <div v-else>
+          <markdown-editor v-model="content" ref="MarkdownEditor"></markdown-editor>
+          <v-divider></v-divider>
+
+          <v-btn dark @click="modifyPost()">수정완료</v-btn>
+          <v-btn dark @click="flagToggle()">취소</v-btn>
+        </div>
+        <v-divider></v-divider>
+      </form>
 
       <v-card-actions>
         <v-btn class="text-right" text @click="$router.go(-1)">뒤로</v-btn>
-        <v-btn class="text-right" text>수정</v-btn>
-        <v-btn class="text-right" text>삭제</v-btn>
+        <v-btn class="text-right" text @click="modifyToggle()">수정</v-btn>
+        <v-btn class="text-right" text @click="deletePost()">삭제</v-btn>
       </v-card-actions>
 
       <v-divider></v-divider>
-      <v-card-title>Reply</v-card-title>
-      <!-- ========================================================================================== -->
+
       <v-flex>
         <v-card color="#385F73" dark v-for="(reply, index) in replies" :key="index">
-          <v-card-text class="white--text">
-            <div class="headline mb-1">{{reply.author}}</div>
-            <div>{{reply.created_at}}</div>
-          </v-card-text>
-
-          <v-text-field
-            :id="index"
-            auto-grow
-            outlined
-            rows="3"
-            row-height="25"
-            v-model="reply.content"
-            :readonly="selectedIndex != index"
-          ></v-text-field>
-
-          <v-btn v-show="selectedIndex == index" @click="modifyReply(index)">수정완료</v-btn>
-
-          <v-card-actions>
-            <v-btn text flat>Reply</v-btn>
-            <v-btn text flat @click="checkReplyAuthority(index)">Modify</v-btn>
-            <v-btn text flat @click="removeReply(index)">Delete</v-btn>
-          </v-card-actions>
+          <Reply
+            :replyAuthorName="reply.author"
+            :created_at="reply.created_at"
+            :replyContent="reply.content"
+            :replyAuthorUid="reply.uid"
+            :articleId="articleId"
+            :index="index"
+          ></Reply>
         </v-card>
       </v-flex>
-      <!-- ========================================================================================== -->
 
       <v-card>
-        <v-flex xs12 sm6>
+        <v-flex xs12>
           <v-textarea
             v-model="replyContent"
             label="댓글입력"
@@ -75,6 +81,8 @@
 
 <script>
 import FirebaseService from "@/services/FirebaseService";
+import MarkdownEditor from "vue-simplemde/src/markdown-editor";
+import Reply from "@/components/article/Reply";
 import { mapState } from "vuex";
 
 export default {
@@ -82,7 +90,7 @@ export default {
   data() {
     return {
       replies: [],
-      selectedIndex : -1,
+      selectedIndex: -1,
       replyContent: "",
       ff: false,
       title: "",
@@ -94,17 +102,19 @@ export default {
 
       loadMore: false,
       focusPage: 1,
-      totalPage: 10
+      totalPage: 10,
+
+      flag: false
     };
   },
+  components: {
+    MarkdownEditor,
+    Reply
+  },
   computed: {
-
     ...mapState({
       user: state => state.user.user
-    }),
-    rendering() {
-
-    }
+    })
   },
   methods: {
     async loadPost(id) {
@@ -119,9 +129,7 @@ export default {
 
       this.replies = ret.reply;
 
-      if(this.replies.length > 10)
-        this.loadMore = true;
-
+      if (this.replies.length > 10) this.loadMore = true;
     },
     getPostInfo() {
       return {
@@ -134,39 +142,44 @@ export default {
       };
     },
     addReply() {
-      let temp = this.replyContent;
+
       console.log(this.replyContent);
       console.log(this.user.uid + "!!!" + this.articleId);
 
-      console.log("BEFORE PUSH ", this.replies);
-      FirebaseService.addReply(this.articleId, this.getPostInfo(), temp);
+      let temp = {
+
+        author: this.user.name,
+        content: this.replyContent,
+        created_at: FirebaseService.getCurrentDate(),
+        uid: this.user.uid
+      }
+      console.log("TEMP> ", temp);
+
+      FirebaseService.addReply(this.articleId, temp);
       this.replyContent = "";
+      this.replies.push(temp);
     },
-    removeReply(index) {
-      if (this.replies[index].uid == this.user.uid) {
-        this.replies.splice(index, 1);
-        FirebaseService.modifyReply(this.articleId, this.getPostInfo());
-      } else {
-        console.log("다름!");
-      }
+
+    modifyToggle() {
+      if (this.identifier == this.user.uid) this.flag = true;
+      else console.log("다릅니다!");
     },
-    checkReplyAuthority(index) {
-      if (this.replies[index].uid == this.user.uid) {
-        
-        if(this.selectedIndex == -1)
-          this.selectedIndex = index;
-        else
-          this.selectedIndex = -1;
-      } else {
-        console.log("다름!");
-      }
+    flagToggle() {
+      this.flag = !this.flag;
     },
-    modifyReply(index) {
-      if (this.replies[index].uid == this.user.uid) {
-        FirebaseService.modifyReply(this.articleId, this.getPostInfo());
+    modifyPost() {
+      if (this.identifier == this.user.uid) {
+        FirebaseService.modifyPost(this.articleId, this.getPostInfo());
         this.selectedIndex = -1;
       } else {
         console.log("다름!");
+      }
+    },
+    deletePost() {
+      if (this.identifier == this.user.uid) {
+        FirebaseService.deletePost(this.articleId);
+      } else {
+        console.log("다릅니다!");
       }
     }
   },

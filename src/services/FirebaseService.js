@@ -1,6 +1,7 @@
 import firebase from 'firebase/app';
 import 'firebase/firestore';
 import 'firebase/auth';
+import "firebase/messaging";
 
 import store from '../store';
 import router from '../router';
@@ -24,6 +25,24 @@ const config = {
 
 firebase.initializeApp(config)
 const firestore = firebase.firestore()
+
+const messaging = firebase.messaging();
+  
+	messaging.requestPermission()
+		.then(function(){
+			console.log("Have permission");
+			return messaging.getToken();
+		})
+		.then(function(token){
+			console.log(token);
+		})
+		.catch(function(arr){
+			console.log("Error Occured");
+		});
+
+	messaging.onMessage(function(payload) {
+		console.log('onMessage: ', payload);
+	});
 
 export default {
 	getReplyInfo(articleId) {

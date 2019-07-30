@@ -24,7 +24,7 @@
 
 <script>
 import { mapState } from "vuex";
-import Post from "@/components/Post";
+import Post from "@/components/post/Post";
 import FirebaseService from "@/services/FirebaseService";
 
 export default {
@@ -57,19 +57,13 @@ export default {
       let index = 0;
       this.totalPage = parseInt(tempPosts["length"] / 6);
 
-      console.log(tempPosts);
-      console.log(this.totalPage);
-
       for (let page = 0; page < this.totalPage; page++) {
         let pagePost = [];
 
         for (let count = 0; count < 6; count++)
           pagePost.push(tempPosts[index++]);
-
-        console.log(pagePost);
         this.posts.push(pagePost);
       }
-      console.log(this.posts);
     }
   }
 };

@@ -5,7 +5,16 @@
       <td class="text-xs-left">{{ props.item.name }}</td>
       <td class="text-xs-left">{{ props.item.email }}</td>
       <td class="text-xs-right">{{ props.item.date }}</td>
-      <td class="text-xs-right">{{props.item.tier.toUpperCase()}}</td>
+      <td class="text-xs-right">
+        <v-flex xs6>
+          <v-select
+            :items="tiers"
+            v-model="props.item.tier"
+            single-line
+            @change="tierChange(`${props.item.uid}`, `${props.item.tier}`)"
+          ></v-select>
+        </v-flex>
+      </td>
     </template>
     <template
       slot="pageText"
@@ -29,7 +38,8 @@ export default {
       { text: "가입일", align: "center", value: "date", sortable: false },
       { text: "등급", align: "center", value: "tier", sortable: false }
     ],
-    desserts: []
+    desserts: [],
+    tiers: ["bronze", "silver", "gold", "diamond"]
   }),
   created() {
     this.initialize();
@@ -37,8 +47,6 @@ export default {
   methods: {
     async initialize() {
       let users = await firebaseService.getUsers();
-
-      console.log(users);
 
       users.forEach(user => {
         let row = {
@@ -51,6 +59,11 @@ export default {
 
         this.desserts.push(row);
       });
+    },
+    async tierChange(uid, tier) {
+      await firebaseService.modifyTier(uid, tier);
+
+      alert("등급 변경완료!");
     }
   }
 };

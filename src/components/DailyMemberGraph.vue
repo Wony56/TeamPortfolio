@@ -15,17 +15,30 @@
 </template>
 
 <script>
+import firebaseService from "../services/FirebaseService";
+import { stringify } from "querystring";
+
 export default {
   data: () => ({
-    values: [
-      { name: 'Page A', pv: 2400 },
-      { name: 'Page B', pv: 1398 },
-      { name: 'Page C', pv: 9800 },
-      { name: 'Page D', pv: 3908 },
-      { name: 'Page E', pv: 4800 },
-      { name: 'Page F', pv: 3800 },
-      { name: 'Page G', pv: 4300 }
-    ]
-  })
+    values: []
+  }),
+  created() {
+    this.setMemberGraph();
+  },
+  methods: {
+    async setMemberGraph() {
+      const users = await firebaseService.getUsers();
+      let memberCount = [];
+
+      users.forEach(user => {
+        let date = user.created_at.toString().substring(4, 10);
+        if (memberCount[date]) {
+          memberCount[date] += 1;
+        } else {
+          memberCount[date] = 1;
+        }
+      });
+    }
+  }
 };
 </script>

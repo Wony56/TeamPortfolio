@@ -1,5 +1,8 @@
 import Vue from 'vue'
 import Router from 'vue-router'
+import store from './store';
+import firebaseService from './services/FirebaseService';
+
 import HomePage from './views/HomePage.vue'
 import PostPage from './views/PostPage.vue'
 import PortfolioPage from './views/PortfolioPage.vue'
@@ -14,6 +17,10 @@ export default new Router({
 	mode: 'history',
 	base: process.env.BASE_URL,
 	routes: [
+		{
+			path: '*',
+			redirect: '/'
+		},
 		{
 			path: '/',
 			name: 'home',
@@ -61,10 +68,15 @@ export default new Router({
 		{
 			path: '/adminpage',
 			name: 'adminpage',
-			component: Adminpage
+			component: Adminpage,
+			meta: {
+				requiresAuth: true
+			}
 		}
 	],
 	scrollBehavior(to, from, savedPosition) {
 		return { x: 0, y: 0 };
 	}
 })
+
+

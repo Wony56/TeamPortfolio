@@ -1,5 +1,5 @@
 <template>
-  <v-container fluid grid-list-md fill-height="100%">
+  <v-container class="admin-container" fluid grid-list-md fill-height="100%">
     <v-layout column class="temp">
       <v-flex d-flex xs12 sm6 md4>
         <v-layout wrap>
@@ -33,30 +33,30 @@
         </v-layout>
       </v-flex>
       <v-flex d-flex xs12 sm6 md4>
-        <v-layout wrap>
+        <v-layout>
           <v-flex d-flex xs6 sm6 md3>
-            <v-card color="green">
+            <v-card color="green" height="130">
               <v-card-title style="color:#ffff">POST</v-card-title>
               <v-divider></v-divider>
               <v-card-text style="color:#ffff">{{postCount}}</v-card-text>
             </v-card>
           </v-flex>
           <v-flex d-flex xs6 sm6 md3>
-            <v-card color="red">
+            <v-card color="red" height="130">
               <v-card-title style="color:#ffff">PORTFOLIO</v-card-title>
               <v-divider></v-divider>
               <v-card-text style="color:#ffff">{{portfolioCount}}</v-card-text>
             </v-card>
           </v-flex>
           <v-flex d-flex xs6 sm6 md3>
-            <v-card color="blue">
+            <v-card color="blue" height="130">
               <v-card-title style="color:#ffff">MEMBER</v-card-title>
               <v-divider></v-divider>
               <v-card-text style="color:#ffff">{{memberCount}}</v-card-text>
             </v-card>
           </v-flex>
           <v-flex d-flex xs6 sm6 md3>
-            <v-card color="black">
+            <v-card color="black" height="130">
               <v-card-title style="color:#ffff">팔레트</v-card-title>
               <v-divider></v-divider>
               <v-card-text style="color:#ffff">여기에</v-card-text>
@@ -66,34 +66,36 @@
       </v-flex>
       <v-flex d-flex xs12 sm6 md4>
         <v-layout wrap>
-          <v-flex d-flex xs12 sm6 md5>
+          <v-flex d-flex xs12 sm6 md6>
             <v-card outlined width="330" height="450">
-              <v-card-title>게시글 관리</v-card-title>
+              <v-card-title>POST 관리</v-card-title>
               <v-divider></v-divider>
               <v-card-text>
                 <PostTable></PostTable>
               </v-card-text>
             </v-card>
           </v-flex>
-          <v-flex d-flex xs12 sm6 md5>
+          <v-flex d-flex xs12 sm6 md6>
             <v-card outlined width="330" height="450">
-              <v-card-title>회원 관리</v-card-title>
+              <v-card-title>PORTFOLIO 관리</v-card-title>
               <v-divider></v-divider>
               <v-card-text>
-                <MemberTable></MemberTable>
-              </v-card-text>
-            </v-card>
-          </v-flex>
-          <v-flex d-flex xs12 sm12 md2>
-            <v-card outlined>
-              <v-card-title width="330" height="450">현재 접속자</v-card-title>
-              <v-divider></v-divider>
-              <v-card-text>
-                <NowLogin></NowLogin>
+                <PortfolioTable></PortfolioTable>
               </v-card-text>
             </v-card>
           </v-flex>
         </v-layout>
+      </v-flex>
+      <v-flex d-flex xs12 sm6 md4>
+        <v-flex d-flex xs12 sm6 md12>
+          <v-card outlined width="330" height="450">
+            <v-card-title>회원 관리</v-card-title>
+            <v-divider></v-divider>
+            <v-card-text>
+              <MemberTable></MemberTable>
+            </v-card-text>
+          </v-card>
+        </v-flex>
       </v-flex>
     </v-layout>
   </v-container>
@@ -105,6 +107,7 @@ import DailyMemberGraph from "../components/DailyMemberGraph";
 import TotalMember from "../components/TotalMember";
 import PostTable from "../components/PostTable";
 import MemberTable from "../components/MemberTable";
+import PortfolioTable from "../components/PortfolioTable";
 import NowLogin from "../components/NowLogin";
 import { mapMutations, mapState } from "vuex";
 
@@ -116,6 +119,7 @@ export default {
     DailyMemberGraph,
     TotalMember,
     PostTable,
+    PortfolioTable,
     MemberTable,
     NowLogin
   },
@@ -138,6 +142,8 @@ export default {
 * {
   font-family: "Jua", sans-serif;
 }
+
+.admin-container {
+  margin-top: 80px;
+}
 </style>
-
-

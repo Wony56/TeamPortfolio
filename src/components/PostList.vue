@@ -33,7 +33,6 @@ export default {
     return {
       posts: [],
       focusPage: 1,
-      perPage: 0,
       totalPage: 10
     };
   },

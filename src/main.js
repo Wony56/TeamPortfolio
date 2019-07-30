@@ -12,6 +12,7 @@ import router from './router'
 import store from './store'
 import './registerServiceWorker'
 import firebase from 'firebase';
+import firebaseService from './services/FirebaseService';
 import FlagIcon from 'vue-flag-icon'
 import VueScrollProgress from 'vue-scroll-progress'
 import ToggleButton from 'vue-js-toggle-button'
@@ -53,22 +54,44 @@ Vue.use(lineClamp,{
 
 })
 
-new Vue({
-  router,
-  store,
-  async created(){
+router.beforeEach(async (to, from, next) => {
+	const currentUser = firebase.auth().currentUser;
+	const requiresAuth = to.matched.some(record => record.meta.requiresAuth);
 
-	await firebase.auth().onAuthStateChanged(user=>{
-		if(user){
-			store.state.user.user.uid = user.uid;
-			store.state.user.user.name = user.displayName;
-			store.state.user.user.email = user.email;
+	if(currentUser){
+		store.state.user.user = await firebaseService.getUser(currentUser);
+		store.state.user.loggedIn = true;
+	}else{
+		store.state.user.user = {};
+		store.state.user.loggedIn = false;
+	}
 
-			store.state.user.loggedIn = true;
+	if(requiresAuth && !currentUser){
+		alert("접근권한이 없습니다.");
+		next("home");
+	}else if(requiresAuth && currentUser){
+		if(store.state.user.user.tier !== 'diamond'){
+			alert("접근권한이 없습니다.");
+			next("home");
 		}else{
-			store.state.user.loggedIn = false;
+			next();
 		}
-	})
-  },
-  render: h => h(App)
-}).$mount('#app')
+	}else{
+		next();
+	}
+})
+
+firebase.auth().onAuthStateChanged(async user => {
+	
+	if(user){
+		store.state.user.loggedIn = true;
+	}else{
+		store.state.user.loggedIn = false;
+	}
+	new Vue({
+		router,
+		store,
+		render: h => h(App)
+	  }).$mount('#app')
+})
+

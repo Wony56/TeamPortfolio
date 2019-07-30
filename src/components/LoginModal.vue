@@ -37,6 +37,7 @@
 </template>
 
 <script>
+import firebaseService from "../services/FirebaseService";
 import { mapState, mapMutations } from "vuex";
 
 export default {
@@ -67,19 +68,19 @@ export default {
     },
     loginWithEmail() {
       if (this.$refs.form.validate()) {
-        this.$store.commit("loginWithEmail", {
-          email: this.email,
-          password: this.password
-        });
+        firebaseService.loginWithEmail(this.email, this.password);
+        this.$store.commit("closeLoginModal");
         this.$refs.form.reset();
       }
     },
     loginWithGoogle() {
-      this.$store.commit("loginWithGoogle");
+      firebaseService.loginWithGoogle();
+      this.$store.commit("closeLoginModal");
       this.$refs.form.reset();
     },
     loginWithFacebook() {
-      this.$store.commit("loginWithFacebook");
+      firebaseService.loginWithFacebook();
+      this.$store.commit("closeLoginModal");
       this.$refs.form.reset();
     }
   }

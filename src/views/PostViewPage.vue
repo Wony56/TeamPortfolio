@@ -37,10 +37,12 @@
             outlined
             rows="3"
             row-height="25"
-            :readonly="toggles[index]"
             v-model="reply.content"
+            :readonly="selectedIndex != index"
           ></v-text-field>
-          
+
+          <v-btn v-show="selectedIndex == index" @click="modifyReply(index)">수정완료</v-btn>
+
           <v-card-actions>
             <v-btn text flat>Reply</v-btn>
             <v-btn text flat @click="checkReplyAuthority(index)">Modify</v-btn>
@@ -57,14 +59,16 @@
             label="댓글입력"
             auto-grow
             outlined
-            rows="3"
-            row-height="25"
-            shaped
+            rows="1"
+            row-height="15"
           ></v-textarea>
         </v-flex>
       </v-card>
 
       <v-btn @click="addReply()">Add Reply</v-btn>
+      <v-flex xs12 text-xs-center round my-5 v-if="loadMore">
+        <v-pagination v-model="focusPage" :length="totalPage" :total-visible="7" color="#ff6616"></v-pagination>
+      </v-flex>
     </v-card>
   </div>
 </template>
@@ -78,20 +82,30 @@ export default {
   data() {
     return {
       replies: [],
-      toggles: [],
+      selectedIndex : -1,
       replyContent: "",
-
+      ff: false,
       title: "",
       content: "",
       author: "",
       identifier: "",
       articleId: "",
-      created_at: ""
+      created_at: "",
+
+      loadMore: false,
+      focusPage: 1,
+      totalPage: 10
     };
   },
-  computed: mapState({
-    user: state => state.user.user
-  }),
+  computed: {
+
+    ...mapState({
+      user: state => state.user.user
+    }),
+    rendering() {
+
+    }
+  },
   methods: {
     async loadPost(id) {
       let ret = await FirebaseService.getPostById(this.$route.params.postIndex);
@@ -105,23 +119,21 @@ export default {
 
       this.replies = ret.reply;
 
-      for(let i = 0; i < this.replies.length; i++)
-        this.toggles[i] = true;
+      if(this.replies.length > 10)
+        this.loadMore = true;
+
     },
     getPostInfo() {
-
       return {
-
-        author: this.author,
+        author: this.user.name,
         content: this.content,
         created_at: this.created_at,
-        identifier: this.identifier,
+        identifier: this.user.uid,
         reply: this.replies,
         title: this.title
       };
     },
     addReply() {
-
       let temp = this.replyContent;
       console.log(this.replyContent);
       console.log(this.user.uid + "!!!" + this.articleId);
@@ -131,40 +143,29 @@ export default {
       this.replyContent = "";
     },
     removeReply(index) {
-
-      if(this.replies[index].uid == this.user.uid) {
-
+      if (this.replies[index].uid == this.user.uid) {
         this.replies.splice(index, 1);
         FirebaseService.modifyReply(this.articleId, this.getPostInfo());
-      }
-      else {
-
+      } else {
         console.log("다름!");
       }
     },
     checkReplyAuthority(index) {
-
-      console.log("check authority");
-
-      if(this.replies[index].uid == this.user.uid) {
-
-        this.toggles[index] = !this.toggles[index];
-      }
-      else {
-
+      if (this.replies[index].uid == this.user.uid) {
+        
+        if(this.selectedIndex == -1)
+          this.selectedIndex = index;
+        else
+          this.selectedIndex = -1;
+      } else {
         console.log("다름!");
       }
-      console.log(index + " " + this.toggles[index]);
     },
     modifyReply(index) {
-
-      if(this.replies[index].uid == this.user.uid) {
-
-
+      if (this.replies[index].uid == this.user.uid) {
         FirebaseService.modifyReply(this.articleId, this.getPostInfo());
-      }
-      else {
-
+        this.selectedIndex = -1;
+      } else {
         console.log("다름!");
       }
     }

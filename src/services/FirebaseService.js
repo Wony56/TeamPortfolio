@@ -45,22 +45,6 @@ const messaging = firebase.messaging();
 	});
 
 export default {
-	// getReplyInfo(articleId) {
-
-	// 	const postCollection = firestore.collection(POSTS).doc(articleId)
-	// 	return postCollection
-	// 		.get()
-	// 		.then((doc) => {
-
-	// 			console.log(doc.id);
-	// 			let data = doc.data();
-	// 			return data.reply;
-	// 		})
-	// 		.catch(err => {
-	// 			console.log('Error getting document', err);
-	// 			return 'error';
-	// 		});
-	// },
 	addReply(articleId, replyInfo) {
 
 		replyInfo.created_at = this.getCurrentDate();
@@ -118,7 +102,7 @@ export default {
 			content: postInfo.content,
 			reply: postInfo.reply,
 			author: postInfo.author,
-			identifier: postInfo.identifier,
+			authorUid: postInfo.authorUid,
 			created_at: this.getCurrentDate()
 		})
 	},

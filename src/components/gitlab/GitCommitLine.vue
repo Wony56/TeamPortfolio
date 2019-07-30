@@ -28,7 +28,7 @@ export default {
   methods: {
     getCommits() {
       fetch(
-        `${BASE_URL}/projects/6094/repository/commits?private_token=J7kwFVv-7zWVHD3_zuU1&all=true&per_page=100`
+        `${BASE_URL}/projects/7559/repository/commits?private_token=J7kwFVv-7zWVHD3_zuU1&all=true&per_page=100`
       )
         .then(res => {
           return res.json();

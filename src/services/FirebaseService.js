@@ -63,9 +63,20 @@ export default {
 	// },
 	addReply(articleId, replyInfo) {
 
+		replyInfo.created_at = this.getCurrentDate();
+		console.log(replyInfo);
+
 		const postCollection = firestore.collection(POSTS).doc(articleId)
 		return postCollection
-			.update({ 'reply': firebase.firestore.FieldValue.arrayUnion(replyInfo) })
+			.update({ 'reply': firebase.firestore.FieldValue.arrayUnion({
+				
+				author: replyInfo.author,
+				uid: replyInfo.uid,
+				replyContent: replyInfo.replyContent,
+				name:replyInfo.name,
+				created_at: replyInfo.created_at
+			})
+		});
 	},
 	removeReply(articleId, replyInfo) {
 		
@@ -80,7 +91,8 @@ export default {
 				replyContent: replyInfo.replyContent,
 				name:replyInfo.name,
 				created_at: replyInfo.created_at
-			}) })
+			}) 
+		})
 	},
 	modifyReply(articleId, index, replyContent) {
 
@@ -379,9 +391,10 @@ export default {
 	},
 	getCurrentDate() {
 
-		let time = firebase.firestore.FieldValue.serverTimestamp();
-		let currentDate = new Date(time.toDate);
-		return new String(currentDate.getFullYear() +
+		// let currentDate = firebase.firestore.FieldValue.serverTimestamp();
+		let currentDate = new Date();
+
+		return currentDate.getFullYear() +
 			"년 " +
 			(currentDate.getMonth() + 1) +
 			"월 " +
@@ -392,7 +405,7 @@ export default {
 			currentDate.getMinutes() +
 			"분" +
 			currentDate.getSeconds() +
-			"초")
+			"초"
 			;
 	}
 }

@@ -149,13 +149,13 @@ export default {
       if (this.replies.length > 10) this.loadMore = true;
       this.articleId = this.$route.params.postIndex;
     },
-    getReplyInfo(date) {
+    getReplyInfo() {
       return {
         author: this.user.name,
         uid: this.user.uid,
         replyContent: this.replyContent,
         name: this.user.name,
-        created_at: date
+        created_at: ""
       };
     },
     getPostInfo() {
@@ -178,7 +178,6 @@ export default {
         return;
       }
       let reply = this.getReplyInfo();
-      reply.created_at = this.getCurrentDate();
       FirebaseService.addReply(this.articleId, reply);
 
       this.replies.push(reply);
@@ -209,7 +208,8 @@ export default {
     modifyReply(index) {
 
       if (this.replies[index].uid == this.user.uid) {
-        FirebaseService.modifyReply(this.articleId, index, this.replyContent);
+
+        FirebaseService.modifyReply(this.articleId, index, document.getElementById(index).value);
         this.selectedIndex = -1;
       } else {
         this.modalTitle = "ERROR";
@@ -227,6 +227,7 @@ export default {
   }
 };
 </script>
+
 <style>
 *{
   font-family: 'Nanum Gothic', sans-serif;

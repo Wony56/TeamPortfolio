@@ -151,16 +151,15 @@ export default {
     },
     getReplyInfo() {
       return {
-        author: this.user.name,
+        author: this.user.displayName,
         uid: this.user.uid,
         replyContent: this.replyContent,
-        name: this.user.name,
         created_at: ""
       };
     },
     getPostInfo() {
       return {
-        author: this.user.name,
+        author: this.user.displayName,
         content: this.content,
         created_at: this.created_at,
         authorUid: this.user.uid,

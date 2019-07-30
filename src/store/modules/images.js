@@ -1,5 +1,4 @@
 import api from "../../api/imgur";
-import FirebaseService from '../../services/FirebaseService';
 
 const state = {
   images: [],

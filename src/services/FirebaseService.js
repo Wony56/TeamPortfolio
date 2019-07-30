@@ -64,7 +64,7 @@ export default {
 	addReply(articleId, replyInfo) {
 
 		replyInfo.created_at = this.getCurrentDate();
-		console.log(replyInfo);
+		console.log("REPLY> ", replyInfo);
 
 		const postCollection = firestore.collection(POSTS).doc(articleId)
 		return postCollection
@@ -73,7 +73,6 @@ export default {
 				author: replyInfo.author,
 				uid: replyInfo.uid,
 				replyContent: replyInfo.replyContent,
-				name:replyInfo.name,
 				created_at: replyInfo.created_at
 			})
 		});
@@ -89,7 +88,6 @@ export default {
 				author: replyInfo.author,
 				uid: replyInfo.uid,
 				replyContent: replyInfo.replyContent,
-				name:replyInfo.name,
 				created_at: replyInfo.created_at
 			}) 
 		})

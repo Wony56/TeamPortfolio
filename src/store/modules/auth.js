@@ -1,5 +1,3 @@
-import api from "../../api/imgur";
-import qs from "qs";
 
 const state = {
   token: '63790bdb4f81a92a40f46088ef9c4334ec9c0d1b'

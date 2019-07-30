@@ -17,7 +17,7 @@
 </template>
 
 <script>
-import firebaseService from "../services/FirebaseService";
+import FirebaseService from "@/services/FirebaseService";
 
 export default {
   data: () => ({
@@ -45,7 +45,7 @@ export default {
       this.$router.push(`/postview/${a.id}`)
     },
     async initialize() {
-      let posts = await firebaseService.getPosts();
+      let posts = await FirebaseService.getPosts();
 
       posts.forEach(post => {
         let row = {
@@ -57,6 +57,19 @@ export default {
 
         this.desserts.push(row);
       });
+    },
+    async getPosts() {
+      let tempPosts = await FirebaseService.getPosts();
+      let index = 0;
+      this.totalPage = parseInt(tempPosts["length"] / 6);
+
+      for (let page = 0; page < this.totalPage; page++) {
+        let pagePost = [];
+
+        for (let count = 0; count < 6; count++)
+          pagePost.push(tempPosts[index++]);
+        this.posts.push(pagePost);
+      }
     }
   }
 };

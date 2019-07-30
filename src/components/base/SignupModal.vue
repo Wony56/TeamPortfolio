@@ -1,6 +1,6 @@
 <template>
   <v-card>
-    <v-card-title style="background-color:#ff6f61; color:#ffff">
+    <v-card-title persistent style="background-color:#ff6f61; color:#ffff">
       <span class="headline">Sign up</span>
     </v-card-title>
     <v-card-text>

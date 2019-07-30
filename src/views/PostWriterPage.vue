@@ -34,7 +34,7 @@
 </template>
 
 <script>
-import ImgBanner from "../components/ImgBanner";
+import ImgBanner from "../components/base/ImgBanner";
 import MarkdownEditor from "vue-simplemde/src/markdown-editor";
 import FirebaseService from "@/services/FirebaseService";
 import {mapState} from 'vuex';

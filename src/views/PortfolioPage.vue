@@ -17,8 +17,8 @@
 </template>
 
 <script>
-import ImgBanner from "../components/ImgBanner";
-import PortfolioList from "../components/PortfolioList";
+import ImgBanner from "../components/base/ImgBanner";
+import PortfolioList from "../components/portfolio/PortfolioList";
 
 export default {
   name: "PortfolioPage",

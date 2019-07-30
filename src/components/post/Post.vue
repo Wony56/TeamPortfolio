@@ -31,8 +31,12 @@ export default {
   // ,
   // computed: {
   //   formatedDate() {
-  //     return `${this.date.getFullYear()}년 ${this.date.getMonth() +
-  //       1}월 ${this.date.getDate()}일`;
+
+  //     let time = this.date.toDate();
+
+  //     console.log(time);
+  //     return `${time.getFullYear()}년 ${time.getMonth() +
+  //       1}월 ${time.getDate()}일`;
   //   }
   // }
 };

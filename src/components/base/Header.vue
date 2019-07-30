@@ -55,8 +55,8 @@
       <v-toolbar-title>
         <router-link to="/" v-on:click.native="moveTop">
           <span class="header_logo logo mt-5">
-            <img src="../../public/img/logo/122.svg" class />
-            <img src="../../public/img/logo/wtd.svg" class="logo_text_bottom logo_text" />
+            <img src="../../../public/img/logo/122.svg" class />
+            <img src="../../../public/img/logo/wtd.svg" class="logo_text_bottom logo_text" />
           </span>
         </router-link>
       </v-toolbar-title>

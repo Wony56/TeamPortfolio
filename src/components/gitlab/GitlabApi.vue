@@ -38,9 +38,9 @@
 </template>
 
 <script>
-import GitCommitLine from "../components/GitCommitLine.vue";
+import GitCommitLine from "./GitCommitLine.vue";
 
-const converter = require("../services/CurlToNodeJS");
+const converter = require("../../services/CurlToNodeJS");
 const BASE_URL = "https://lab.ssafy.com/api/v4";
 google.charts.load("current", { packages: ["calendar"] });
 google.charts.setOnLoadCallback(drawChart);

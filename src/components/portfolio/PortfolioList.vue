@@ -25,9 +25,9 @@
 </template>
 
 <script>
-import { mapState } from "vuex";
-import Portfolio from "@/components/Portfolio";
+import Portfolio from "@/components/portfolio/Portfolio";
 import FirebaseService from "@/services/FirebaseService";
+import { mapState } from "vuex";
 
 export default {
   name: "PortfoliosList",

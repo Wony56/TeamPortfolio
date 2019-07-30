@@ -26,8 +26,8 @@
 </template>
 
 <script>
-import PostList from "../components/PostList";
-import ImgBanner from "../components/ImgBanner";
+import PostList from "../components/post/PostList";
+import ImgBanner from "../components/base/ImgBanner";
 
 export default {
   name: "PostPage",

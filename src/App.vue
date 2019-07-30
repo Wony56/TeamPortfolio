@@ -93,8 +93,8 @@
 
 <script>
 import store from "./store";
-import Header from "./components/Header.vue";
-import Footer from "./components/Footer.vue";
+import Header from "./components/base/Header.vue";
+import Footer from "./components/base/Footer.vue";
 
 export default {
   name: "App",

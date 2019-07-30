@@ -103,14 +103,14 @@
   </div>
 </template>
 <script>
-import DailyVisitorGraph from "../components/DailyVisitorGraph";
-import DailyPostingGraph from "../components/DailyPostingGraph";
-import DailyMemberGraph from "../components/DailyMemberGraph";
-import TotalMember from "../components/TotalMember";
-import PostTable from "../components/PostTable";
-import MemberTable from "../components/MemberTable";
-import PortfolioTable from "../components/PortfolioTable";
-import NowLogin from "../components/NowLogin";
+
+import DailyVisitorGraph from "../components/admin/DailyVisitorGraph";
+import DailyPostingGraph from "../components/admin/DailyPostingGraph";
+import DailyMemberGraph from "../components/admin/DailyMemberGraph";
+import TotalMember from "../components/admin/TotalMember";
+import PostTable from "../components/admin/PostTable";
+import MemberTable from "../components/admin/MemberTable";
+import NowLogin from "../components/admin/NowLogin";
 import { mapMutations, mapState } from "vuex";
 
 export default {

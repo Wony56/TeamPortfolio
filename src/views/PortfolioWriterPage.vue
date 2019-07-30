@@ -31,9 +31,9 @@
 </template>
 
 <script>
-import ImgBanner from "../components/ImgBanner";
+import ImgBanner from "../components/base/ImgBanner";
 import markdownEditor from "vue-simplemde/src/markdown-editor";
-import UploadForm from "../components/UploadForm";
+import UploadForm from "../components/base/UploadForm";
 import FirebaseService from "@/services/FirebaseService";
 
 export default {

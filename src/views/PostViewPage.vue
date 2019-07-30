@@ -29,8 +29,10 @@
       </v-card-actions>
 
       <v-divider></v-divider>
+      
+      <!-- ==============================REPLY================================================ -->
       <v-card-title class="headline" style="background-color:#ff6f61; color:#fff">Reply</v-card-title>
-      <!-- ========================================================================================== -->
+      <v-card-title>Reply</v-card-title>
       <v-flex>
         <v-card flat outlined color="#fff" v-for="(reply, index) in replies" :key="index">
       <v-text-field
@@ -38,7 +40,7 @@
             auto-grow
             rows="3"
             row-height="25"
-            v-model="reply.content"
+            v-model="reply.replyContent"
             :readonly="selectedIndex != index"
           ></v-text-field>
           <v-card-text>
@@ -76,8 +78,21 @@
         <v-pagination v-model="focusPage" :length="totalPage" :total-visible="7" color="#ff6616"></v-pagination>
       </v-flex>
     </v-card>
-      </v-flex>
+
+    <!-- =========================================== MODAL =========================================== -->
+    <v-layout justify-center>
+      <v-dialog v-model="dialog" persistent max-width="290">
+        <v-card>
+          <v-card-title class="headline">{{modalTitle}}</v-card-title>
+          <v-card-text>{{modalContent}}</v-card-text>
+          <v-card-actions>
+            <v-spacer></v-spacer>
+            <v-btn color="green darken-1" text @click="dialog = false">확인</v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-dialog>
     </v-layout>
+    <!-- =========================================================================================== -->
   </div>
 </template>
 
@@ -91,9 +106,9 @@ export default {
   data() {
     return {
       replies: [],
-      selectedIndex : -1,
+      selectedIndex: -1,
       replyContent: "",
-      ff: false,
+
       title: "",
       content: "",
       author: "",
@@ -103,20 +118,20 @@ export default {
 
       loadMore: false,
       focusPage: 1,
-      totalPage: 10
+      totalPage: 10,
+
+      modalTitle: "",
+      modalContent: "",
+      dialog: false
     };
   },
   components:{
     ImgBanner
   },
   computed: {
-
     ...mapState({
       user: state => state.user.user
-    }),
-    rendering() {
-
-    }
+    })
   },
   methods: {
     async loadPost(id) {
@@ -125,61 +140,85 @@ export default {
       this.title = ret.title;
       this.content = ret.content;
       this.author = ret.author;
-      this.identifier = ret.identifier;
-      this.articleId = ret.articleId;
+      this.authorUid = ret.authorUid;
+      this.postId = ret.postId;
       this.created_at = ret.created_at;
-
       this.replies = ret.reply;
 
-      if(this.replies.length > 10)
-        this.loadMore = true;
-
+      if (this.replies.length > 10) this.loadMore = true;
+      this.articleId = this.$route.params.postIndex;
+    },
+    getReplyInfo(date) {
+      return {
+        author: this.user.name,
+        uid: this.user.uid,
+        replyContent: this.replyContent,
+        name: this.user.name,
+        created_at: date
+      };
     },
     getPostInfo() {
       return {
         author: this.user.name,
         content: this.content,
         created_at: this.created_at,
-        identifier: this.user.uid,
+        authorUid: this.user.uid,
         reply: this.replies,
         title: this.title
       };
     },
     addReply() {
-      let temp = this.replyContent;
-      console.log(this.replyContent);
-      console.log(this.user.uid + "!!!" + this.articleId);
+      
+      if(this.user.uid == undefined) {
 
-      console.log("BEFORE PUSH ", this.replies);
-      FirebaseService.addReply(this.articleId, this.getPostInfo(), temp);
+        this.modalTitle = "WARNING";
+        this.modalContent = "로그인 해주세요.";
+        this.dialog = true;
+        return;
+      }
+      let reply = this.getReplyInfo();
+      reply.created_at = this.getCurrentDate();
+      FirebaseService.addReply(this.articleId, reply);
+
+      this.replies.push(reply);
       this.replyContent = "";
     },
     removeReply(index) {
       if (this.replies[index].uid == this.user.uid) {
+
+        let reply = this.replies[index];
         this.replies.splice(index, 1);
-        FirebaseService.modifyReply(this.articleId, this.getPostInfo());
+        FirebaseService.removeReply(this.articleId, reply);
       } else {
-        console.log("다름!");
+        this.modalTitle = "ERROR";
+        this.modalContent = "권한이 없습니다.";
+        this.dialog = true;
       }
     },
     checkReplyAuthority(index) {
       if (this.replies[index].uid == this.user.uid) {
-        
-        if(this.selectedIndex == -1)
-          this.selectedIndex = index;
-        else
-          this.selectedIndex = -1;
+        if (this.selectedIndex == -1) this.selectedIndex = index;
+        else this.selectedIndex = -1;
       } else {
-        console.log("다름!");
+        this.modalTitle = "ERROR";
+        this.modalContent = "권한이 없습니다.";
+        this.dialog = true;
       }
     },
     modifyReply(index) {
+
       if (this.replies[index].uid == this.user.uid) {
-        FirebaseService.modifyReply(this.articleId, this.getPostInfo());
+        FirebaseService.modifyReply(this.articleId, index, this.replyContent);
         this.selectedIndex = -1;
       } else {
-        console.log("다름!");
+        this.modalTitle = "ERROR";
+        this.modalContent = "권한이 없습니다.";
+        this.dialog = true;
       }
+    },
+    getCurrentDate() {
+
+      return new Date();
     }
   },
   mounted() {

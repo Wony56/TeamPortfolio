@@ -100,11 +100,11 @@
 </template>
 
 <script>
-import ImgBanner from "../components/ImgBanner";
-import GridImage from "../components/GridImages";
-import PostList from "../components/PostList";
+import ImgBanner from "../components/base/ImgBanner";
+import GridImage from "../components/base/GridImages";
+import PostList from "../components/post/PostList";
 //Gitlab API
-import GitlabAPI from "../components/GitlabApi.vue";
+import GitlabAPI from "../components/gitlab/GitlabApi.vue";
 
 const BASE_URL = "https://lab.ssafy.com/api/v4";
 

@@ -29,7 +29,7 @@
       </v-card-actions>
 
       <v-divider></v-divider>
-      
+
       <!-- ==============================REPLY================================================ -->
       <v-card-title class="headline" style="background-color:#ff6f61; color:#fff">Reply</v-card-title>
       <v-card-title>Reply</v-card-title>
@@ -78,7 +78,8 @@
         <v-pagination v-model="focusPage" :length="totalPage" :total-visible="7" color="#ff6616"></v-pagination>
       </v-flex>
     </v-card>
-
+      </v-flex>
+    </v-layout>
     <!-- =========================================== MODAL =========================================== -->
     <v-layout justify-center>
       <v-dialog v-model="dialog" persistent max-width="290">
@@ -98,7 +99,7 @@
 
 <script>
 import FirebaseService from "@/services/FirebaseService";
-import ImgBanner from "../components/ImgBanner";
+import ImgBanner from "../components/base/ImgBanner";
 import { mapState } from "vuex";
 
 export default {

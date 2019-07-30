@@ -111,6 +111,7 @@ import TotalMember from "../components/admin/TotalMember";
 import PostTable from "../components/admin/PostTable";
 import MemberTable from "../components/admin/MemberTable";
 import NowLogin from "../components/admin/NowLogin";
+import PortfolioTable from "../components/admin/PortfolioTable"
 import { mapMutations, mapState } from "vuex";
 
 export default {

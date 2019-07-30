@@ -13,7 +13,7 @@
 </template>
 
 <script>
-import firebaseService from "../services/FirebaseService";
+import firebaseService from "../../services/FirebaseService";
 
 export default {
   data: () => ({

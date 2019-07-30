@@ -113,7 +113,7 @@
 </template>
 
 <script>
-import firebaseService from "../services/FirebaseService";
+import firebaseService from "../../services/FirebaseService";
 import LoginModal from "./LoginModal";
 import SignupModal from "./SignupModal";
 import { mapState, mapMutations } from "vuex";

@@ -37,7 +37,7 @@
 </template>
 
 <script>
-import firebaseService from "../services/FirebaseService";
+import firebaseService from "../../services/FirebaseService";
 import { mapState, mapMutations } from "vuex";
 
 export default {

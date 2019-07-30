@@ -95,6 +95,9 @@ export default {
 </script>
 
 <style scoped>
+*{
+font-family: 'Nanum Gothic', sans-serif;
+}
 .dropper {
   height: 30vh;
   border: 2px dashed black;

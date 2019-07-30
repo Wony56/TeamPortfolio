@@ -61,6 +61,9 @@ export default {
 </script>
 
 <style>
+*{
+  font-family: 'Nanum Gothic', sans-serif;
+};
 .mw-700 {
   max-width: 700px;
   margin: auto;

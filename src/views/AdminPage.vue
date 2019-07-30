@@ -140,7 +140,7 @@ export default {
 </script>
 <style>
 * {
-  font-family: "Jua", sans-serif;
+ font-family: 'Nanum Gothic', sans-serif;
 }
 
 .admin-container {

@@ -247,4 +247,7 @@ export default {
   border: 3px solid #ff6f61;
   padding: 10px;
 }
+*{
+  font-family: 'Nanum Gothic', sans-serif;
+}
 </style>

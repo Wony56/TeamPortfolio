@@ -57,4 +57,7 @@ export default {
 .post-title {
   text-overflow: clip;
 }
+*{
+  font-family: 'Nanum Gothic', sans-serif;
+}
 </style>

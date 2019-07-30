@@ -111,6 +111,13 @@ export default {
 			console.log(error)
 		})
 	},
+	modifyTier(uid, tier){
+		return firestore.collection(USERS).doc(uid).update({
+			tier
+		}).catch(error => {
+			alert(error.message);
+		})
+	},
 	postLogData(user, type) {
 		console.log(JSON.stringify(user));
 		return firestore.collection(WEBLOGS).add({
@@ -326,6 +333,7 @@ export default {
 	},
 	logout() {
 		firebase.auth().signOut().then(() => {
+			store.state.notification.snackbar = false;
 			this.postLogData(store.state.user.user, 'Log out');
 			router.replace('/');
 		}).catch(err => {

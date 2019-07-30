@@ -1,92 +1,68 @@
 <template>
-  <v-layout row wrap>
-    <v-flex v-for="(element, i) in posts[focusPage - 1]" :key="i" xs12 md4>
-      <v-card flat >
-         <Post
-        :date="element.created_at"
-        :title="element.title"
-        :content="element.content"
-        :id="element.id"
-        ></Post>
-        <v-divider/>
-      </v-card>
-    </v-flex>
+  <v-data-table  :headers="headers" :items="desserts">
+    <template class="row" slot="items" slot-scope="props">
+      <tr @click="viewpost(props.item)">
+      <td style="background-color:#ff6f61; color:#fff" class="text-xs-left">{{ props.item.author }}</td>
+      <td class="text-xs-right post-title">{{ props.item.title }}</td>
+      <td class="text-xs-right">{{ props.item.date }}</td>
+      </tr>
+    </template>
+    <template text-xs-left
+      slot="pageText"
+      slot-scope="{ pageStart, pageStop }"
+    >From {{ pageStart }} to {{ pageStop }}</template>
+        
+  </v-data-table>
 
-    <v-flex xs12 text-xs-right round my-5>
-      <v-btn flat style="background-color:#ff6f61; color:#ffff" to="/postwriterpage" v-show="loggedIn">
-        <v-icon size="25" class="mr-2 notranslate">fa-pencil</v-icon>글쓰기
-      </v-btn>
-    </v-flex>
-
-    <v-flex xs12 text-xs-center round my-5 v-if="loadMore">
-      <v-pagination v-model="focusPage" :length="totalPage" :total-visible="7" color="#ff6616"></v-pagination>
-    </v-flex>
-  </v-layout>
 </template>
 
 <script>
-import { mapState } from "vuex";
-import Post from "@/components/Post";
-import FirebaseService from "@/services/FirebaseService";
+import firebaseService from "../services/FirebaseService";
 
 export default {
-  name: "PostList",
-  data() {
-    return {
-      posts: [],
-      focusPage: 1,
-      totalPage: 10
-    };
-  },
-  components: {
-    Post
-  },
-  props: {
-    column: { type: Number, default: 1 },
-    limits: { type: Number, default: 4 },
-    loadMore: { type: Boolean, default: false }
-  },
-  mounted() {
-    console.log("asdfasdfasdf");
-    this.getPosts();
-  },
-  computed: mapState({
-    loggedIn: state => state.user.loggedIn
+  data: () => ({
+    max25chars: v => v.length <= 25 || "Input too long!",
+    pagination: {},
+    dialog: false,
+    headers: [
+      {
+        text: "작성자",
+        align: "left",
+        value: "name",
+        width: "150",
+        sortable: false
+      },
+      { text: "글제목", align: "right", value: "title", sortable: false },
+      { text: "작성일", align:"right", value: "date", sortable: false }
+    ],
+    desserts: []
   }),
+  created() {
+    this.initialize();
+  },
   methods: {
-    async getPosts() {
-      let tempPosts = await FirebaseService.getPosts();
-      let index = 0;
-      this.totalPage = parseInt(tempPosts["length"] / 6);
+    viewpost(a){
+      this.$router.push(`/postview/${a.id}`)
+    },
+    async initialize() {
+      let posts = await firebaseService.getPosts();
 
-      console.log(tempPosts);
-      console.log(this.totalPage);
+      posts.forEach(post => {
+        let row = {
+          author: post.author,
+          title: post.title,
+          date: post.created_at,
+          id:post.id
+        };
 
-      for (let page = 0; page < this.totalPage; page++) {
-        let pagePost = [];
-
-        for (let count = 0; count < 6; count++)
-          pagePost.push(tempPosts[index++]);
-
-        console.log(pagePost);
-        this.posts.push(pagePost);
-      }
-      console.log(this.posts);
+        this.desserts.push(row);
+      });
     }
   }
 };
 </script>
 
 <style>
-
-*{
-  font-family: 'Nanum Gothic', sans-serif;
+.post-title {
+  text-overflow: clip;
 }
-.class1 {
-  background-color:#fff;
-}
-
-.class2 {
-  background-color:#ff6f61;
-}
-</style>

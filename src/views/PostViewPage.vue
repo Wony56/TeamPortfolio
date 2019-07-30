@@ -32,7 +32,6 @@
 
       <!-- ==============================REPLY================================================ -->
       <v-card-title class="headline" style="background-color:#ff6f61; color:#fff">Reply</v-card-title>
-      <v-card-title>Reply</v-card-title>
       <v-flex>
         <v-card flat outlined color="#fff" v-for="(reply, index) in replies" :key="index">
       <v-text-field

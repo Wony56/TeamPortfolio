@@ -84,7 +84,7 @@ export default {
 			if (doc.exists) {
 				let data = doc.data();
 				data.created_at = new Date(data.created_at.toDate());
-				
+
 				return data;
 			}
 			return;
@@ -149,15 +149,34 @@ export default {
 			return "fail";
 		})
 	},
+	getPortfolioById(id) {
+
+		const portfoliosCollection = firestore.collection(PORTFOLIOS).doc(id)
+		return portfoliosCollection
+			.get()
+			.then((doc) => {
+
+				console.log(doc.id);
+				let data = doc.data();
+				data.articleId = doc.id;
+
+				console.log('Document data:', data);
+				console.log('Articel ID: ', data.id);
+				return data;
+			})
+			.catch(err => {
+				console.log('Error getting document', err);
+			});
+	},
 	getPortfolios() {
-		const postsCollection = firestore.collection(PORTFOLIOS)
-		return postsCollection
+		const portfoliosCollection = firestore.collection(PORTFOLIOS)
+		return portfoliosCollection
 			.orderBy('created_at', 'desc')
 			.get()
 			.then((docSnapshots) => {
 				return docSnapshots.docs.map((doc) => {
 					let data = doc.data()
-					
+					data.id = doc.id;
 					return data
 				})
 			})

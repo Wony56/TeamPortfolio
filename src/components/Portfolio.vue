@@ -1,7 +1,7 @@
 <template>
   <v-card
   :loading="loading"
-  class="mx-auto my-3"
+  class="mx-auto my-auto"
   width="500"
   height="100%">
     <v-carousel class="notranslate" hide-delimiters>

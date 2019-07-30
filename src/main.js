@@ -18,10 +18,12 @@ import VueScrollProgress from 'vue-scroll-progress'
 import ToggleButton from 'vue-js-toggle-button'
 import Autocomplete from 'v-autocomplete'
 import { Laue } from 'laue';
+import {VueMasonryPlugin} from 'vue-masonry';
 
 // VueSmoothScrollbar
 import SmoothScrollbar from 'vue-smooth-scrollbar'
 
+Vue.use(VueMasonryPlugin)
 Vue.use(VueScrollProgress);
 Vue.use(SmoothScrollbar)
 Vue.use(ToggleButton)
@@ -94,4 +96,3 @@ firebase.auth().onAuthStateChanged(async user => {
 		render: h => h(App)
 	  }).$mount('#app')
 })
-

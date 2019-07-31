@@ -1,5 +1,5 @@
-import Vue from 'vue'
-import Vuex from 'vuex'
+import Vue from 'vue';
+import Vuex from 'vuex';
 import auth from "./store/modules/auth";
 import images from "./store/modules/images";
 import user from './store/modules/user';

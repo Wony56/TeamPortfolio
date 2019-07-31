@@ -1,33 +1,19 @@
 <template>
-  <!-- <div v-if="!showLoading" class="dropper">
-    <input
-    multiple accept="image/*"
-    type="file"
-    @change="uploadImages($event.target.files)">
-    <span>Drag files here!</span>
-  </div>
-  <div v-else class="centered">
-    <Spinner/>
-    <div class="wait">Please Wait</div>
-  </div> -->
 
   <div id="app">
-
-    <file-pond
+    <FilePond
            name="test"
            ref="pond"
            label-idle="이곳에 파일을 넣어주세요."
            allow-multiple="true"
-           v-bind:server="myServer"
-           v-bind:files="myFiles"
-           v-on:init="handleFilePondInit"/>
-
+           :server="myServer"
+           :files="myFiles"
+           v-on:init="handleFilePondInit"
+      />
   </div>
 </template>
 
 <script>
-// import { mapActions, mapGetters } from "vuex";
-// Import Vue FilePond
 import vueFilePond from 'vue-filepond'
 
 // Import FilePond styles
@@ -54,9 +40,13 @@ export default {
   name: "app",
   data () {
     return {
+
+      myFiles: [],
        // fake server to simulate loading a 'local' server file and processing a file
        myServer: {
          process: (fieldName, file, metadata, load) => {
+           //this.fetchImages(file);
+           console.log(file);
            this.uploadImages(file); // images.js 에 있는 upLoadImages method
            setTimeout(() => {
              load(Date.now())
@@ -66,31 +56,21 @@ export default {
      };
   },
   methods: {
+
     ...mapActions(["uploadImages"]),
-    // async attempUpload() {
-    //   this.imgUrl = this.$store.state.imgurLink
-    //   if (this.imgUrl) {
-    //     try {
-    //       await FirebaseService.postImage(this.title, this.imgUrl);
-    //       alert("이미지 업로드 완료!");
-    //     } catch (error) {
-    //       console.log(error);
-    //     }
-    //   } else {
-    //     alert("이미지를 올려주세요.");
-    //   }
-    // }
+
     handleFilePondInit: function() {
         console.log('FilePond has initialized');
 
+        console.log(this.$store.state.images.images);
+
+        console.log(this.$store.state.images.imgurLinks);
         // FilePond instance methods are available on `this.$refs.pond`
-    },
+    }
   },
   components: {
     FilePond
   },
-  // computed: mapGetters(["showLoading"]),
-  // methods: mapActions(["uploadImages"])
 };
 </script>
 

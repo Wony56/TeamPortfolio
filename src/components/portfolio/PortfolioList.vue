@@ -9,6 +9,7 @@
           :title="portfolios[i - 1].title"
           :body="portfolios[i - 1].body"
           :imgItems="portfolios[i - 1].img"
+          :id="portfolios[i - 1].id"
         ></Portfolio>
       </div>
     </div>

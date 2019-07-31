@@ -213,10 +213,10 @@ export default {
 
 				console.log(doc.id);
 				let data = doc.data();
-				data.articleId = doc.id;
+				//data.articleId = doc.id;
 
 				console.log('Document data:', data);
-				console.log('Articel ID: ', data.id);
+				//console.log('Article ID: ', data.articleId);
 				return data;
 			})
 			.catch(err => {

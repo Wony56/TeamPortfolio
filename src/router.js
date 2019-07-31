@@ -1,7 +1,5 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import store from './store';
-import firebaseService from './services/FirebaseService';
 
 import HomePage from './views/HomePage.vue'
 import PostPage from './views/PostPage.vue'
@@ -10,6 +8,7 @@ import PortfolioWriterPage from './views/PortfolioWriterPage.vue'
 import PostWriterPage from './views/PostWriterPage.vue'
 import PostViewPage from './views/PostViewPage.vue'
 import Adminpage from './views/AdminPage.vue'
+import PortfolioViewPage from './views/PortfolioViewPage.vue'
 
 Vue.use(Router)
 
@@ -72,6 +71,11 @@ export default new Router({
 			meta: {
 				requiresAuth: true
 			}
+		},
+		{
+			path: '/portfolioview/:portfolioInfo',
+			name: 'portfolioview',
+			component: PortfolioViewPage
 		}
 	],
 	scrollBehavior(to, from, savedPosition) {

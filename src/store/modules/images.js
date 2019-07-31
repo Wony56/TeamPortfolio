@@ -18,6 +18,11 @@ const actions = {
   },
 
   async uploadImages({ commit, rootState }, images) {
+
+    console.log("COMMIT> ", commit);
+    console.log("ROOTSTATE> ", rootState);
+    console.log("IMAGES ", images);
+
     let array = []
     array[0] = images;
     // console.log(array);
@@ -30,6 +35,26 @@ const actions = {
       alert("사진 업로드에 실패하였습니다.");
     });
     commit("setLoading", false);
+  },
+
+  async deleteImage({rootState}, imageDeleteHash) {
+
+    // let array = []
+    // array[0] = images;
+    // console.log(array);
+    const { token } = rootState.auth;
+    //commit("setLoading", true);
+
+    console.log("TOKEN> ", token);
+    console.log("HASH> ", imageDeleteHash);
+
+    await api.deleteImage(token, imageDeleteHash).then(res => {
+
+      return true;
+    }).catch(error=>{
+      alert("사진 업로드에 실패하였습니다.");
+      return false;
+    });
   }
 };
 

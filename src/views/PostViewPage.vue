@@ -7,7 +7,7 @@
       <v-flex xs12 md10>
         <!-- 뒤로가기 -->
         <v-layout justify-end>
-          <v-btn style="background-color:#ff6f61; color:#fff" @click="$router.go(-1)">뒤로</v-btn>
+          <v-btn color="#ff6f61" flat @click="$router.go(-1)">뒤로</v-btn>
         </v-layout>
         <!-- 본문 부분 -->
         <v-card min-height=400 flat>

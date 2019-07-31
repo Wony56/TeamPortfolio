@@ -1,5 +1,5 @@
 <template>
-  <la-cartesian :width="450" :height="200" :bound="[0]" :data="values">
+  <la-cartesian :width="450" :height="200"  :bound="[0]" :data="values">
     <defs>
       <linearGradient id="area-fill" x1="0" y1="0" x2="0" y2="1">
         <stop stop-color="#0076b1" offset="0%" stop-opacity="0.4"></stop>

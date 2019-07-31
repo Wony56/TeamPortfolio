@@ -24,11 +24,10 @@ export default {
       {
         text: "작성자",
         align: "left",
-        value: "name",
-        sortable: false
+        value: "name"
       },
-      { text: "글제목", value: "title", sortable: false },
-      { text: "작성일", value: "date", sortable: false }
+      { text: "글제목",align: "right", value: "title" },
+      { text: "작성일",align: "right", value: "date" }
     ],
     desserts: []
   }),

@@ -26,8 +26,8 @@ export default {
         align: "left",
         value: "name"
       },
-      { text: "글제목", value: "title" },
-      { text: "작성일", value: "date" }
+      { text: "글제목",align: "right", value: "title" },
+      { text: "작성일",align: "right", value: "date" }
     ],
     desserts: []
   }),

@@ -34,31 +34,31 @@
           </v-layout>
         </v-flex>
         <v-flex d-flex xs12 sm6 md4>
-          <v-layout>
+          <v-layout justify-center text-xs-center min-height=100>
             <v-flex d-flex xs6 sm6 md3>
-              <v-card color="green" height="130">
-                <v-card-title style="color:#ffff">POST</v-card-title>
+              <v-card color="green">
+                <v-card-text style="color:#ffff">POST</v-card-text>
                 <v-divider></v-divider>
                 <v-card-text style="color:#ffff">{{postCount}}</v-card-text>
               </v-card>
             </v-flex>
             <v-flex d-flex xs6 sm6 md3>
-              <v-card color="red" height="130">
-                <v-card-title style="color:#ffff">PORTFOLIO</v-card-title>
+              <v-card color="red">
+                <v-card-text style="color:#ffff">PORTFOLIO</v-card-text>
                 <v-divider></v-divider>
                 <v-card-text style="color:#ffff">{{portfolioCount}}</v-card-text>
               </v-card>
             </v-flex>
             <v-flex d-flex xs6 sm6 md3>
-              <v-card color="blue" height="130">
-                <v-card-title style="color:#ffff">MEMBER</v-card-title>
+              <v-card color="blue">
+                <v-card-text style="color:#ffff">MEMBER</v-card-text>
                 <v-divider></v-divider>
                 <v-card-text style="color:#ffff">{{memberCount}}</v-card-text>
               </v-card>
             </v-flex>
             <v-flex d-flex xs6 sm6 md3>
-              <v-card color="black" height="130">
-                <v-card-title style="color:#ffff">팔레트</v-card-title>
+              <v-card color="black">
+                <v-card-text style="color:#ffff">팔레트</v-card-text>
                 <v-divider></v-divider>
                 <v-card-text style="color:#ffff">여기에</v-card-text>
               </v-card>
@@ -68,7 +68,7 @@
         <v-flex d-flex xs12 sm6 md4>
           <v-layout wrap>
             <v-flex d-flex xs12 sm6 md6>
-              <v-card outlined width="330" height="450">
+              <v-card outlined >
                 <v-card-title>POST 관리</v-card-title>
                 <v-divider></v-divider>
                 <v-card-text>
@@ -77,7 +77,7 @@
               </v-card>
             </v-flex>
             <v-flex d-flex xs12 sm6 md6>
-              <v-card outlined width="330" height="450">
+              <v-card outlined>
                 <v-card-title>PORTFOLIO 관리</v-card-title>
                 <v-divider></v-divider>
                 <v-card-text>
@@ -87,16 +87,18 @@
             </v-flex>
           </v-layout>
         </v-flex>
-        <v-flex d-flex xs12 sm6 md4>
-          <v-flex d-flex xs12 sm6 md12>
-            <v-card outlined width="330" height="600">
-              <v-card-title>회원 관리</v-card-title>
-              <v-divider></v-divider>
-              <v-card-text>
-                <MemberTable />
-              </v-card-text>
-            </v-card>
-          </v-flex>
+        <v-flex d-flex xs12 sm12 md12>
+          <v-layout wrap>
+            <v-flex d-flex xs12 sm12 md12>
+              <v-card outlined>
+                <v-card-title>회원 관리</v-card-title>
+                <v-divider></v-divider>
+                <v-card-text>
+                  <MemberTable />
+                </v-card-text>
+              </v-card>
+            </v-flex>
+          </v-layout>
         </v-flex>
       </v-layout>
     </v-container>
@@ -122,8 +124,7 @@ export default {
     TotalMember,
     PostTable,
     PortfolioTable,
-    MemberTable,
-    NowLogin
+    MemberTable
   },
   created() {
     this.countMember();

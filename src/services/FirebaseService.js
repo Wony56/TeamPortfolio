@@ -124,7 +124,7 @@ export default {
 		return postsCollection.orderBy('created_at', 'desc').get().then(docSnapshots => {
 			return docSnapshots.docs.map(doc => {
 				let data = doc.data();
-				//data.created_at = new Date(data.created_at.toDate());
+				// data.created_at = new Date(data.created_at.toDate());
 
 				return data;
 			});

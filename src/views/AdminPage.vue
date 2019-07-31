@@ -6,19 +6,19 @@
           <v-layout wrap>
             <v-flex d-flex xs12 sm12 md4>
               <v-card>
-                <v-card-title primary class="title">일간 방문자 수</v-card-title>
+                <v-card-title primary class="title">일간 POST 수</v-card-title>
                 <v-divider></v-divider>
                 <v-card-text>
-                  <DailyVisitorGraph />
+                  <DailyPostGraph />
                 </v-card-text>
               </v-card>
             </v-flex>
             <v-flex d-flex xs12 sm12 md4>
               <v-card>
-                <v-card-title primary class="title">일간 방문자 수</v-card-title>
+                <v-card-title primary class="title">일간 PORTFOLIO 수</v-card-title>
                 <v-divider></v-divider>
                 <v-card-text>
-                  <DailyPostingGraph />
+                  <DailyPortfolioGraph />
                 </v-card-text>
               </v-card>
             </v-flex>
@@ -103,22 +103,21 @@
   </div>
 </template>
 <script>
-
-import DailyVisitorGraph from "../components/admin/DailyVisitorGraph";
-import DailyPostingGraph from "../components/admin/DailyPostingGraph";
+import DailyPortfolioGraph from "../components/admin/DailyPortfolioGraph";
+import DailyPostGraph from "../components/admin/DailyPostGraph";
 import DailyMemberGraph from "../components/admin/DailyMemberGraph";
 import TotalMember from "../components/admin/TotalMember";
 import PostTable from "../components/admin/PostTable";
 import MemberTable from "../components/admin/MemberTable";
 import NowLogin from "../components/admin/NowLogin";
-import PortfolioTable from "../components/admin/PortfolioTable"
+import PortfolioTable from "../components/admin/PortfolioTable";
 import { mapMutations, mapState } from "vuex";
 
 export default {
   name: "AdminPage",
   components: {
-    DailyVisitorGraph,
-    DailyPostingGraph,
+    DailyPortfolioGraph,
+    DailyPostGraph,
     DailyMemberGraph,
     TotalMember,
     PostTable,
@@ -143,7 +142,7 @@ export default {
 </script>
 <style>
 * {
- font-family: 'Nanum Gothic', sans-serif;
+  font-family: "Nanum Gothic", sans-serif;
 }
 
 .admin-container {

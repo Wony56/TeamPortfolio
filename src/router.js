@@ -1,7 +1,7 @@
-import Vue from 'vue'
 import Router from 'vue-router'
-import store from './store';
-import firebaseService from './services/FirebaseService';
+import firebase from 'firebase'
+import firebaseService from './services/FirebaseService'
+import store from './store'
 
 import HomePage from './views/HomePage.vue'
 import PostPage from './views/PostPage.vue'
@@ -11,9 +11,7 @@ import PostWriterPage from './views/PostWriterPage.vue'
 import PostViewPage from './views/PostViewPage.vue'
 import Adminpage from './views/AdminPage.vue'
 
-Vue.use(Router)
-
-export default new Router({
+export const router = new Router({
 	mode: 'history',
 	base: process.env.BASE_URL,
 	routes: [
@@ -79,4 +77,29 @@ export default new Router({
 	}
 })
 
+router.beforeEach(async (to, from, next) => {
+	const currentUser = firebase.auth().currentUser;
+	const requiresAuth = to.matched.some(record => record.meta.requiresAuth);
 
+	if(currentUser){
+		store.state.user.user = await firebaseService.getUser(currentUser);
+		store.state.user.loggedIn = true;
+	}else{
+		store.state.user.user = {};
+		store.state.user.loggedIn = false;
+	}
+
+	if(requiresAuth && !currentUser){
+		alert("접근권한이 없습니다.");
+		next("home");
+	}else if(requiresAuth && currentUser){
+		if(store.state.user.user.tier !== 'diamond'){
+			alert("접근권한이 없습니다.");
+			next("home");
+		}else{
+			next();
+		}
+	}else{
+		next();
+	}
+})

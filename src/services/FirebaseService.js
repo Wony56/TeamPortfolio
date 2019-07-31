@@ -4,7 +4,7 @@ import 'firebase/auth';
 import "firebase/messaging";
 
 import store from '../store';
-import router from '../router';
+import {router} from '../router';
 
 const POSTS = 'posts';
 const PORTFOLIOS = 'portfolios';

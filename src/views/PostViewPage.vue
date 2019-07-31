@@ -3,120 +3,45 @@
     <ImgBanner>
       <span color="#fff">Post</span>
     </ImgBanner>
-    <v-layout justify-center align-center id="magi">
-      <v-flex xs11 md10>
-<<<<<<< HEAD
-    <v-card flat>
-      <v-btn class="text-right" text @click="$router.go(-1)">뒤로</v-btn>
-      <v-divider></v-divider>
-      <v-card-title>제목 : {{title}} </v-card-title>
-      <v-divider></v-divider>
-      <v-card-text class="text--primary">작성일 : {{created_at}}</v-card-text>
-      <v-divider></v-divider>
-      <v-card-text>
-        작성자 :
-        {{author}}
-      </v-card-text>
-      <v-divider></v-divider>
-      <v-card-text>내용></v-card-text>
-
-      <v-card-text>{{content}}</v-card-text>
-      <v-divider></v-divider>
-
-      <v-card-actions text-xs-right jusitfy-right align-right>
-        
-        <v-btn class="text-right" text>수정</v-btn>
-        <v-btn class="text-right" text>삭제</v-btn>
-      </v-card-actions>
-
-      <v-divider></v-divider>
-
-      <!-- ==============================REPLY================================================ -->
-      <v-card-title class="headline" style="background-color:#ff6f61; color:#fff">Reply</v-card-title>
-      <v-flex>
-        <v-card flat outlined color="#fff" v-for="(reply, index) in replies" :key="index">
-      <v-text-field
-            :id="index"
-            auto-grow
-            rows="3"
-            row-height="25"
-            v-model="reply.replyContent"
-            :readonly="selectedIndex != index"
-          ></v-text-field>
-=======
-        <v-card flat>
-          <v-btn class="text-right" text @click="$router.go(-1)">뒤로</v-btn>
+    <v-layout id="magi" justify-center text-xs-center>
+      <v-flex xs12 md10>
+        <!-- 뒤로가기 -->
+        <v-layout justify-end>
+          <v-btn style="background-color:#ff6f61; color:#fff" @click="$router.go(-1)">뒤로</v-btn>
+        </v-layout>
+        <!-- 본문 부분 -->
+        <v-card min-height=400 flat>
           <v-divider></v-divider>
-          <v-card-title>제목 : {{title}}</v-card-title>
-          <v-divider></v-divider>
-          <v-card-text class="text--primary">작성일 : {{created_at}}</v-card-text>
-          <v-divider></v-divider>
->>>>>>> 2c06e779bc9a49f9b51ad65878fda40b352fc935
-          <v-card-text>
-            작성자 :
-            {{author}}
+          <v-card-text class="headline" style="background-color:#ff6f61; color:#fff">{{title}}
           </v-card-text>
           <v-divider></v-divider>
-          <v-card-text>내용></v-card-text>
-
-          <div v-if="modifyFlag">
-            <v-card-text>{{content}}</v-card-text>
-          </div>
-          <div v-else>
-            <markdown-editor v-model="content" ref="MarkdownEditor"></markdown-editor>
-          </div>
-          <v-divider></v-divider>
-
-          <v-card-actions text-xs-right jusitfy-right align-right>
-            <v-btn v-if="modifyFlag" class="text-right" @click="checkPostAuthority()">수정</v-btn>
-            <v-btn v-else class="text-right" @click="modifyPost()">수정완료</v-btn>
-            <v-btn v-if="!modifyFlag" class="text-right" @click="modifyFlag = true">취소</v-btn>
-            <v-btn v-if="modifyFlag" class="text-right" @click="deletePost()" text>삭제</v-btn>
+          <v-card-title>{{content}}
+          </v-card-title>
+        </v-card>
+        <!--버튼 부분-->
+        <v-layout justify-end>
+          <v-card-actions>
+            <v-btn v-if="modifyFlag" style="background-color:#ff6f61; color:#fff" @click="checkPostAuthority()">수정</v-btn>
+            <v-btn v-else style="background-color:#ff6f61; color:#fff" @click="modifyPost()">수정완료</v-btn>
+            <v-btn v-if="!modifyFlag" style="background-color:#ff6f61; color:#fff" @click="modifyFlag = true">취소</v-btn>
+            <v-btn v-if="modifyFlag" style="background-color:#ff6f61; color:#fff" @click="deletePost()" text>삭제</v-btn>
           </v-card-actions>
-
-          <v-divider></v-divider>
-
-          <!-- ==============================REPLY================================================ -->
-          <v-card-title class="headline" style="background-color:#ff6f61; color:#fff">Reply</v-card-title>
-          <v-card-title>Reply</v-card-title>
-          <v-flex>
-            <v-card flat outlined color="#fff" v-for="(reply, index) in replies" :key="index">
-              <v-text-field
-                :id="index"
-                auto-grow
-                rows="3"
-                row-height="25"
-                v-model="reply.replyContent"
-                :readonly="selectedIndex != index"
-              ></v-text-field>
-              <v-card-text>
-                {{reply.author}}
-                {{reply.created_at}}
-              </v-card-text>
-              <v-btn v-show="selectedIndex == index" @click="modifyReply(index)">수정완료</v-btn>
-
-              <v-card-actions justify-right text-xs-right>
-                <v-btn text style="background-color:#ff6f61; color:#fff" flat>Reply</v-btn>
-                <v-btn
-                  text
-                  style="background-color:#ff6f61; color:#fff"
-                  flat
-                  @click="checkReplyAuthority(index)"
-                >Modify</v-btn>
-                <v-btn
-                  text
-                  style="background-color:#ff6f61; color:#fff"
-                  flat
-                  @click="removeReply(index)"
-                >Delete</v-btn>
-              </v-card-actions>
+        </v-layout>
+        <!--댓글 부분-->
+        <v-layout justify-center text-xs-center>
+          <v-flex row wrap>
+          <v-card max-height=50>
+            <v-card-text style="background-color:#ff6f61; color:#fff">
+              Comments
+            </v-card-text>
             </v-card>
           </v-flex>
-          <!-- ========================================================================================== -->
-
-          <v-card flat>
-            <v-flex xs12 sm12>
-              <v-textarea
+        </v-layout>
+        <v-layout justify-end text-xs-right>
+          <v-flex row wrap>
+          <v-card min-height=50 max-height=170>
+            <v-card-text>
+            <v-textarea
                 v-model="replyContent"
                 label="댓글입력"
                 auto-grow
@@ -125,42 +50,52 @@
                 flat
                 color="#ff6f61"
               ></v-textarea>
-            </v-flex>
-          </v-card>
-          <div text-xs-right justify-right>
-            <v-btn style="background-color:#ff6f61; color:#fff" @click="addReply()">Add Reply</v-btn>
-          </div>
-          <v-flex xs12 text-xs-center round my-5 v-if="loadMore">
+            </v-card-text>
+              <v-card-text>
+              <v-btn flat
+                  color="#ff6f61" @click="addReply()">댓글 추가</v-btn>
+              </v-card-text>
+            </v-card>
+          </v-flex>
+        </v-layout>
+        <!--하나씩 카드로 나눠서 보여주는걸로 할 예정-->
+        <v-layout v-for="(reply, index) in replies" :key="index">
+          <v-flex row wrap>
+            <br>
+            <v-card min-height=100>
+              <v-card-title>
+                {{reply.replyContent}}
+              </v-card-title>
+              <v-divider></v-divider>
+              <v-layout justify-end text-xs-right>
+              <v-card-text style="color:gray">
+                {{reply.author}}
+                {{reply.created_at}}
+                <v-btn
+                  text
+                  flat
+                  color="#ff6f61"
+                  @click="checkReplyAuthority(index)"
+                >수정</v-btn>
+                <v-btn
+                  text
+                  flat
+                  color="#ff6f61"
+                  @click="removeReply(index)"
+                >삭제</v-btn>
+              </v-card-text>
+              </v-layout>
+            </v-card>          
+          </v-flex>
+        </v-layout>
             <v-pagination
               v-model="focusPage"
               :length="totalPage"
-              :total-visible="7"
+              :total-visible="5"
               color="#ff6616"
             ></v-pagination>
-          </v-flex>
-        </v-card>
       </v-flex>
     </v-layout>
-    <!-- =========================================== MODAL =========================================== -->
-    <v-layout justify-center>
-      <v-dialog v-model="dialog" persistent max-width="290">
-        <v-card>
-          <v-card-title class="headline">{{modalTitle}}</v-card-title>
-          <v-card-text>{{modalContent}}</v-card-text>
-          <v-card-actions>
-            <v-spacer></v-spacer>
-
-            <div v-if="movePage">
-              <v-btn color="green darken-1" text @click="dialog = false">확인</v-btn>
-            </div>
-            <div v-else>
-              <v-btn color="red darken-1" text @click="$router.push('/post')">확인</v-btn>
-            </div>
-          </v-card-actions>
-        </v-card>
-      </v-dialog>
-    </v-layout>
-    <!-- =========================================================================================== -->
   </div>
 </template>
 
@@ -355,16 +290,21 @@ export default {
 }
 
 #magi {
-  margin-top: -100px;
+  margin-top: -150px;
 }
 @media (min-width: 768px) {
   #magi {
-    margin-top: -200px;
+    margin-top: -250px;
   }
 }
 @media (min-width: 1024px) {
   #magi {
-    margin-top: -500px;
+    margin-top: -650px;
   }
+}
+
+.choosingcolor{
+  background-color:#ff6f61;
+  color:#fff;
 }
 </style>

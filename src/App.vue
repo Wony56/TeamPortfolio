@@ -228,9 +228,6 @@ export default {
   bottom: 180px;
   right: 20px;
 }
-#contents {
-  font-size: 1.6vw;
-}
 
 #progress-container-el {
   background-color: transparent !important;

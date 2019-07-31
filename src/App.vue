@@ -1,6 +1,5 @@
 <template>
   <div>
-    <VueScrollProgress></VueScrollProgress>
     <v-app>
       <Header />
       <v-content id="contents">
@@ -80,7 +79,6 @@
             >
               <v-img src="../img/icons/united-states.png" />
             </v-btn>
-           
           </v-speed-dial>
         </v-card>
       </v-content>
@@ -231,7 +229,7 @@ export default {
 
 #progress-container-el {
   background-color: transparent !important;
-  top: calc(100%+2px) !important;
+  top: calc(100%-4px) !important;
 }
 
 #progress-el {

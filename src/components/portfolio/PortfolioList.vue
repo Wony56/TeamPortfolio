@@ -1,17 +1,20 @@
 <template>
   <div>
-    <div v-masonry transition-duration="0.3s" class="masonry-container align-center">
-      <div v-masonry-tile flat v-for="i in portfolios.length" :key="i" xs12>
+    <v-layout v-masonry transition-duration="1s"
+      width="100%"
+      class="masonry-container">
+      <v-flex v-masonry-tile flat
+        col-12 col-md-6 col-lg-4
+        class="masonry-grid-item column ma-2"
+        v-for="i in portfolios.length" :key="i">
         <Portfolio flat
-          class="ma-3 grid-item"
-          gutter = 10;
           :date="portfolios[i - 1].created_at.toString()"
           :title="portfolios[i - 1].title"
           :body="portfolios[i - 1].body"
           :imgItems="portfolios[i - 1].img"
         ></Portfolio>
-      </div>
-    </div>
+      </v-flex>
+    </v-layout >
 
     <v-flex xs12 text-xs-center round my-5>
       <v-btn style="background-color:#ff6f61; color:#ffff" to="/portfoliowriter">
@@ -32,7 +35,7 @@ import { mapState } from "vuex";
 export default {
   name: "PortfoliosList",
   props: {
-    limits: { type: Number, default: 4 },
+    limits: { type: Number, default: 6 },
     loadMore: { type: Boolean, default: false }
   },
   data() {
@@ -64,12 +67,13 @@ export default {
 *{
   font-family: 'Nanum Gothic', sans-serif;
 };
-.mw-700 {
-  max-width: 700px;
-  margin: auto;
+
+.column {
+  /* Chrome, Safari, Opera */
+  -webkit-column-count: 3;
+  -webkit-column-gap: 40px;
+  -webkit-column-rule-style: outset;
+  -webkit-column-rule-width: 10px;
 }
 
-.grid-item {
-  margin-bottom: 10px;
-}
 </style>

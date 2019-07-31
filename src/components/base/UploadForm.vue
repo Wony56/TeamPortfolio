@@ -45,8 +45,8 @@ export default {
        // fake server to simulate loading a 'local' server file and processing a file
        myServer: {
          process: (fieldName, file, metadata, load) => {
-           //this.fetchImages(file);
-           console.log(file);
+           
+           console.log("INIT ",file);
            this.uploadImages(file); // images.js 에 있는 upLoadImages method
            setTimeout(() => {
              load(Date.now())
@@ -55,6 +55,10 @@ export default {
        }
      };
   },
+  // created() {
+
+  //   this.$store.state.images.imgurLinks = [];
+  // },
   methods: {
 
     ...mapActions(["uploadImages"]),
@@ -62,9 +66,8 @@ export default {
     handleFilePondInit: function() {
         console.log('FilePond has initialized');
 
-        console.log(this.$store.state.images.images);
-
-        console.log(this.$store.state.images.imgurLinks);
+        // console.log(this.$store.state.images.images);
+        // console.log(this.$store.state.images.imgurLinks);
         // FilePond instance methods are available on `this.$refs.pond`
     }
   },

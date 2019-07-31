@@ -38,6 +38,9 @@ export default {
   },
 
   uploadImages(images, token) {
+    
+    console.log("TTOOKKEENN> ", token);
+
     const promises = Array.from(images).map(image => {
       const formData = new FormData();
       formData.append("image", image);

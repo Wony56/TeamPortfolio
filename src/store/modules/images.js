@@ -3,6 +3,7 @@ import api from "../../api/imgur";
 const state = {
   images: [],
   imgurLinks: [],
+  // imageList: [],
   loading: false
 };
 const getters = {
@@ -27,9 +28,11 @@ const actions = {
     array[0] = images;
     // console.log(array);
     const { token } = rootState.auth;
+
     commit("setLoading", true);
     await api.uploadImages(array, token).then(res => {
       let imgUrl = res[0]['data']['data']['link'];
+      console.log(imgUrl);
       state.imgurLinks.push(imgUrl);
     }).catch(error=>{
       alert("사진 업로드에 실패하였습니다.");
@@ -39,15 +42,7 @@ const actions = {
 
   async deleteImage({rootState}, imageDeleteHash) {
 
-    // let array = []
-    // array[0] = images;
-    // console.log(array);
     const { token } = rootState.auth;
-    //commit("setLoading", true);
-
-    console.log("TOKEN> ", token);
-    console.log("HASH> ", imageDeleteHash);
-
     await api.deleteImage(token, imageDeleteHash).then(res => {
 
       return true;

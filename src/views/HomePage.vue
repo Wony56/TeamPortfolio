@@ -83,7 +83,7 @@
         </v-flex>
       </v-layout>
 
-      <GridImage></Gridimage>
+      <GridImage></GridImage>
 
       <!-- Post -->
       <v-layout my-5 justify-center>
@@ -103,8 +103,16 @@
 import ImgBanner from "../components/base/ImgBanner";
 import GridImage from "../components/base/GridImages";
 import PostList from "../components/post/PostList";
+
+// Firebase Service
+import FirebaseServices from "../services/FirebaseService"
+
 //Gitlab API
 import GitlabAPI from "../components/gitlab/GitlabApi.vue";
+
+//Load Portfolio & Post Data
+import { mapState } from 'vuex';
+import FirebaseService from '../services/FirebaseService';
 
 const BASE_URL = "https://lab.ssafy.com/api/v4";
 
@@ -128,12 +136,24 @@ export default {
     GridImage,
     GitlabAPI
   },
+  computed: {
+
+        ... mapState({
+            portfolioList: state => state.article.portfolioList,
+            postList: state => state.article.postList
+        })
+  },
+  created() {
+
+    this.portfolioList = this.loadPortfolios();
+    this.postList = this.loadPosts();
+  },
   methods: {
     getImgUrl(img) {
       return require("../assets/" + img);
     },
     async getRepositories(userId, token, color) {
-      console.log("토끈?> " + token);
+
       this.mainColor = color;
       this.datas = [];
 
@@ -148,6 +168,15 @@ export default {
     },
     showRepoPage(url) {
       window.open(url, "_blank");
+    },
+
+    async loadPortfolios() {
+
+      return await FirebaseService.getPortfolios();
+    },
+    async loadPosts() {
+
+      return await FirebaseServices.getPosts();
     }
   }
 };

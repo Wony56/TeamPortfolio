@@ -10,7 +10,6 @@
         style="min-height:500px;"
         white
         pa-4
-        
       >
         <v-flex xs12 text-xs-center>
           <v-btn round color="#df4a31" dark v-on:click="loginWithGoogle" style="width:100%;">
@@ -41,7 +40,7 @@ export default {
 };
 </script>
 <style>
-*{
-font-family: 'Nanum Gothic', sans-serif;
+* {
+  font-family: "Nanum Gothic", sans-serif;
 }
 </style>

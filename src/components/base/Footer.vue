@@ -1,5 +1,4 @@
 <template>
-  
   <v-footer color="#fff" height="auto" justify-center text-xs-center>
     <V-CARD justify-center text-xs-center>
       <v-card-actions justify-center text-xs-center class="notranslate" style="height: 100px;">
@@ -9,21 +8,6 @@
     </v-card>
   </v-footer>
 </template>
-
-<script>
-import { close } from 'fs';
-export default {
-  name: "main-footer",
-  data() {
-    return {
-    };
-  },
-
-  methods: {
-
-  }
-};
-</script>
 
 <style>
 * {

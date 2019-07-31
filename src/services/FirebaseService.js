@@ -25,26 +25,36 @@ const config = {
 
 firebase.initializeApp(config)
 const firestore = firebase.firestore()
+const messaging = firebase.messaging()
 
-const messaging = firebase.messaging();
-  
-	messaging.requestPermission()
-		.then(function(){
-			console.log("Have permission");
-			return messaging.getToken();
-		})
-		.then(function(token){
-			console.log(token);
-		})
-		.catch(function(arr){
-			console.log("Error Occured");
-		});
-
-	messaging.onMessage(function(payload) {
-		console.log('onMessage: ', payload);
+messaging.requestPermission()
+	.then(function(){
+		console.log("Have permission");
+		return messaging.getToken();
+	})
+	.then(function(token){
+		console.log(token);
+	})
+	.catch(function(arr){
+		console.log("Error Occured");
 	});
 
+
+messaging.onMessage(function(payload) {
+	console.log('onMessage: ', payload);
+})
+
 export default {
+	getToken() {
+		return messaging.requestPermission()
+			.then(function(){
+				console.log("Have permission",  messaging.getToken());
+				return messaging.getToken();
+			})
+			.catch(function(arr){
+				console.log("Error Occured");
+			});
+	},
 	// getReplyInfo(articleId) {
 
 	// 	const postCollection = firestore.collection(POSTS).doc(articleId)

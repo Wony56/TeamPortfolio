@@ -87,6 +87,7 @@
 
       <!-- Footer -->
       <Footer />
+      <v-btn v-on:click="postPush">버튼</v-btn>
     </v-app>
   </div>
 </template>
@@ -95,6 +96,17 @@
 import store from "./store";
 import Header from "./components/base/Header.vue";
 import Footer from "./components/base/Footer.vue";
+import Firebase from './services/FirebaseService'
+
+var key = 'AIzaSyDCo_1aj9Q1FYra6QCPzkV6Fya6nHqSZr4';
+var to = "";
+var notification = {
+  'title': '새글!',
+  'body': '이건새글',
+  'icon': 'firebase-logo.png',
+  'click_action': 'http://localhost:8080'
+};
+
 
 export default {
   name: "App",
@@ -119,7 +131,9 @@ export default {
       right: true,
       bottom: true,
       left: false,
-      transition: "slide-y-reverse-transition"
+      transition: "slide-y-reverse-transition",
+      
+      token: "",
     };
   },
   created() {
@@ -180,7 +194,33 @@ export default {
       }
 
       return triggerDefault;
-    }
+    },
+    postPush() {
+      fetch('https://fcm.googleapis.com/fcm/send', {
+        'method': 'POST',
+        'headers': {
+          'Authorization': 'key=' + key,
+          'Content-Type': 'application/json'
+        },
+        'body': JSON.stringify({
+          'notification': notification,
+          'to': to
+        })
+      }).then(function(response) {
+        console.log(response);
+      }).catch(function(error) {
+        console.error(error);
+      })
+    },
+    async loadToken() {
+      await Firebase.getToken().then(ret => {
+        // this.to = ret;
+        to = ret;
+      });
+    },
+  },
+  mounted() {
+  this.loadToken();
   },
   computed: {
     activeFab() {

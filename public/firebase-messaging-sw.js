@@ -17,27 +17,16 @@ const messaging = firebase.messaging({
     'messagingSenderId': "363817638878",
 });
 
-messaging.setBackgroundMessageHandler(function(payload) {
-  console.log('[firebase-messaging-sw.js] Received background message ', payload);
-  var notificationTitle = '알림';
-  var notificationOptions = {
-    body: '새글 등장',
-    icon: '/firebase-logo.png'
-  };
 
-  return self.registration.showNotification(notificationTitle,
-    notificationOptions);
-});
+// messaging.setBackgroundMessageHandler(function(payload) {
+//   console.log('[firebase-messaging-sw.js] Received background message ', payload);
+//   var notificationTitle = 'Background Message Title';
+//   var notificationOptions = {
+//     body: 'Background Message body.',
+//     // icon: '/firebase-logo.png'
+//   };
 
-
-// const messaging = firebase.messaging();
-// messaging.setBackgroundMessageHandler(function(payload){
- 
-//     const title = "Hello World";
-//     const options = {
-//             body: payload.data.status
-//     };
- 
-//     return self.registration.showNotification(title,options);
+//   return self.registration.showNotification(notificationTitle,
+//     notificationOptions);
 // });
 

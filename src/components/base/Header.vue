@@ -15,8 +15,8 @@
 
       <mq-layout mq="tablet+" style="height: 100%;">
         <v-toolbar-items>
-          <v-btn class="menu-item" flat to="post">게시판</v-btn>
-          <v-btn class="menu-item" flat to="portfolio">포트폴리오</v-btn>
+          <v-btn class="menu-item" flat to="/post">게시판</v-btn>
+          <v-btn class="menu-item" flat to="/portfolio">포트폴리오</v-btn>
           <template v-if="!loggedIn">
             <!--로그인-->
             <v-btn class="menu-item" flat @click="openLoginModal">로그인</v-btn>

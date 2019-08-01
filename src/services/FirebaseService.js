@@ -11,6 +11,7 @@ const PORTFOLIOS = 'portfolios';
 const WEBLOGS = 'weblogs';
 const USERS = 'users';
 const IMAGES = 'images';
+const TOKENS = 'tokens';
 
 // Setup Firebase
 const config = {
@@ -39,21 +40,31 @@ messaging.requestPermission()
 		console.log("Error Occured");
 	});
 
-
 messaging.onMessage(function(payload) {
 	console.log('onMessage: ', payload);
 })
 
 export default {
 	getToken() {
-		return messaging.requestPermission()
-			.then(function(){
-				console.log("Have permission",  messaging.getToken());
-				return messaging.getToken();
+		return messaging.getToken()
+			.then(token => {
+				return token;
 			})
-			.catch(function(arr){
+			.catch(err => {
 				console.log("Error Occured");
 			});
+	},
+	async postToken(user) {
+		let token = await this.getToken();
+
+		return firestore.collection(TOKENS).doc(user.uid).set({
+			uid: user.uid,
+			token: token
+		});
+	},
+	deleteToken(user) {
+		console.log('삭제완료')
+		return firestore.collection(TOKENS).doc(user.uid).delete()
 	},
 	// getReplyInfo(articleId) {
 
@@ -163,6 +174,7 @@ export default {
 				
 				let data = doc.data();
 				//data.created_at = new Date(data.created_at.toDate());
+				this.postToken(user);
 
 				return data;
 			}
@@ -392,6 +404,7 @@ export default {
 		firebase.auth().signOut().then(() => {
 			store.state.notification.snackbar = false;
 			this.postLogData(store.state.user.user, 'Log out');
+			this.deleteToken(store.state.user.user);
 			router.replace('/');
 		}).catch(err => {
 			console.log(err);

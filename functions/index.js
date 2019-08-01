@@ -1,8 +1,23 @@
 const functions = require('firebase-functions');
 
-// // Create and Deploy Your First Cloud Functions
-// // https://firebase.google.com/docs/functions/write-firebase-functions
-//
-// exports.helloWorld = functions.https.onRequest((request, response) => {
-//  response.send("Hello from Firebase!");
-// });
+const admin = require('firebase-admin');
+admin.initializeApp();
+
+
+exports.newPost = functions.firestore
+.document('posts/{postId}')
+.onCreate((event) => {
+    const payload = {
+        notification:{
+            title: '새글',
+            body: '새글등록'
+        }
+    }
+    
+    firestore.collection('tokens').get().then((data)=>{
+        data.forEach(doc => {
+          console.log(doc.token)
+          return admin.messaging().newPost(doc.token,payload);
+        })
+    })
+})

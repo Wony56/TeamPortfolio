@@ -3,99 +3,134 @@
     <ImgBanner>
       <span color="#fff">Post</span>
     </ImgBanner>
-    <v-layout id="magi" justify-center text-xs-center>
+    <v-layout id="magi" justify-center>
       <v-flex xs12 md10>
         <!-- 뒤로가기 -->
         <v-layout justify-end>
           <v-btn style="background-color:#ff6f61; color:#fff" @click="$router.go(-1)">뒤로</v-btn>
         </v-layout>
         <!-- 본문 부분 -->
-        <v-card min-height=400 flat>
+        <v-card min-height="400" flat>
           <v-divider></v-divider>
-          <v-card-text class="headline" style="background-color:#ff6f61; color:#fff">{{title}}
-          </v-card-text>
+          <v-layout text-xs-center>
+            <v-card-text class="headline" style="background-color:#ff6f61; color:#fff">{{title}}</v-card-text>
+          </v-layout>
           <v-divider></v-divider>
-          <v-card-title>{{content}}
-          </v-card-title>
+
+          <div v-if="!postFlag">
+            <VueMarkdown :source="content"></VueMarkdown>
+          </div>
+
+          <div v-else>
+            <MarkdownEditor v-model="content"></MarkdownEditor>
+          </div>
         </v-card>
         <!--버튼 부분-->
         <v-layout justify-end>
           <v-card-actions>
-            <v-btn v-if="modifyFlag" style="background-color:#ff6f61; color:#fff" @click="checkPostAuthority()">수정</v-btn>
+            <v-btn
+              v-if="!postFlag"
+              style="background-color:#ff6f61; color:#fff"
+              @click="checkPostAuthority()"
+            >수정</v-btn>
             <v-btn v-else style="background-color:#ff6f61; color:#fff" @click="modifyPost()">수정완료</v-btn>
-            <v-btn v-if="!modifyFlag" style="background-color:#ff6f61; color:#fff" @click="modifyFlag = true">취소</v-btn>
-            <v-btn v-if="modifyFlag" style="background-color:#ff6f61; color:#fff" @click="deletePost()" text>삭제</v-btn>
+            <v-btn
+              v-if="postFlag"
+              style="background-color:#ff6f61; color:#fff"
+              @click="postFlag = false"
+            >취소</v-btn>
+            <v-btn
+              v-if="!postFlag"
+              style="background-color:#ff6f61; color:#fff"
+              @click="deletePost()"
+              text
+            >삭제</v-btn>
           </v-card-actions>
         </v-layout>
         <!--댓글 부분-->
         <v-layout justify-center text-xs-center>
           <v-flex row wrap>
-          <v-card max-height=50>
-            <v-card-text style="background-color:#ff6f61; color:#fff">
-              Comments
-            </v-card-text>
+            <v-card max-height="50">
+              <v-card-text style="background-color:#ff6f61; color:#fff">Comments</v-card-text>
             </v-card>
           </v-flex>
         </v-layout>
         <v-layout justify-end text-xs-right>
           <v-flex row wrap>
-          <v-card min-height=50 max-height=170>
-            <v-card-text>
-            <v-textarea
-                v-model="replyContent"
-                label="댓글입력"
-                auto-grow
-                rows="1"
-                row-height="15"
-                flat
-                color="#ff6f61"
-              ></v-textarea>
-            </v-card-text>
+            <v-card min-height="50" max-height="170">
               <v-card-text>
-              <v-btn flat
-                  color="#ff6f61" @click="addReply()">댓글 추가</v-btn>
+                <v-textarea
+                  v-model="replyContent"
+                  label="댓글입력"
+                  auto-grow
+                  rows="1"
+                  row-height="15"
+                  flat
+                  color="#ff6f61"
+                ></v-textarea>
+              </v-card-text>
+              <v-card-text>
+                <v-btn flat color="#ff6f61" @click="addReply()">댓글 추가</v-btn>
               </v-card-text>
             </v-card>
           </v-flex>
         </v-layout>
         <!--하나씩 카드로 나눠서 보여주는걸로 할 예정-->
-        <v-layout v-for="(reply, index) in replies" :key="index">
+        <v-layout v-for="(reply, index) in replies[focusPage - 1]" :key="index">
           <v-flex row wrap>
-            <br>
-            <v-card min-height=100>
-              <v-card-title>
-                {{reply.replyContent}}
-              </v-card-title>
+            <br />
+            <v-card min-height="100">
+              <v-text-field
+                :id="index"
+                v-model="reply.replyContent"
+                :readonly="selectedIndex != index"
+              ></v-text-field>
               <v-divider></v-divider>
               <v-layout justify-end text-xs-right>
-              <v-card-text style="color:gray">
-                {{reply.author}}
-                {{reply.created_at}}
-                <v-btn
-                  text
-                  flat
-                  color="#ff6f61"
-                  @click="checkReplyAuthority(index)"
-                >수정</v-btn>
-                <v-btn
-                  text
-                  flat
-                  color="#ff6f61"
-                  @click="removeReply(index)"
-                >삭제</v-btn>
-              </v-card-text>
+                <v-card-text style="color:gray">
+                  {{reply.author}} |
+                  {{reply.created_at}}
+                  <v-btn
+                    v-if="!replyFlag"
+                    text
+                    flat
+                    color="#ff6f61"
+                    @click="checkReplyAuthority(index)"
+                  >수정</v-btn>
+
+                  <v-btn v-else text flat color="black" @click="modifyReply(index)">수정완료</v-btn>
+
+                  <v-btn v-if="replyFlag" text flat color="black" @click="replyFlag = false">취소</v-btn>
+
+                  <v-btn text flat color="#ff6f61" @click="removeReply(index)">삭제</v-btn>
+                </v-card-text>
               </v-layout>
-            </v-card>          
+            </v-card>
           </v-flex>
         </v-layout>
-            <v-pagination
-              v-model="focusPage"
-              :length="totalPage"
-              :total-visible="5"
-              color="#ff6616"
-            ></v-pagination>
+        <v-pagination
+          v-if="loadMore"
+          v-model="focusPage"
+          :length="totalPage"
+          :total-visible="5"
+          color="#ff6616"
+        ></v-pagination>
       </v-flex>
     </v-layout>
+
+    <!--=========================================MODAL====================================================-->
+    <v-dialog v-model="dialog" persistent max-width="290">
+      <v-card>
+        <v-card-title class="headline">{{modalTitle}}</v-card-title>
+        <v-card-text>{{modalContent}}</v-card-text>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn v-if="movePage" color="green darken-1" flat to="/post">Close</v-btn>
+          <v-btn v-else color="blue darken-1" flat @click="dialog = false">Close</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+    <!--=================================================================================================-->
   </div>
 </template>
 
@@ -104,6 +139,9 @@ import FirebaseService from "@/services/FirebaseService";
 import MarkdownEditor from "vue-simplemde/src/markdown-editor";
 import ImgBanner from "../components/base/ImgBanner";
 import { mapState } from "vuex";
+
+// Markdown Viewer
+import VueMarkdown from "vue-markdown";
 
 export default {
   name: "PostViewPage",
@@ -115,12 +153,13 @@ export default {
 
       title: "",
       content: "",
+      authorUid: "",
       author: "",
       articleId: "",
       created_at: "",
-      postId: "",
-      modifyFlag: true,
+      postFlag: false,
 
+      replyFlag: false,
       loadMore: false,
       focusPage: 1,
       totalPage: 10,
@@ -133,7 +172,8 @@ export default {
   },
   components: {
     ImgBanner,
-    MarkdownEditor
+    MarkdownEditor,
+    VueMarkdown
   },
   computed: {
     ...mapState({
@@ -144,15 +184,32 @@ export default {
     async loadPost(id) {
       let ret = await FirebaseService.getPostById(this.$route.params.postIndex);
 
+      this.articleId = ret.articleId;
       this.title = ret.title;
       this.content = ret.content;
       this.author = ret.author;
       this.authorUid = ret.authorUid;
-      this.postId = ret.postId;
       this.created_at = ret.created_at;
-      this.replies = ret.reply;
 
-      if (this.replies.length > 10) this.loadMore = true;
+      console.log(this.replies);
+
+      let index = 0;
+
+      this.loadMore = true;
+      this.totalPage = parseInt(ret.reply.length / 5) + 1;
+
+      console.log(this.totalPage);
+
+      for (let page = 0; page <= this.totalPage; page++) {
+        let temp = [];
+
+        for (let count = 0; count < 5; count++) {
+          if (ret.reply[index] === undefined) break;
+          temp.push(ret.reply[index++]);
+        }
+        this.replies.push(temp);
+      }
+      console.log(this.replies);
       this.articleId = this.$route.params.postIndex;
     },
     getReplyInfo() {
@@ -160,7 +217,7 @@ export default {
         author: this.user.displayName,
         uid: this.user.uid,
         replyContent: this.replyContent,
-        created_at: ""
+        created_at: { type: Date }
       };
     },
     getPostInfo() {
@@ -181,19 +238,20 @@ export default {
         return;
       }
       let reply = this.getReplyInfo();
-      FirebaseService.addReply(this.articleId, reply);
+      this.replies[this.focusPage - 1].push(reply);
+      FirebaseService.addReply(this.articleId, reply, "POST");
 
-      this.replies.push(reply);
       this.replyContent = "";
     },
     removeReply(index) {
       if (
-        this.replies[index].uid == this.user.uid ||
+        this.replies[this.focusPage - 1][index].uid == this.user.uid ||
         this.user.tier == "diamond"
       ) {
-        let reply = this.replies[index];
-        this.replies.splice(index, 1);
-        FirebaseService.removeReply(this.articleId, reply);
+        let reply = this.replies[this.focusPage - 1][index];
+
+        FirebaseService.removeReply(this.articleId, reply, "POST");
+        this.replies[this.focusPage - 1].splice(index, 1);
       } else {
         this.modalTitle = "ERROR";
         this.modalContent = "권한이 없습니다.";
@@ -202,11 +260,13 @@ export default {
     },
     checkReplyAuthority(index) {
       if (
-        this.replies[index].uid == this.user.uid ||
+        this.replies[this.focusPage - 1][index].uid == this.user.uid ||
         this.user.tier == "diamond"
       ) {
         if (this.selectedIndex == -1) this.selectedIndex = index;
         else this.selectedIndex = -1;
+
+        this.replyFlag = true;
       } else {
         this.modalTitle = "ERROR";
         this.modalContent = "권한이 없습니다.";
@@ -215,15 +275,17 @@ export default {
     },
     modifyReply(index) {
       if (
-        this.replies[index].uid == this.user.uid ||
+        this.replies[this.focusPage - 1][index].uid == this.user.uid ||
         this.user.tier == "diamond"
       ) {
         FirebaseService.modifyReply(
           this.articleId,
           index,
-          document.getElementById(index).value
+          document.getElementById(index).value,
+          "POST"
         );
         this.selectedIndex = -1;
+        this.replyFlag = false;
       } else {
         this.modalTitle = "ERROR";
         this.modalContent = "권한이 없습니다.";
@@ -232,9 +294,8 @@ export default {
     },
 
     checkPostAuthority() {
-
       if (this.postId == this.user.uid || this.user.tier == "diamond") {
-        this.modifyFlag = false;
+        this.postFlag = true;
       } else {
         this.modalTitle = "ERROR";
         this.modalContent = "권한이 없습니다.";
@@ -242,7 +303,6 @@ export default {
       }
     },
     deletePost() {
-
       if (this.postId == this.user.uid || this.user.tier == "diamond") {
         this.movePage = false;
 
@@ -257,7 +317,6 @@ export default {
       }
     },
     modifyPost() {
-
       if (this.postId == this.user.uid || this.user.tier == "diamond") {
         this.movePage = true;
 
@@ -265,17 +324,12 @@ export default {
         this.modalTitle = "성공";
         this.modalContent = "글을 성공적으로 수정하였습니다.";
         this.dialog = true;
-        this.modifyFlag = true;
-
+        this.postFlag = true;
       } else {
         this.modalTitle = "ERROR";
         this.modalContent = "권한이 없습니다.";
         this.dialog = true;
       }
-    },
-
-    getCurrentDate() {
-      return new Date();
     }
   },
   mounted() {
@@ -303,8 +357,8 @@ export default {
   }
 }
 
-.choosingcolor{
-  background-color:#ff6f61;
-  color:#fff;
+.choosingcolor {
+  background-color: #ff6f61;
+  color: #fff;
 }
 </style>

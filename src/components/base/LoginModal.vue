@@ -38,7 +38,6 @@
 
 <script>
 import firebaseService from "../../services/FirebaseService";
-import { mapState, mapMutations } from "vuex";
 
 export default {
   name: "LoginModal",

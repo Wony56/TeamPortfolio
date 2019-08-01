@@ -28,9 +28,10 @@ export default {
     };
   },
   created() {
+
     FirebaseService.getPortfolios().then(portfolios => {
 
-      console.log(portfolios);
+      // console.log(portfolios);
       
       for(let i = 0; i < portfolios.length && i < 30; i++) {
 

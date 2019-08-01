@@ -16,34 +16,39 @@
         ></v-text-field>
         <v-text-field v-model="created_at" color="#ff6f61" readonly required></v-text-field>
 
-        <div v-if="modifyFlag">
-            <v-card-text>{{body}}</v-card-text>
-          </div>
-          <div v-else>
-            <markdown-editor v-model="body" ref="MarkdownEditor"></markdown-editor>
-          </div>
-
-        <!-- <MarkdownEditor v-model="body" ref="markdownEditor"></MarkdownEditor> -->
+        <div v-if="!modifyFlag">
+          <VueMarkdown :source="body"></VueMarkdown>
+        </div>
+        <div v-else>
+          <markdown-editor v-model="body" ref="MarkdownEditor"></markdown-editor>
+        </div>
 
         <v-spacer></v-spacer>
 
         <v-layout row style="margin: 30px;">
           <v-flex v-for="(img, index) in imgs" :key="index">
             <v-img class="white--text" width="200px" height="200px" :src="img">
-              <v-btn text icon color="yellow" @click="deletePicture(index, img)">
+              <v-btn  v-if="modifyFlag" text icon color="yellow" @click="deletePicture(index, img)">
                 <v-icon>delete</v-icon>
               </v-btn>
             </v-img>
           </v-flex>
         </v-layout>
 
-        <v-spacer></v-spacer>
+        <div v-if="modifyFlag">
+          <v-spacer></v-spacer>
 
-        <UploadForm></UploadForm>
+          <UploadForm></UploadForm>
+        </div>
+
         <v-spacer></v-spacer>
         <v-layout justify-center>
-          <v-btn style="background-color:#ff6f61; color:#ffff" @click="postPortfolio">submit</v-btn>
-          <v-btn style="background-color:#ff6f61; color:#ffff" @click="$router.go(-1)">cancel</v-btn>
+          <v-btn v-if="!modifyFlag" style="background-color:#ff6f61; color:#ffff" @click="checkAuthentication()">수정</v-btn>
+
+          <v-btn v-if="modifyFlag" style="background-color:black; color:#ffff" @click="modifyPortfolio()">수정완료</v-btn>
+
+          <v-btn v-if="!modifyFlag" style="background-color:#ff6f61; color:#ffff" @click="$router.go(-1)">취소</v-btn>
+          <v-btn v-if="modifyFlag" style="background-color:#ff6f61; color:#ffff" @click="modifyFlag = false">취소</v-btn>
         </v-layout>
       </form>
     </v-container>
@@ -70,9 +75,14 @@ import MarkdownEditor from "vue-simplemde/src/markdown-editor";
 import UploadForm from "../components/base/UploadForm";
 import FirebaseService from "@/services/FirebaseService";
 
-// Imgur API
-import {mapActions} from "vuex";
+// Get Logined User Info
+import { mapState } from "vuex";
 
+// Imgur API
+import { mapActions } from "vuex";
+
+// Markdown Viewer
+import VueMarkdown from 'vue-markdown'
 
 export default {
   data: () => ({
@@ -88,7 +98,7 @@ export default {
 
     dialog: false,
     flag: true,
-    modifyFlag: true,
+    modifyFlag: false,
 
     dialogTitle: "",
     dialogContent: ""
@@ -96,15 +106,49 @@ export default {
   components: {
     ImgBanner,
     MarkdownEditor,
-    UploadForm
+    UploadForm,
+    VueMarkdown
+  },  
+  computed: {
+    ...mapState({
+      user: state => state.user.user,
+      imgurLink: state => state.images.imgurLinks
+    })
   },
   mounted() {
     this.articleId = this.$route.params.portfolioInfo;
     this.getPortfolio();
   },
   methods: {
-    async postPortfolio() {
+    checkAuthentication() {
 
+      if (this.authorUid == this.user.uid || this.user.tier == "diamond") {
+        this.modifyFlag = true;
+      } else {
+        this.dialogTitle = "ERROR";
+        this.dialogContent = "권한이 없습니다.";
+        this.dialog = true;
+      }
+    },
+    modifyPortfolio() {
+
+      console.log(this.imgurLink);
+      for(let i = 0; i < this.imgurLink.length; i++) {
+        
+        this.imgs.push(this.imgurLink[i]);
+      }
+      FirebaseService.modifyPortfoilo(this.articleId, this.title, this.body, this.imgs);
+
+      this.$store.state.images.imgurLinks = [];
+      this.$store.state.images.images = [];
+
+      this.dialogTitle = "수정완료";
+      this.dialogContent = "글 수정을 완료하였습니다.";
+      this.flag = true;
+      this.dialog = true;
+    },
+
+    async postPortfolio() {
       if (this.title === "") {
         this.dialogTitle = "WARNING";
         this.dialogContent = "제목을 입력해주세요.";
@@ -157,19 +201,23 @@ export default {
       this.authorUid = this.author.uid;
     },
     async deletePicture(index, src) {
+      let start = src.lastIndexOf("/");
+      let end = src.lastIndexOf(".");
+      let imageDeleteHash = src.substring(start + 1, end);
 
-        let start = src.lastIndexOf('/');
-        let end = src.lastIndexOf('.');
-        let imageDeleteHash = src.substring(start + 1, end);
+      console.log(imageDeleteHash);
+      
+      console.log("BEFORE DELETE ", this.imgs);
 
-        console.log(imageDeleteHash);
-        
-        let flag = await this.deleteImage(imageDeleteHash);
-        this.imgs.splice(index, 1);
+      let flag = await this.deleteImage(imageDeleteHash);
+      this.imgs.splice(index, 1);
 
-        console.log("flag> ", flag);
+      console.log(this.imgs);
+      FirebaseService.modifyPortfolioImage(this.articleId, this.imgs);
+
+      console.log("flag> ", flag);
     },
-    ...mapActions(['deleteImage'])
+    ...mapActions(["deleteImage"])
   }
 };
 </script>

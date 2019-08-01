@@ -28,21 +28,19 @@ export default {
     };
   },
   created() {
-    FirebaseService.getPortfolios().then(portfolios => {
-      portfolios.forEach(portfolio => {
-        portfolio.img.forEach(image => this.images.push(image));
-      });
 
-      localStorage.setItem(
-        "banner",
-        portfolios[0].img[portfolios[0].img.length - 1]
-      );
+    FirebaseService.getPortfolios().then(portfolios => {
+
+      // console.log(portfolios);
+      
+      for(let i = 0; i < portfolios.length && i < 30; i++) {
+
+        if(portfolios[i].img === undefined || portfolios[i].img.length == 0)
+          continue;
+        
+        this.images.push(portfolios[i].img[0]);
+      }
     });
   }
 };
 </script>
-<style>
-*{
-  font-family: 'Nanum Gothic', sans-serif;
-}
-</style>

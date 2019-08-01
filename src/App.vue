@@ -1,6 +1,5 @@
 <template>
   <div>
-    <VueScrollProgress></VueScrollProgress>
     <v-app>
       <Header />
       <v-content id="contents">
@@ -93,6 +92,7 @@ export default
       }
     },
   computed: {
+
     activeFab() {
       switch (this.tabs) {
         case "one":
@@ -144,7 +144,7 @@ export default
 
 #progress-container-el {
   background-color: transparent !important;
-  top: calc(100%+2px) !important;
+  top: calc(100%-4px) !important;
 }
 
 #progress-el {

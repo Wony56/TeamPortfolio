@@ -1,7 +1,7 @@
 <template>
   <div>
     <div v-masonry transition-duration="0.3s" class="masonry-container align-center">
-      <div v-masonry-tile flat v-for="i in portfolios.length" :key="i" xs12>
+      <div v-masonry-tile flat v-for="i in portfolios.length > limit ? limit : portfolios.length" :key="i" xs12>
         <Portfolio flat
           class="ma-3 grid-item"
           gutter = 10;
@@ -9,15 +9,16 @@
           :title="portfolios[i - 1].title"
           :body="portfolios[i - 1].body"
           :imgItems="portfolios[i - 1].img"
+          :id="portfolios[i - 1].id"
         ></Portfolio>
       </div>
     </div>
 
     <v-flex xs12 text-xs-center round my-5>
-      <v-btn style="background-color:#ff6f61; color:#ffff" to="/portfoliowriter">
+      <v-btn style="background-color:#ff6f61; color:#ffff;" to="/portfoliowriter">
         <v-icon size="25" class="mr-2 notranslate">fa-pencil</v-icon>글쓰기
       </v-btn>
-      <v-btn style="background-color:#ff6f61; color:#ffff" v-if="loadMore" v-on:click="loadMorePortfolios">
+      <v-btn style="background-color:#ff6f61; color:#ffff;" v-if="load" @click="loadMorePortfolios()">
         <v-icon size="25" class="mr-2 notranslate">fa-plus</v-icon>더 보기
       </v-btn>
     </v-flex>
@@ -32,12 +33,14 @@ import { mapState } from "vuex";
 export default {
   name: "PortfoliosList",
   props: {
-    limits: { type: Number, default: 4 },
+    limits: { type: Number, default: 5 },
     loadMore: { type: Boolean, default: false }
   },
   data() {
     return {
-      portfolios: []
+      portfolios: [],
+      limit: this.limits,
+      load: this.loadMore
     };
   },
   components: {
@@ -54,7 +57,8 @@ export default {
       this.portfolios = await FirebaseService.getPortfolios();
     },
     loadMorePortfolios() {
-
+      
+      this.limit += 5;
     }
   }
 };

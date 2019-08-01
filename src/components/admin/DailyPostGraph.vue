@@ -22,16 +22,16 @@ export default {
     values: []
   }),
   created() {
-    this.setMemberGraph();
+    this.setPostGraph();
   },
   methods: {
-    async setMemberGraph() {
-      const users = await firebaseService.getUsers();
-      let memberCount = [];
+    async setPostGraph() {
+      const posts = await firebaseService.getPosts();
 
-      users.forEach(user => {
-        let date = user.created_at;
-        console.log(date);
+      let postCount = [];
+
+      posts.forEach(post => {
+        let date = post.created_at;
 
         let dateArr = date.split("년 ");
         let year = dateArr[0];
@@ -44,10 +44,10 @@ export default {
 
         let key = year + "-" + month + "-" + day;
 
-        if (memberCount[key]) {
-          memberCount[key] += 1;
+        if (postCount[key]) {
+          postCount[key] += 1;
         } else {
-          memberCount[key] = 1;
+          postCount[key] = 1;
         }
       });
 
@@ -62,10 +62,10 @@ export default {
 
         let key = year + "-" + month + "-" + day;
 
-        if (memberCount[key]) {
+        if (postCount[key]) {
           this.values.push({
             date: key,
-            counts: memberCount[key]
+            counts: postCount[key]
           });
         } else {
           this.values.push({

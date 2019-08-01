@@ -11,6 +11,7 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
+    drawer: false,
     imageToggle: false,
     banner: '',
 

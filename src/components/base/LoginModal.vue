@@ -61,8 +61,8 @@ export default {
       this.$store.commit("closeLoginModal");
       this.$refs.form.reset();
     },
-    changeLoginToSignup() {
-      this.$store.commit("closeLoginModal");
+    async changeLoginToSignup() {
+      await this.$store.commit("closeLoginModal");
       this.$store.commit("openSignupModal");
       this.$refs.form.reset();
     },
@@ -87,7 +87,7 @@ export default {
 };
 </script>
 <style>
-*{
-  font-family: 'Nanum Gothic', sans-serif;
+* {
+  font-family: "Nanum Gothic", sans-serif;
 }
 </style>

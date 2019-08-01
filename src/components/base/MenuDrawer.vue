@@ -1,0 +1,92 @@
+<template>
+  <v-navigation-drawer v-model="$store.state.drawer" app temporary>
+    <v-list>
+      <v-list-tile style="color:#ff6f61">
+        <v-list-tile-content>
+          <v-list-tile-title>
+            <span>Menu</span>
+          </v-list-tile-title>
+        </v-list-tile-content>
+      </v-list-tile>
+      <v-divider></v-divider>
+      <template v-for="(item, index) in items">
+        <v-list-tile :to="{name: item.href}" :key="index" class="sidetitle">
+          <v-list-tile-action>
+            <v-icon light v-html="item.icon"></v-icon>
+          </v-list-tile-action>
+          <v-list-tile-content>
+            <v-list-tile-title v-html="item.title" class="titletext"></v-list-tile-title>
+          </v-list-tile-content>
+        </v-list-tile>
+      </template>
+      <template v-if="!loggedIn">
+        <v-list-tile @click="openLoginModal">
+          <v-list-tile-action>
+            <v-icon light>input</v-icon>
+          </v-list-tile-action>
+          <v-list-tile-content>
+            <v-list-tile-title>로그인</v-list-tile-title>
+          </v-list-tile-content>
+        </v-list-tile>
+        <v-list-tile @click="openSignupModal">
+          <v-list-tile-action>
+            <v-icon light>person_add</v-icon>
+          </v-list-tile-action>
+          <v-list-tile-content>
+            <v-list-tile-title>회원가입</v-list-tile-title>
+          </v-list-tile-content>
+        </v-list-tile>
+      </template>
+      <template v-else>
+        <v-list-tile @click="logOut">
+          <v-list-tile-action>
+            <v-icon light></v-icon>
+          </v-list-tile-action>
+          <v-list-tile-content>
+            <v-list-tile-title>로그아웃</v-list-tile-title>
+          </v-list-tile-content>
+        </v-list-tile>
+      </template>
+    </v-list>
+  </v-navigation-drawer>
+</template>
+
+<script>
+import firebaseService from "../../services/FirebaseService";
+import { mapState, mapMutations } from "vuex";
+
+export default {
+  data() {
+    return {
+      items: [
+        {
+          href: "post",
+          router: true,
+          title: "게시판",
+          icon: "dashboard"
+        },
+        {
+          href: "portfolio",
+          router: true,
+          title: "포트폴리오",
+          icon: "folder"
+        }
+      ]
+    };
+  },
+  computed: mapState({
+    loggedIn: state => state.user.loggedIn,
+    loginDialog: state => state.modal.loginDialog,
+    signupDialog: state => state.modal.signupDialog
+  }),
+  methods: {
+    logOut() {
+      alert("로그아웃되었습니다.");
+      firebaseService.logout();
+    },
+    ...mapMutations(["openLoginModal", "openSignupModal"])
+  }
+};
+</script>
+
+

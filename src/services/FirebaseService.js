@@ -4,7 +4,7 @@ import 'firebase/auth';
 import "firebase/messaging";
 
 import store from '../store';
-import router from '../router';
+import {router} from '../router';
 
 const POSTS = 'posts';
 const PORTFOLIOS = 'portfolios';
@@ -45,22 +45,6 @@ const messaging = firebase.messaging();
 	});
 
 export default {
-	// getReplyInfo(articleId) {
-
-	// 	const postCollection = firestore.collection(POSTS).doc(articleId)
-	// 	return postCollection
-	// 		.get()
-	// 		.then((doc) => {
-
-	// 			console.log(doc.id);
-	// 			let data = doc.data();
-	// 			return data.reply;
-	// 		})
-	// 		.catch(err => {
-	// 			console.log('Error getting document', err);
-	// 			return 'error';
-	// 		});
-	// },
 	addReply(articleId, replyInfo) {
 
 		replyInfo.created_at = this.getCurrentDate();
@@ -118,7 +102,7 @@ export default {
 			content: postInfo.content,
 			reply: postInfo.reply,
 			author: postInfo.author,
-			identifier: postInfo.identifier,
+			authorUid: postInfo.authorUid,
 			created_at: this.getCurrentDate()
 		})
 	},
@@ -140,7 +124,7 @@ export default {
 		return postsCollection.orderBy('created_at', 'desc').get().then(docSnapshots => {
 			return docSnapshots.docs.map(doc => {
 				let data = doc.data();
-				//data.created_at = new Date(data.created_at.toDate());
+				// data.created_at = new Date(data.created_at.toDate());
 
 				return data;
 			});

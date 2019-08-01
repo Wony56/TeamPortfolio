@@ -1,104 +1,107 @@
 <template>
-<div>
-  <ImgBanner>
-        <span color="#fff">Post</span>
+  <div>
+    <ImgBanner>
+      <span color="#fff">Post</span>
     </ImgBanner>
-    <v-layout justify-center align-center id="magi">
-      <v-flex xs11 md10>
-    <v-card flat>
-      <v-btn class="text-right" text @click="$router.go(-1)">뒤로</v-btn>
-      <v-divider></v-divider>
-      <v-card-title>제목 : {{title}} </v-card-title>
-      <v-divider></v-divider>
-      <v-card-text class="text--primary">작성일 : {{created_at}}</v-card-text>
-      <v-divider></v-divider>
-      <v-card-text>
-        작성자 :
-        {{author}}
-      </v-card-text>
-      <v-divider></v-divider>
-      <v-card-text>내용></v-card-text>
-
-      <v-card-text>{{content}}</v-card-text>
-      <v-divider></v-divider>
-
-      <v-card-actions text-xs-right jusitfy-right align-right>
-        
-        <v-btn class="text-right" text>수정</v-btn>
-        <v-btn class="text-right" text>삭제</v-btn>
-      </v-card-actions>
-
-      <v-divider></v-divider>
-
-      <!-- ==============================REPLY================================================ -->
-      <v-card-title class="headline" style="background-color:#ff6f61; color:#fff">Reply</v-card-title>
-      <v-card-title>Reply</v-card-title>
-      <v-flex>
-        <v-card flat outlined color="#fff" v-for="(reply, index) in replies" :key="index">
-      <v-text-field
-            :id="index"
-            auto-grow
-            rows="3"
-            row-height="25"
-            v-model="reply.replyContent"
-            :readonly="selectedIndex != index"
-          ></v-text-field>
-          <v-card-text>
-            {{reply.author}}
-            {{reply.created_at}}
+    <v-layout id="magi" justify-center text-xs-center>
+      <v-flex xs12 md10>
+        <!-- 뒤로가기 -->
+        <v-layout justify-end>
+          <v-btn style="background-color:#ff6f61; color:#fff" @click="$router.go(-1)">뒤로</v-btn>
+        </v-layout>
+        <!-- 본문 부분 -->
+        <v-card min-height=400 flat>
+          <v-divider></v-divider>
+          <v-card-text class="headline" style="background-color:#ff6f61; color:#fff">{{title}}
           </v-card-text>
-          <v-btn v-show="selectedIndex == index" @click="modifyReply(index)">수정완료</v-btn>
-
-          <v-card-actions justify-right text-xs-right>
-            <v-btn text style="background-color:#ff6f61; color:#fff" flat>Reply</v-btn>
-            <v-btn text style="background-color:#ff6f61; color:#fff" flat @click="checkReplyAuthority(index)">Modify</v-btn>
-            <v-btn text style="background-color:#ff6f61; color:#fff" flat @click="removeReply(index)">Delete</v-btn>
-          </v-card-actions>
+          <v-divider></v-divider>
+          <v-card-title>{{content}}
+          </v-card-title>
         </v-card>
-      </v-flex>
-      <!-- ========================================================================================== -->
-
-      <v-card flat>
-        <v-flex xs12 sm12>
-          <v-textarea
-            v-model="replyContent"
-            label="댓글입력"
-            auto-grow
-            rows="1"
-            row-height="15"
-            flat
-            color="#ff6f61"
-          ></v-textarea>
-        </v-flex>
-      </v-card>
-      <div text-xs-right justify-right>
-      <v-btn style="background-color:#ff6f61; color:#fff" @click="addReply()">Add Reply</v-btn>
-      </div>
-      <v-flex xs12 text-xs-center round my-5 v-if="loadMore">
-        <v-pagination v-model="focusPage" :length="totalPage" :total-visible="7" color="#ff6616"></v-pagination>
-      </v-flex>
-    </v-card>
-      </v-flex>
-    </v-layout>
-    <!-- =========================================== MODAL =========================================== -->
-    <v-layout justify-center>
-      <v-dialog v-model="dialog" persistent max-width="290">
-        <v-card>
-          <v-card-title class="headline">{{modalTitle}}</v-card-title>
-          <v-card-text>{{modalContent}}</v-card-text>
+        <!--버튼 부분-->
+        <v-layout justify-end>
           <v-card-actions>
-            <v-spacer></v-spacer>
-            <v-btn color="green darken-1" text @click="dialog = false">확인</v-btn>
+            <v-btn v-if="modifyFlag" style="background-color:#ff6f61; color:#fff" @click="checkPostAuthority()">수정</v-btn>
+            <v-btn v-else style="background-color:#ff6f61; color:#fff" @click="modifyPost()">수정완료</v-btn>
+            <v-btn v-if="!modifyFlag" style="background-color:#ff6f61; color:#fff" @click="modifyFlag = true">취소</v-btn>
+            <v-btn v-if="modifyFlag" style="background-color:#ff6f61; color:#fff" @click="deletePost()" text>삭제</v-btn>
           </v-card-actions>
-        </v-card>
-      </v-dialog>
+        </v-layout>
+        <!--댓글 부분-->
+        <v-layout justify-center text-xs-center>
+          <v-flex row wrap>
+          <v-card max-height=50>
+            <v-card-text style="background-color:#ff6f61; color:#fff">
+              Comments
+            </v-card-text>
+            </v-card>
+          </v-flex>
+        </v-layout>
+        <v-layout justify-end text-xs-right>
+          <v-flex row wrap>
+          <v-card min-height=50 max-height=170>
+            <v-card-text>
+            <v-textarea
+                v-model="replyContent"
+                label="댓글입력"
+                auto-grow
+                rows="1"
+                row-height="15"
+                flat
+                color="#ff6f61"
+              ></v-textarea>
+            </v-card-text>
+              <v-card-text>
+              <v-btn flat
+                  color="#ff6f61" @click="addReply()">댓글 추가</v-btn>
+              </v-card-text>
+            </v-card>
+          </v-flex>
+        </v-layout>
+        <!--하나씩 카드로 나눠서 보여주는걸로 할 예정-->
+        <v-layout v-for="(reply, index) in replies" :key="index">
+          <v-flex row wrap>
+            <br>
+            <v-card min-height=100>
+              <v-card-title>
+                {{reply.replyContent}}
+              </v-card-title>
+              <v-divider></v-divider>
+              <v-layout justify-end text-xs-right>
+              <v-card-text style="color:gray">
+                {{reply.author}}
+                {{reply.created_at}}
+                <v-btn
+                  text
+                  flat
+                  color="#ff6f61"
+                  @click="checkReplyAuthority(index)"
+                >수정</v-btn>
+                <v-btn
+                  text
+                  flat
+                  color="#ff6f61"
+                  @click="removeReply(index)"
+                >삭제</v-btn>
+              </v-card-text>
+              </v-layout>
+            </v-card>          
+          </v-flex>
+        </v-layout>
+            <v-pagination
+              v-model="focusPage"
+              :length="totalPage"
+              :total-visible="5"
+              color="#ff6616"
+            ></v-pagination>
+      </v-flex>
     </v-layout>
-    <!-- =========================================================================================== -->
   </div>
 </template>
 
 <script>
 import FirebaseService from "@/services/FirebaseService";
+import MarkdownEditor from "vue-simplemde/src/markdown-editor";
 import ImgBanner from "../components/base/ImgBanner";
 import { mapState } from "vuex";
 
@@ -113,9 +116,10 @@ export default {
       title: "",
       content: "",
       author: "",
-      identifier: "",
       articleId: "",
       created_at: "",
+      postId: "",
+      modifyFlag: true,
 
       loadMore: false,
       focusPage: 1,
@@ -123,11 +127,13 @@ export default {
 
       modalTitle: "",
       modalContent: "",
-      dialog: false
+      dialog: false,
+      movePage: false
     };
   },
-  components:{
-    ImgBanner
+  components: {
+    ImgBanner,
+    MarkdownEditor
   },
   computed: {
     ...mapState({
@@ -168,9 +174,7 @@ export default {
       };
     },
     addReply() {
-      
-      if(this.user.uid == undefined) {
-
+      if (this.user.uid == undefined) {
         this.modalTitle = "WARNING";
         this.modalContent = "로그인 해주세요.";
         this.dialog = true;
@@ -183,8 +187,10 @@ export default {
       this.replyContent = "";
     },
     removeReply(index) {
-      if (this.replies[index].uid == this.user.uid) {
-
+      if (
+        this.replies[index].uid == this.user.uid ||
+        this.user.tier == "diamond"
+      ) {
         let reply = this.replies[index];
         this.replies.splice(index, 1);
         FirebaseService.removeReply(this.articleId, reply);
@@ -195,7 +201,10 @@ export default {
       }
     },
     checkReplyAuthority(index) {
-      if (this.replies[index].uid == this.user.uid) {
+      if (
+        this.replies[index].uid == this.user.uid ||
+        this.user.tier == "diamond"
+      ) {
         if (this.selectedIndex == -1) this.selectedIndex = index;
         else this.selectedIndex = -1;
       } else {
@@ -205,10 +214,15 @@ export default {
       }
     },
     modifyReply(index) {
-
-      if (this.replies[index].uid == this.user.uid) {
-
-        FirebaseService.modifyReply(this.articleId, index, document.getElementById(index).value);
+      if (
+        this.replies[index].uid == this.user.uid ||
+        this.user.tier == "diamond"
+      ) {
+        FirebaseService.modifyReply(
+          this.articleId,
+          index,
+          document.getElementById(index).value
+        );
         this.selectedIndex = -1;
       } else {
         this.modalTitle = "ERROR";
@@ -216,8 +230,51 @@ export default {
         this.dialog = true;
       }
     },
-    getCurrentDate() {
 
+    checkPostAuthority() {
+
+      if (this.postId == this.user.uid || this.user.tier == "diamond") {
+        this.modifyFlag = false;
+      } else {
+        this.modalTitle = "ERROR";
+        this.modalContent = "권한이 없습니다.";
+        this.dialog = true;
+      }
+    },
+    deletePost() {
+
+      if (this.postId == this.user.uid || this.user.tier == "diamond") {
+        this.movePage = false;
+
+        FirebaseService.deletePost(this.articleId);
+        this.modalTitle = "성공";
+        this.modalContent = "글을 성공적으로 삭제하였습니다.";
+        this.dialog = true;
+      } else {
+        this.modalTitle = "ERROR";
+        this.modalContent = "권한이 없습니다.";
+        this.dialog = true;
+      }
+    },
+    modifyPost() {
+
+      if (this.postId == this.user.uid || this.user.tier == "diamond") {
+        this.movePage = true;
+
+        FirebaseService.modifyPost(this.articleId, this.getPostInfo());
+        this.modalTitle = "성공";
+        this.modalContent = "글을 성공적으로 수정하였습니다.";
+        this.dialog = true;
+        this.modifyFlag = true;
+
+      } else {
+        this.modalTitle = "ERROR";
+        this.modalContent = "권한이 없습니다.";
+        this.dialog = true;
+      }
+    },
+
+    getCurrentDate() {
       return new Date();
     }
   },
@@ -228,21 +285,26 @@ export default {
 </script>
 
 <style>
-*{
-  font-family: 'Nanum Gothic', sans-serif;
+* {
+  font-family: "Nanum Gothic", sans-serif;
 }
 
-#magi{
-  margin-top:-100px;
+#magi {
+  margin-top: -150px;
 }
-@media ( min-width: 768px ) {
-  #magi{
-  margin-top:-200px;
+@media (min-width: 768px) {
+  #magi {
+    margin-top: -250px;
+  }
 }
+@media (min-width: 1024px) {
+  #magi {
+    margin-top: -650px;
+  }
 }
-@media ( min-width: 1024px ) {
-  #magi{
-  margin-top:-500px;
-}
+
+.choosingcolor{
+  background-color:#ff6f61;
+  color:#fff;
 }
 </style>

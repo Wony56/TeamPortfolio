@@ -94,7 +94,7 @@
                 <v-card-title>회원 관리</v-card-title>
                 <v-divider></v-divider>
                 <v-card-text>
-                  <MemberTable />
+                  <MemberTable/>
                 </v-card-text>
               </v-card>
             </v-flex>

@@ -47,7 +47,8 @@ const messaging = firebase.messaging();
 export default {
 	addReply(articleId, replyInfo) {
 
-		replyInfo.created_at = this.getCurrentDate();
+		// replyInfo.created_at = this.getCurrentDate();
+		replyInfo.created_at = firebase.firestore.FieldValue.serverTimestamp();
 		console.log("REPLY> ", replyInfo);
 
 		const postCollection = firestore.collection(POSTS).doc(articleId)
@@ -83,9 +84,11 @@ export default {
 			console.log(doc.data());
 			let ret = doc.data();
 			ret.reply[index].replyContent = replyContent;
-			ret.reply[index].created_at = this.getCurrentDate();
+			// ret.reply[index].created_at = this.getCurrentDate();
+			ret.reply[index].created_at = firebase.firestore.FieldValue.serverTimestamp();
 
 			return firestore.collection(POSTS).doc(articleId).update({
+
 				title: ret.title,
 				content: ret.content,
 				reply: ret.reply,
@@ -103,7 +106,8 @@ export default {
 			reply: postInfo.reply,
 			author: postInfo.author,
 			authorUid: postInfo.authorUid,
-			created_at: this.getCurrentDate()
+			// created_at: this.getCurrentDate()
+			created_at: firebase.firestore.FieldValue.serverTimestamp()
 		})
 	},
 	deletePost(id) {
@@ -116,7 +120,8 @@ export default {
 			displayName: user.displayName,
 			email: user.email,
 			tier: 'bronze',
-			created_at: this.getCurrentDate()
+			// created_at: this.getCurrentDate()
+			created_at: firebase.firestore.FieldValue.serverTimestamp()
 		})
 	},
 	getUsers() {
@@ -136,7 +141,7 @@ export default {
 			if (doc.exists) {
 				
 				let data = doc.data();
-				//data.created_at = new Date(data.created_at.toDate());
+				// data.created_at = new Date(data.created_at.toDate());
 
 				return data;
 			}
@@ -158,7 +163,8 @@ export default {
 			type: type,
 			uid: user.uid,
 			name: user.displayName,
-			date: this.getCurrentDate()
+			// date: this.getCurrentDate()
+			date: firebase.firestore.FieldValue.serverTimestamp()
 		})
 	},
 	getPostById(id) {
@@ -170,6 +176,7 @@ export default {
 
 				let data = doc.data();
 				data.articleId = doc.id;
+				data.created_at = new Date(data.created_at.toDate());
 				return data;
 			})
 			.catch(err => {
@@ -186,6 +193,8 @@ export default {
 					let data = doc.data();
 
 					data.id = doc.id;
+					data.created_at = new Date(data.created_at.toDate());
+
 					return data
 				})
 			})
@@ -198,7 +207,8 @@ export default {
 			reply,
 			author,
 			authorUid,
-			created_at: this.getCurrentDate()
+			// created_at: this.getCurrentDate()
+			created_at: firebase.firestore.FieldValue.serverTimestamp()
 		}).catch(function (error) {
 
 			return "fail";
@@ -213,10 +223,11 @@ export default {
 
 				console.log(doc.id);
 				let data = doc.data();
-				data.articleId = doc.id;
+				data.created_at = new Date(data.created_at.toDate());
+				//data.articleId = doc.id;
 
 				console.log('Document data:', data);
-				console.log('Articel ID: ', data.id);
+				//console.log('Article ID: ', data.articleId);
 				return data;
 			})
 			.catch(err => {
@@ -233,7 +244,7 @@ export default {
 					let data = doc.data()
 
 					data.id = doc.id;
-					//data.created_at = new Date(data.created_at.toDate())
+					data.created_at = new Date(data.created_at.toDate())
 					return data
 				})
 			})
@@ -244,9 +255,35 @@ export default {
 			title,
 			body,
 			img,
-			created_at: this.getCurrentDate()
+			// created_at: this.getCurrentDate()
+			created_at: firebase.firestore.FieldValue.serverTimestamp()
 		})
 	},
+
+	modifyPortfoilo(id, title, body, img) {
+
+		return firestore.collection(PORTFOLIOS).doc(id).update({
+			
+			title,
+			body,
+			img,
+			created_at: firebase.firestore.FieldValue.serverTimestamp()
+
+		}).catch(error => {
+			alert(error.message);
+		})
+	},
+
+	modifyPortfolioImage(id, img) {
+
+		return firestore.collection(PORTFOLIOS).doc(id).update({
+			
+			img
+		}).catch(error => {
+			alert(error.message);
+		})
+	},
+
 	getImage() {
 		const imagesCollection = firestore.collection(IMAGES)
 		return imagesCollection
@@ -255,7 +292,7 @@ export default {
 			.then((docSnapshots) => {
 				return docSnapshots.docs.map((doc) => {
 					let data = doc.data()
-					//data.created_at = new Date(data.created_at.toDate())
+					data.created_at = new Date(data.created_at.toDate())
 					return data
 				})
 			})
@@ -370,24 +407,25 @@ export default {
 		}).catch(err => {
 			console.log(err);
 		});
-	},
-	getCurrentDate() {
-
-		// let currentDate = firebase.firestore.FieldValue.serverTimestamp();
-		let currentDate = new Date();
-
-		return currentDate.getFullYear() +
-			"년 " +
-			(currentDate.getMonth() + 1) +
-			"월 " +
-			currentDate.getDate() +
-			"일 " +
-			currentDate.getHours() +
-			"시 " +
-			currentDate.getMinutes() +
-			"분" +
-			currentDate.getSeconds() +
-			"초"
-			;
 	}
+	// ,
+	// getCurrentDate() {
+
+	// 	// let currentDate = firebase.firestore.FieldValue.serverTimestamp();
+	// 	let currentDate = new Date();
+
+	// 	return currentDate.getFullYear() +
+	// 		"년 " +
+	// 		(currentDate.getMonth() + 1) +
+	// 		"월 " +
+	// 		currentDate.getDate() +
+	// 		"일 " +
+	// 		currentDate.getHours() +
+	// 		"시 " +
+	// 		currentDate.getMinutes() +
+	// 		"분" +
+	// 		currentDate.getSeconds() +
+	// 		"초"
+	// 		;
+	// }
 }

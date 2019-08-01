@@ -94,6 +94,7 @@ import store from "./store";
 import Header from "./components/base/Header.vue";
 import Footer from "./components/base/Footer.vue";
 
+
 export default {
   name: "App",
   store,
@@ -181,6 +182,7 @@ export default {
     }
   },
   computed: {
+
     activeFab() {
       switch (this.tabs) {
         case "one":

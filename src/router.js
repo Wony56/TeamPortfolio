@@ -10,6 +10,7 @@ import PortfolioWriterPage from './views/PortfolioWriterPage.vue'
 import PostWriterPage from './views/PostWriterPage.vue'
 import PostViewPage from './views/PostViewPage.vue'
 import Adminpage from './views/AdminPage.vue'
+import PortfolioViewPage from './views/PortfolioViewPage.vue'
 
 export const router = new Router({
 	mode: 'history',
@@ -70,6 +71,11 @@ export const router = new Router({
 			meta: {
 				requiresAuth: true
 			}
+		},
+		{
+			path: '/portfolioview/:portfolioInfo',
+			name: 'portfolioview',
+			component: PortfolioViewPage
 		}
 	],
 	scrollBehavior(to, from, savedPosition) {

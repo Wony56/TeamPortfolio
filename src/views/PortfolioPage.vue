@@ -22,6 +22,10 @@ import PortfolioList from "../components/portfolio/PortfolioList";
 
 export default {
   name: "PortfolioPage",
+  mounted() {
+
+    // this.$store.state.images.imgurLinks = [];
+  },
   components: {
     ImgBanner,
     PortfolioList

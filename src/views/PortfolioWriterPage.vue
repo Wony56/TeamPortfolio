@@ -70,8 +70,9 @@ export default {
             this.image
           );
 
-          this.$store.state.images.imgurLinks = {};
-
+          this.$store.state.images.imgurLinks = [];
+          this.$store.state.images.images = [];
+          
           this.dialog = true;
         } catch (error) {
           console.log(error);
@@ -84,7 +85,7 @@ export default {
 
 <style>
 #upload {
- font-family: 'Nanum Gothic', sans-serif;
+  font-family: "Nanum Gothic", sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;

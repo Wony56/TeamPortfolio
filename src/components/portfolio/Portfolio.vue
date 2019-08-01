@@ -1,5 +1,6 @@
 <template>
   <v-card
+  class="demo"
   :loading="loading"
   width="350"
   height="80%">

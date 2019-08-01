@@ -73,7 +73,7 @@ export const router = new Router({
 			}
 		},
 		{
-			path: '/portfolioview/:portfolioInfo',
+			path: '/portfolioview/:portfolioIndex',
 			name: 'portfolioview',
 			component: PortfolioViewPage
 		}

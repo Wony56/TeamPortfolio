@@ -1,9 +1,7 @@
 <template>
   <v-card
-  class="demo"
-  :loading="loading"
-  width="350"
-  height="80%">
+    width="300"
+    height="80%">
     <v-carousel class="notranslate" hide-delimiters>
       <v-carousel-item v-for="(imgItem,i) in imgItems" :key="i" :src="imgItem"></v-carousel-item>
     </v-carousel>

@@ -127,6 +127,14 @@ export default {
 
     GridImage,
     GitlabAPI
+  },  
+  watch: {
+    loaded: function(newVal, oldVal) {
+      if (newVal && !oldVal) {
+
+        //
+      }
+    }
   },
   methods: {
     getImgUrl(img) {

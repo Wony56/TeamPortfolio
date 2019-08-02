@@ -7,6 +7,7 @@ import modal from './store/modules/modal';
 import notification from './store/modules/notification';
 import admin from './store/modules/admin';
 import article from './store/articles/article'
+import message from './store/pwa/pushMessage'
 
 Vue.use(Vuex)
 
@@ -81,6 +82,7 @@ export default new Vuex.Store({
     modal,
     notification,
     admin,
-    article
+    article,
+    message
   }
 });

@@ -40,6 +40,11 @@ messaging.requestPermission()
 	});
 
 messaging.onMessage(function(payload) {
+	store.state.message = payload;
+
+	console.log(payload);
+	console.log(store.state.message.notification.body);
+	
 	console.log('onMessage: ', payload);
 })
 

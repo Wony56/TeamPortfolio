@@ -84,7 +84,7 @@
                 :id="index"
                 v-model="reply.replyContent"
                 :readonly="selectedIndex != index"
-              ></v-text-field>
+              ></v-text-field>  
               <v-layout justify-end text-xs-right>
                 <v-card-text style="color:gray">
                   {{reply.author}} |

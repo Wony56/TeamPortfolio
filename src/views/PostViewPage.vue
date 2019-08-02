@@ -13,16 +13,24 @@
         <v-card min-height="400" flat>
           <v-divider></v-divider>
           <v-layout text-xs-center>
-            <v-card-text class="headline" style="background-color:#ff6f61; color:#fff">{{title}}</v-card-text>
+            <v-card-text class="headline" style="background-color:#ff6f61; color:#fff">{{postInfo.title}}</v-card-text>
+          </v-layout>
+
+          <v-divider></v-divider>
+
+          <v-layout>
+            <v-card-text style="background-color:#ff6f61; color:#fff">작성일 : {{postInfo.created_at}}</v-card-text>
           </v-layout>
           <v-divider></v-divider>
 
+          <!-- 수정버튼 누르기전 -->
           <div v-if="!postFlag">
-            <VueMarkdown :source="content"></VueMarkdown>
+            <VueMarkdown :source="postInfo.content"></VueMarkdown>
           </div>
 
+          <!-- 수정버튼 누른 후 -->
           <div v-else>
-            <MarkdownEditor v-model="content"></MarkdownEditor>
+            <MarkdownEditor v-model="postInfo.content"></MarkdownEditor>
           </div>
         </v-card>
         <!--버튼 부분-->
@@ -31,13 +39,13 @@
             <v-btn
               v-if="!postFlag"
               style="background-color:#ff6f61; color:#fff"
-              @click="checkPostAuthority()"
+              @click="authorizationCheck('POST', 0)"
             >수정</v-btn>
             <v-btn v-else style="background-color:#ff6f61; color:#fff" @click="modifyPost()">수정완료</v-btn>
             <v-btn
               v-if="postFlag"
               style="background-color:#ff6f61; color:#fff"
-              @click="postFlag = false"
+              @click="cancelPostModify()"
             >취소</v-btn>
             <v-btn
               v-if="!postFlag"
@@ -60,6 +68,7 @@
             <v-card min-height="50" max-height="170">
               <v-card-text>
                 <v-textarea
+                  id="replyInput"
                   v-model="replyContent"
                   label="댓글입력"
                   auto-grow
@@ -94,7 +103,7 @@
                     text
                     flat
                     color="#ff6f61"
-                    @click="checkReplyAuthority(index)"
+                    @click="authorizationCheck('REPLY', index)"
                   >수정</v-btn>
 
                   <v-btn v-else text flat color="black" @click="modifyReply(index)">수정완료</v-btn>
@@ -126,7 +135,8 @@
         <v-card-text>{{modalContent}}</v-card-text>
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn v-if="movePage" color="green darken-1" flat to="/post">Close</v-btn>
+          <v-btn v-if="movePage == 1" color="green darken-1" flat @click="location.reload()">Close</v-btn>
+          <v-btn v-else-if="movePage == 2" color="green darken-1" flat to="/post">Close</v-btn>
           <v-btn v-else color="blue darken-1" flat @click="dialog = false">Close</v-btn>
         </v-card-actions>
       </v-card>
@@ -152,23 +162,30 @@ export default {
       selectedIndex: -1,
       replyContent: "",
 
-      title: "",
-      content: "",
-      authorUid: "",
-      author: "",
       articleId: "",
-      created_at: "",
-      postFlag: false,
 
-      replyFlag: false,
+      postFlag: false,
+      replyFlag: false,      
+      dialog: false,
+      movePage: 0,
       loadMore: false,
+
       focusPage: 1,
       totalPage: 10,
 
       modalTitle: "",
       modalContent: "",
-      dialog: false,
-      movePage: false
+
+      postInfo: {
+
+        author: {type:String},
+        authorUid: {type:String},
+        content: {type:String},
+        created_at: {type:Date},
+        reply: {type:Array},
+        title: {type:String}
+      },
+      originContent: ""
     };
   },
   components: {
@@ -186,32 +203,44 @@ export default {
       let ret = await FirebaseService.getPostById(this.$route.params.postIndex);
 
       this.articleId = ret.articleId;
-      this.title = ret.title;
-      this.content = ret.content;
-      this.author = ret.author;
-      this.authorUid = ret.authorUid;
-      this.created_at = ret.created_at;
 
-      console.log(this.replies);
+      this.postInfo.title = ret.title;
+      this.postInfo.content = ret.content;
+      this.postInfo.author = ret.author;
+      this.postInfo.authorUid = ret.authorUid;
+      this.postInfo.created_at = ret.created_at;
 
-      let index = 0;
-
+      console.log(ret.reply);
       this.loadMore = true;
-      this.totalPage = parseInt(ret.reply.length / 5) + 1;
 
-      console.log(this.totalPage);
+      if(ret.reply.length > 0) {
 
-      for (let page = 0; page <= this.totalPage; page++) {
-        let temp = [];
+        let index = 0;
+        let flag = false;
+        this.totalPage = parseInt(ret.reply.length / 5);
 
-        for (let count = 0; count < 5; count++) {
-          if (ret.reply[index] === undefined) break;
-          temp.push(ret.reply[index++]);
+        for (let page = 0; page <= this.totalPage; page++) {
+          let temp = [];
+
+          for (let count = 0; count < 5; count++) {
+            if (ret.reply[index] === undefined) {
+
+              flag = true;
+              break;
+            }
+            temp.push(ret.reply[index++]);
+          }
+          if(temp.length > 0)
+            this.replies.push(temp);
+          if(flag)
+            break;
         }
-        this.replies.push(temp);
+        this.totalPage = this.replies.length;
       }
-      console.log(this.replies);
-      this.articleId = this.$route.params.postIndex;
+      else {
+
+        this.totalPage = 1;
+      }
     },
     getReplyInfo() {
       return {
@@ -221,27 +250,15 @@ export default {
         created_at: { type: Date }
       };
     },
-    getPostInfo() {
-      return {
-        author: this.user.displayName,
-        content: this.content,
-        created_at: this.created_at,
-        authorUid: this.user.uid,
-        reply: this.replies,
-        title: this.title
-      };
-    },
     addReply() {
       if (this.user.uid == undefined) {
-        this.modalTitle = "WARNING";
-        this.modalContent = "로그인 해주세요.";
-        this.dialog = true;
+        this.setModalContent("알림", "로그인을 해주시길 바랍니다.");
         return;
       }
       let reply = this.getReplyInfo();
-      this.replies[this.focusPage - 1].push(reply);
+      this.paginations(reply);
       FirebaseService.addReply(this.articleId, reply, "POST");
-
+      
       this.replyContent = "";
     },
     removeReply(index) {
@@ -249,29 +266,17 @@ export default {
         this.replies[this.focusPage - 1][index].uid == this.user.uid ||
         this.user.tier == "diamond"
       ) {
-        let reply = this.replies[this.focusPage - 1][index];
 
-        FirebaseService.removeReply(this.articleId, reply, "POST");
+        FirebaseService.removeReply(this.articleId, this.replies[this.focusPage - 1][index], "POST");
         this.replies[this.focusPage - 1].splice(index, 1);
-      } else {
-        this.modalTitle = "ERROR";
-        this.modalContent = "권한이 없습니다.";
-        this.dialog = true;
-      }
-    },
-    checkReplyAuthority(index) {
-      if (
-        this.replies[this.focusPage - 1][index].uid == this.user.uid ||
-        this.user.tier == "diamond"
-      ) {
-        if (this.selectedIndex == -1) this.selectedIndex = index;
-        else this.selectedIndex = -1;
 
-        this.replyFlag = true;
+        if(this.replies[this.focusPage - 1].length == 0) {
+          this.totalPage -= 1;
+          this.focusPage -= 1;
+        }
       } else {
-        this.modalTitle = "ERROR";
-        this.modalContent = "권한이 없습니다.";
-        this.dialog = true;
+
+         this.setModalContent("오류", "권한이 없습니다.");
       }
     },
     modifyReply(index) {
@@ -288,49 +293,99 @@ export default {
         this.selectedIndex = -1;
         this.replyFlag = false;
       } else {
-        this.modalTitle = "ERROR";
-        this.modalContent = "권한이 없습니다.";
-        this.dialog = true;
+
+         this.setModalContent("오류", "권한이 없습니다.");
       }
     },
 
-    checkPostAuthority() {
-      if (this.postId == this.user.uid || this.user.tier == "diamond") {
-        this.postFlag = true;
-      } else {
-        this.modalTitle = "ERROR";
-        this.modalContent = "권한이 없습니다.";
-        this.dialog = true;
+    authorizationCheck(select, index) {
+
+      if (this.user === undefined) {
+
+        this.setModalContent("알림", "로그인을 해주시길 바랍니다.");
+        return;
+      }
+
+      if(select === "POST") {
+
+        if ((this.user.loggedIn === true) && (this.postId == this.user.uid || this.user.tier == "diamond")) {
+          
+          console.log("???");
+
+          this.postFlag = true;
+          this.originContent = this.postInfo.content;
+
+        } else {
+          this.setModalContent("오류", "권한이 없습니다.");
+        }
+      }
+      else {
+
+        if (this.replies[this.focusPage - 1][index].uid == this.user.uid ||
+          this.user.tier == "diamond"
+        ) {
+          if (this.selectedIndex == -1) 
+            this.selectedIndex = index;
+          else 
+            this.selectedIndex = -1;
+
+          this.replyFlag = true;
+        } else {
+          this.setModalContent("오류", "권한이 없습니다.");
+        }
       }
     },
-    deletePost() {
-      if (this.postId == this.user.uid || this.user.tier == "diamond") {
-        this.movePage = false;
+    setModalContent(title, content) {
 
-        FirebaseService.deletePost(this.articleId);
-        this.modalTitle = "성공";
-        this.modalContent = "글을 성공적으로 삭제하였습니다.";
-        this.dialog = true;
-      } else {
-        this.modalTitle = "ERROR";
-        this.modalContent = "권한이 없습니다.";
-        this.dialog = true;
-      }
+        this.modalTitle = title;
+        this.modalContent = content;
+        this.dialog = !this.dialog;
     },
     modifyPost() {
-      if (this.postId == this.user.uid || this.user.tier == "diamond") {
-        this.movePage = true;
 
-        FirebaseService.modifyPost(this.articleId, this.getPostInfo());
-        this.modalTitle = "성공";
-        this.modalContent = "글을 성공적으로 수정하였습니다.";
-        this.dialog = true;
-        this.postFlag = true;
+        FirebaseService.modifyPost(this.articleId, this.postInfo, this.replies);
+        this.setModalContent("성공", "글을 성공적으로 수정하였습니다.");
+        this.movePage = 1;
+        this.postFlag = false;
+    },
+    deletePost() {
+      if ((this.user.loggedIn === true) && (this.postId == this.user.uid || this.user.tier == "diamond")) {
+        this.movePage = 2;
+
+        FirebaseService.deletePost(this.articleId);
+        this.setModalContent("성공", "글이 성공적으로 삭제 되었습니다.");
       } else {
-        this.modalTitle = "ERROR";
-        this.modalContent = "권한이 없습니다.";
-        this.dialog = true;
+        this.setModalContent("오류", "권한이 없습니다.");
       }
+    },
+    paginations(reply) {
+
+      console.log("BEFORE ", this.replies);
+
+      if(this.replies[this.totalPage - 1] === undefined) {
+
+        this.replies.push([reply]);
+        return;
+      }
+
+      if(this.replies[this.totalPage - 1].length == 5) {
+
+        console.log("IF ", this.replies[this.totalPage - 1]);
+        this.totalPage += 1;
+        this.replies.push([reply]);
+      } else {
+
+        console.log("ELSE ", this.replies[this.totalPage - 1]);
+        this.replies[this.totalPage - 1].push(reply);
+      }
+      console.log("AFTER ", this.replies);
+    },
+    cancelPostModify() {
+
+      console.log("test");
+
+      this.postFlag = !this.postFlag;
+      this.postInfo.content = this.originContent;
     }
   },
   mounted() {

@@ -10,11 +10,9 @@
     <v-card-text>
       <span class="grey--text" v-line-clamp="4">{{body}}</span>
     </v-card-text>
-    <v-btn
+    <v-btn block flat style="background-color:#ff6f61; color:#fff"
       :to="{ name: 'portfolioview', params: { portfolioId: this.id}}"
     >MORE</v-btn>
-    
-      <div>{{imgItems}}</div>
   </v-card>
 </template>
 

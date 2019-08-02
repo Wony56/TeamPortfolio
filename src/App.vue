@@ -2,6 +2,7 @@
   <div>
     <v-app>
       <Header />
+
       <v-content id="contents">
         <router-view />
 
@@ -20,43 +21,53 @@
           </v-card>
         </v-dialog>
       </v-content>
-      <!-- Footer -->
+
       <Footer />
+
+      <LoginSnackbar />
+      <LogoutSnackbar />
     </v-app>
   </div>
 </template>
  <script>
-  (function(d, s, id){
-      var js, fjs = d.getElementsByTagName(s)[0];
-      if (d.getElementById(id)) {return;}
-      js = d.createElement(s); js.id = id;
-      js.src = "https:\/\/danbee.ai/js/plugins/frogue-embed/frogue-embed.min.js";
-      fjs.parentNode.insertBefore(js, fjs);
-  }(document, 'script', 'frdogue-embed'));
-  </script>
+(function(d, s, id) {
+  var js,
+    fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) {
+    return;
+  }
+  js = d.createElement(s);
+  js.id = id;
+  js.src = "https://danbee.ai/js/plugins/frogue-embed/frogue-embed.min.js";
+  fjs.parentNode.insertBefore(js, fjs);
+})(document, "script", "frdogue-embed");
+</script>
 <script>
 import store from "./store";
 import Header from "./components/base/Header.vue";
 import Footer from "./components/base/Footer.vue";
-import Firebase from './services/FirebaseService'
+import LoginSnackbar from "./components/snackbar/LoginSnackbar";
+import LogoutSnackbar from "./components/snackbar/LogoutSnackbar";
 
-var key = 'AIzaSyDCo_1aj9Q1FYra6QCPzkV6Fya6nHqSZr4';
+import Firebase from "./services/FirebaseService";
+
+var key = "AIzaSyDCo_1aj9Q1FYra6QCPzkV6Fya6nHqSZr4";
 var to = "";
 var notification = {
-  'title': '새글!',
-  'body': '이건새글',
-  'icon': 'firebase-logo.png',
-  'click_action': 'http://localhost:8080'
+  title: "새글!",
+  body: "이건새글",
+  icon: "firebase-logo.png",
+  click_action: "http://localhost:8080"
 };
 
-
-export default 
-{
+export default {
   name: "App",
   store,
   components: {
     Header,
-    Footer
+    Footer,
+    LoginSnackbar,
+    LogoutSnackbar
   },
   data() {
     return {
@@ -75,8 +86,8 @@ export default
       bottom: true,
       left: false,
       transition: "slide-y-reverse-transition",
-      
-      token: "",
+
+      token: ""
     };
   },
   created() {
@@ -135,34 +146,35 @@ export default
       return triggerDefault;
     },
     postPush() {
-      fetch('https://fcm.googleapis.com/fcm/send', {
-        'method': 'POST',
-        'headers': {
-          'Authorization': 'key=' + key,
-          'Content-Type': 'application/json'
+      fetch("https://fcm.googleapis.com/fcm/send", {
+        method: "POST",
+        headers: {
+          Authorization: "key=" + key,
+          "Content-Type": "application/json"
         },
-        'body': JSON.stringify({
-          'notification': notification,
-          'to': to
+        body: JSON.stringify({
+          notification: notification,
+          to: to
         })
-      }).then(function(response) {
-        console.log(response);
-      }).catch(function(error) {
-        console.error(error);
       })
+        .then(function(response) {
+          console.log(response);
+        })
+        .catch(function(error) {
+          console.error(error);
+        });
     },
     async loadToken() {
       await Firebase.getToken().then(ret => {
         // this.to = ret;
         to = ret;
       });
-    },
+    }
   },
   mounted() {
-  this.loadToken();
+    this.loadToken();
   },
   computed: {
-
     activeFab() {
       switch (this.tabs) {
         case "one":
@@ -190,7 +202,7 @@ export default
       this.right = !val;
     }
   }
-}
+};
 </script>
 
 

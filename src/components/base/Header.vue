@@ -48,19 +48,6 @@
         <signup-modal />
       </v-dialog>
     </v-toolbar>
-
-    <v-snackbar
-      v-model="snackbar"
-      :color="'#ff6f61'"
-      :top="true"
-      :left="false"
-      :right="false"
-      :bottom="false"
-      :timeout="3000"
-    >
-      <v-icon color="white" class="mr-3">notifications</v-icon>
-      <div class="snack">{{snackbarText}}</div>
-    </v-snackbar>
   </nav>
 </template>
 
@@ -94,9 +81,7 @@ export default {
   computed: mapState({
     loggedIn: state => state.user.loggedIn,
     loginDialog: state => state.modal.loginDialog,
-    signupDialog: state => state.modal.signupDialog,
-    snackbar: state => state.notification.snackbar,
-    snackbarText: state => state.notification.snackbarText
+    signupDialog: state => state.modal.signupDialog
   }),
   methods: {
     handleDrawer() {
@@ -118,10 +103,12 @@ export default {
       }
     },
     logOut() {
-      alert("로그아웃되었습니다.");
-      firebaseService.logout();
+      firebaseService.logout().then(() => {
+        this.$router.replace("/");
+        this.showLogoutBar();
+      });
     },
-    ...mapMutations(["openLoginModal", "openSignupModal"])
+    ...mapMutations(["openLoginModal", "openSignupModal", "showLogoutBar"])
   }
 };
 </script>

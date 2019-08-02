@@ -4,7 +4,6 @@ import 'firebase/auth';
 import "firebase/messaging";
 
 import store from '../store';
-import {router} from '../router';
 
 const POSTS = 'posts';
 const PORTFOLIOS = 'portfolios';
@@ -175,7 +174,6 @@ export default {
 		const postsCollection = firestore.collection(USERS)
 		return postsCollection.orderBy('created_at', 'desc').get().then(docSnapshots => {
 			return docSnapshots.docs.map(doc => {
-
 				let data = doc.data();
 				return data;
 			});
@@ -185,7 +183,6 @@ export default {
 		const postsCollection = firestore.collection(USERS)
 		return postsCollection.doc(user.uid).get().then(doc => {
 			if (doc.exists) {
-				
 				let data = doc.data();
 				this.postToken(user);
 				return data;
@@ -378,10 +375,6 @@ export default {
 			}
 			store.state.user.user = await this.getUser(result.user);
 
-			store.state.notification.snackbar = false;
-			store.state.notification.snackbarText = store.state.user.user.displayName + "님, 환영합니다.";
-			store.state.notification.snackbar = true;
-
 			this.postLogData(result.user, 'Log in');
 			return result;
 		}).catch(function (error) {
@@ -398,10 +391,6 @@ export default {
 
 			store.state.user.user = await this.getUser(result.user);
 
-			store.state.notification.snackbar = false;
-			store.state.notification.snackbarText = store.state.user.user.displayName + "님, 환영합니다.";
-			store.state.notification.snackbar = true;
-
 			this.postLogData(result.user, 'Log in');
 			return result;
 		}).catch(function (error) {
@@ -415,10 +404,6 @@ export default {
 			}
 
 			store.state.user.user = await this.getUser(result.user);
-
-			store.state.notification.snackbar = false;
-			store.state.notification.snackbarText = store.state.user.user.displayName + "님, 환영합니다.";
-			store.state.notification.snackbar = true;
 
 			this.postLogData(result.user, 'Log in');
 			return result;
@@ -445,10 +430,6 @@ export default {
 
 			store.state.user.user = await this.getUser(result.user);
 
-			store.state.notification.snackbar = false;
-			store.state.notification.snackbarText = store.state.user.user.displayName + "님, 환영합니다.";
-			store.state.notification.snackbar = true;
-
 			this.postLogData(result.user, 'Log in');
 			return result;
 		}).catch(err => {
@@ -466,11 +447,9 @@ export default {
 		})
 	},
 	logout() {
-		firebase.auth().signOut().then(() => {
-			store.state.notification.snackbar = false;
+		return firebase.auth().signOut().then(() => {
 			this.postLogData(store.state.user.user, 'Log out');
 			this.deleteToken(store.state.user.user);
-			router.replace('/');
 		}).catch(err => {
 			console.log(err);
 		});

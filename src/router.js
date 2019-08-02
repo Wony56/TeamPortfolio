@@ -80,6 +80,7 @@ router.beforeEach(async (to, from, next) => {
 	const requiresAuth = to.matched.some(record => record.meta.requiresAuth);
 	const writeAuth = to.matched.some(record => record.meta.writeAuth);
 
+	
 	if(currentUser){
 		store.state.user.user = await firebaseService.getUser(currentUser);
 		store.state.user.loggedIn = true;

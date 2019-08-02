@@ -21,7 +21,6 @@
           </v-card>
         </v-dialog>
       </v-content>
-
       <Footer />
 
       <LoginSnackbar />

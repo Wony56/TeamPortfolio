@@ -22,6 +22,7 @@
       </v-content>
       <!-- Footer -->
       <Footer />
+      <v-btn v-on:click="postPush">버튼</v-btn>
     </v-app>
   </div>
 </template>
@@ -38,6 +39,17 @@
 import store from "./store";
 import Header from "./components/base/Header.vue";
 import Footer from "./components/base/Footer.vue";
+import Firebase from './services/FirebaseService'
+
+var key = 'AIzaSyDCo_1aj9Q1FYra6QCPzkV6Fya6nHqSZr4';
+var to = "";
+var notification = {
+  'title': '새글!',
+  'body': '이건새글',
+  'icon': 'firebase-logo.png',
+  'click_action': 'http://localhost:8080'
+};
+
 
 export default 
 {
@@ -63,7 +75,9 @@ export default
       right: true,
       bottom: true,
       left: false,
-      transition: "slide-y-reverse-transition"
+      transition: "slide-y-reverse-transition",
+      
+      token: "",
     };
   },
   created() {
@@ -91,6 +105,63 @@ export default
         this.show = false;
       }
     },
+    bookmark() {
+      var bookmarkURL = window.location.href;
+      var bookmarkTitle = document.title;
+      var triggerDefault = false;
+
+      if (window.sidebar && window.sidebar.addPanel) {
+        window.sidebar.addPanel(bookmarkTitle, bookmarkURL, "");
+      } else if (
+        (window.sidebar &&
+          navigator.userAgent.toLowerCase().indexOf("firefox") > -1) ||
+        (window.opera && window.print)
+      ) {
+        this.attr("href", bookmarkURL);
+        this.attr("title", bookmarkTitle);
+        this.attr("rel", "sidebar");
+        this.off(e);
+        triggerDefault = true;
+      } else if (window.external && "AddFavorite" in window.external) {
+        window.external.AddFavorite(bookmarkURL, bookmarkTitle);
+      } else {
+        if (navigator.userAgent.toLowerCase().indexOf("mac") !== -1) {
+          this.favoriteKey = "Command";
+        } else {
+          this.favoriteKey = "Ctrl";
+        }
+        this.favorite = true;
+      }
+
+      return triggerDefault;
+    },
+    postPush() {
+      fetch('https://fcm.googleapis.com/fcm/send', {
+        'method': 'POST',
+        'headers': {
+          'Authorization': 'key=' + key,
+          'Content-Type': 'application/json'
+        },
+        'body': JSON.stringify({
+          'notification': notification,
+          'to': to
+        })
+      }).then(function(response) {
+        console.log(response);
+      }).catch(function(error) {
+        console.error(error);
+      })
+    },
+    async loadToken() {
+      await Firebase.getToken().then(ret => {
+        // this.to = ret;
+        to = ret;
+      });
+    },
+  },
+  mounted() {
+  this.loadToken();
+  },
   computed: {
 
     activeFab() {
@@ -119,7 +190,6 @@ export default
     left(val) {
       this.right = !val;
     }
-  }
   }
 }
 </script>

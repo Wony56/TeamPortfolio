@@ -11,15 +11,14 @@
         </v-layout>
         <!-- 본문 부분 -->
         <v-card min-height="400" flat>
-          <v-divider></v-divider>
           <v-layout text-xs-center>
             <v-card-text class="headline" style="background-color:#ff6f61; color:#fff">{{postInfo.title}}</v-card-text>
           </v-layout>
 
           <v-divider></v-divider>
 
-          <v-layout>
-            <v-card-text style="background-color:#ff6f61; color:#fff">작성일 : {{postInfo.created_at}}</v-card-text>
+          <v-layout justify-end>
+            <v-card-title style="color:gray;">작성일 : {{postInfo.created_at}}</v-card-title>
           </v-layout>
           <v-divider></v-divider>
 

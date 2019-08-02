@@ -47,10 +47,6 @@ const messaging = firebase.messaging();
 export default {
 	addReply(articleId, replyInfo, flag) {
 
-		console.log("ARTICLEID> ", articleId);
-		console.log("REPLYINFO> ", replyInfo);
-		console.log("FLAG> ", flag);
-
 		replyInfo.created_at = new Date();
 
 		if(flag === "POST") {
@@ -110,34 +106,34 @@ export default {
 
 				return firestore.collection(PORTFOLIOS).doc(articleId).update({
 
-					
 					author: ret.author,
 					body: ret.body,
 					created_at: ret.created_at,
 					img: ret.img,
-					title: ret.title
+					title: ret.title,
+					reply: ret.reply
 				})
 			});
 		}
 	},
-	modifyPost(articleId, postInfo) {
+	modifyPost(articleId, postInfo, replies) {
 
-		console.log(postInfo.reply);
+		console.log("REPLIES ", replies);
 		let reply = [];
 		let index = 0;
 
-		for(let i = 0; i < postInfo.reply.length; i++) {
+		for(let i = 0; i < replies.length; i++) {
 
-			for(let j = 0; j < postInfo.reply[i].length; j++)
-				reply[index++] = postInfo.reply[i][j];
+			for(let j = 0; j < replies[i].length; j++)
+				reply[index++] = replies[i][j];
 		}
 		console.log(reply);
-		postInfo.reply = reply;
+		// postInfo.reply = reply;
 
 		return firestore.collection(POSTS).doc(articleId).set({
 			title: postInfo.title,
 			content: postInfo.content,
-			reply: postInfo.reply,
+			reply: reply,
 			author: postInfo.author,
 			authorUid: postInfo.authorUid,
 			created_at: new Date()
@@ -160,9 +156,8 @@ export default {
 		const postsCollection = firestore.collection(USERS)
 		return postsCollection.orderBy('created_at', 'desc').get().then(docSnapshots => {
 			return docSnapshots.docs.map(doc => {
-				let data = doc.data();
-				// data.created_at = new Date(data.created_at.toDate());
 
+				let data = doc.data();
 				return data;
 			});
 		})
@@ -173,8 +168,6 @@ export default {
 			if (doc.exists) {
 				
 				let data = doc.data();
-				// data.created_at = new Date(data.created_at.toDate());
-
 				return data;
 			}
 			return;

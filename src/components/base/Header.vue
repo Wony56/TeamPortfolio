@@ -1,59 +1,10 @@
 <template>
   <nav>
-    <v-navigation-drawer v-model="drawer" app temporary>
-      <v-list>
-        <v-list-tile style="color:#ff6f61">
-          <v-list-tile-content>
-            <v-list-tile-title>
-              <span>Menu</span>
-            </v-list-tile-title>
-          </v-list-tile-content>
-        </v-list-tile>
-        <v-divider></v-divider>
-        <template v-for="(item, index) in items">
-          <v-list-tile :href="item.href" :to="{name: item.href}" :key="index" class="sidetitle">
-            <v-list-tile-action>
-              <v-icon light v-html="item.icon"></v-icon>
-            </v-list-tile-action>
-            <v-list-tile-content>
-              <v-list-tile-title v-html="item.title" class="titletext"></v-list-tile-title>
-            </v-list-tile-content>
-          </v-list-tile>
-        </template>
-        <template v-if="!loggedIn">
-          <v-list-tile @click="openLoginModal">
-            <v-list-tile-action>
-              <v-icon light>input</v-icon>
-            </v-list-tile-action>
-            <v-list-tile-content>
-              <v-list-tile-title>로그인</v-list-tile-title>
-            </v-list-tile-content>
-          </v-list-tile>
-          <v-list-tile @click="openSignupModal">
-            <v-list-tile-action>
-              <v-icon light>person_add</v-icon>
-            </v-list-tile-action>
-            <v-list-tile-content>
-              <v-list-tile-title>회원가입</v-list-tile-title>
-            </v-list-tile-content>
-          </v-list-tile>
-        </template>
+    <MenuDrawer />
 
-        <template v-else>
-          <v-list-tile @click="logOut">
-            <v-list-tile-action>
-              <v-icon light></v-icon>
-            </v-list-tile-action>
-            <v-list-tile-content>
-              <v-list-tile-title>로그아웃</v-list-tile-title>
-            </v-list-tile-content>
-          </v-list-tile>
-        </template>
-      </v-list>
-    </v-navigation-drawer>
     <v-toolbar id="bar" flat fixed clipped-left v-on:scroll="onScroll" height="64px">
       <v-toolbar-title>
-        <router-link to="/" v-on:click.native="moveTop">
+        <router-link to="/">
           <span class="header_logo logo mt-5">
             <img src="../../../public/img/logo/122.svg" class />
             <img src="../../../public/img/logo/wtd.svg" class="logo_text_bottom logo_text" />
@@ -85,14 +36,15 @@
       </mq-layout>
 
       <mq-layout mq="mobile">
-        <v-icon @click.stop="drawer = !drawer" class="notranslate">dehaze</v-icon>
+        <v-icon @click.stop="$store.state.drawer = !$store.state.drawer" class="notranslate">dehaze</v-icon>
       </mq-layout>
+
       <!--로그인 모달-->
-      <v-dialog v-model="$store.state.modal.loginDialog" max-width="350">
+      <v-dialog v-model="$store.state.modal.loginDialog" persistent max-width="350">
         <LoginModal />
       </v-dialog>
       <!--회원가입 모달-->
-      <v-dialog v-model="$store.state.modal.signupDialog" max-width="400">
+      <v-dialog v-model="$store.state.modal.signupDialog" persistent max-width="400">
         <signup-modal />
       </v-dialog>
     </v-toolbar>
@@ -114,6 +66,7 @@
 
 <script>
 import firebaseService from "../../services/FirebaseService";
+import MenuDrawer from "./MenuDrawer";
 import LoginModal from "./LoginModal";
 import SignupModal from "./SignupModal";
 import { mapState, mapMutations } from "vuex";
@@ -122,26 +75,8 @@ var el;
 
 export default {
   name: "Header",
-  data() {
-    return {
-      drawer: false,
-      items: [
-        {
-          href: "post",
-          router: true,
-          title: "게시판",
-          icon: "dashboard"
-        },
-        {
-          href: "portfolio",
-          router: true,
-          title: "포트폴리오",
-          icon: "folder"
-        }
-      ]
-    };
-  },
   components: {
+    MenuDrawer,
     LoginModal,
     SignupModal
   },
@@ -166,7 +101,7 @@ export default {
   methods: {
     handleDrawer() {
       if (this.$mq !== "mobile") {
-        this.drawer = false;
+        this.$store.state.drawer = false;
       }
     },
     click1() {
@@ -192,8 +127,8 @@ export default {
 </script>
 
 <style>
-*{
-  font-family: 'Nanum Gothic', sans-serif;
+* {
+  font-family: "Nanum Gothic", sans-serif;
 }
 nav:not(.snack) {
   font-family: "Do Hyeon", sans-serif;

@@ -1,18 +1,18 @@
 import Vue from 'vue'
-import './plugins/vuetify'
 import Vuetify from 'vuetify'
-import 'vuetify/dist/vuetify.min.css'
 import VueSimplemde from 'vue-simplemde'
-import 'simplemde/dist/simplemde.min.css'
-import 'font-awesome/css/font-awesome.min.css'
 import VueMq from 'vue-mq'
 import lineClamp from 'vue-line-clamp'
 import App from './App.vue'
-import router from './router'
+import Router from 'vue-router'
+import {router} from './router'
 import store from './store'
+import './plugins/vuetify'
 import './registerServiceWorker'
+import 'simplemde/dist/simplemde.min.css'
+import 'vuetify/dist/vuetify.min.css'
+import 'font-awesome/css/font-awesome.min.css'
 import firebase from 'firebase';
-import firebaseService from './services/FirebaseService';
 import FlagIcon from 'vue-flag-icon'
 import VueScrollProgress from 'vue-scroll-progress'
 import ToggleButton from 'vue-js-toggle-button'
@@ -23,6 +23,7 @@ import {VueMasonryPlugin} from 'vue-masonry';
 // VueSmoothScrollbar
 import SmoothScrollbar from 'vue-smooth-scrollbar'
 
+Vue.use(Router);
 Vue.use(VueMasonryPlugin)
 Vue.use(VueScrollProgress);
 Vue.use(SmoothScrollbar)
@@ -57,43 +58,17 @@ Vue.use(lineClamp,{
 
 })
 
-router.beforeEach(async (to, from, next) => {
-	const currentUser = firebase.auth().currentUser;
-	const requiresAuth = to.matched.some(record => record.meta.requiresAuth);
-
-	if(currentUser){
-		store.state.user.user = await firebaseService.getUser(currentUser);
-		store.state.user.loggedIn = true;
-	}else{
-		store.state.user.user = {};
-		store.state.user.loggedIn = false;
-	}
-
-	if(requiresAuth && !currentUser){
-		alert("접근권한이 없습니다.");
-		next("home");
-	}else if(requiresAuth && currentUser){
-		if(store.state.user.user.tier !== 'diamond'){
-			alert("접근권한이 없습니다.");
-			next("home");
-		}else{
-			next();
-		}
-	}else{
-		next();
-	}
-})
-
 firebase.auth().onAuthStateChanged(async user => {
-	
 	if(user){
 		store.state.user.loggedIn = true;
 	}else{
 		store.state.user.loggedIn = false;
 	}
+
+
 	new Vue({
 		router,
 		store,
 		render: h => h(App)
-	  }).$mount('#app')
+	}).$mount('#app')
 })

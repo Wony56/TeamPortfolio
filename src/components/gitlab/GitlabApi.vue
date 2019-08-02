@@ -2,11 +2,11 @@
   <div class="hidden-md-and-down">
     <v-card flat>
       <div class="page center">
-        <a v-on:click="initiateUserRepo('Taylous', 'J7kwFVv-7zWVHD3_zuU1')" class="link mx-3">김창윤</a>
-        <a v-on:click="initiateUserRepo('ryuhojin', 'ZVEyzUs6pWXdv44x2Qxk')" class="link mx-3">류호진</a>
-        <a v-on:click="initiateUserRepo('blackmonkey9256', '-5QLJ3LQoXHNZ43fZhQn')" class="link mx-3">이석원</a>
-        <a v-on:click="initiateUserRepo('hyeonjin23', 'ScV9uvQp_a6E5dgZzGYd')" class="link mx-3">조현진</a>
-        <a v-on:click="initiateUserRepo('Eomazing', 'fNzX96z-yzcyNyuR8TTU')" class="link mx-3">엄윤주</a>
+        <a v-on:click="initiateUserRepo('Taylous', 'zAw5-XwKyMhRkQJuQ4fQ')" class="link mx-3">김창윤</a>
+        <a v-on:click="initiateUserRepo('ryuhojin', 'y4eoDG8jQ29sSs9_mpF2')" class="link mx-3">류호진</a>
+        <a v-on:click="initiateUserRepo('blackmonkey9256', 'HdXsmvT6hBR-mFJyN_YP')" class="link mx-3">이석원</a>
+        <a v-on:click="initiateUserRepo('hyeonjin23', 'kWsKbLKaDydDKBgguZnL')" class="link mx-3">조현진</a>
+        <a v-on:click="initiateUserRepo('Eomazing', 'phLEf4A8LuBfkhsotEwg')" class="link mx-3">엄윤주</a>
       </div>
 
       <v-tabs-items v-model="tab">
@@ -79,7 +79,7 @@ export default {
   },
   created() {
     let user = "Taylous";
-    let token = "J7kwFVv-7zWVHD3_zuU1";
+    let token = "zAw5-XwKyMhRkQJuQ4fQ";
 
     this.getRepos(user, token, true);
   },

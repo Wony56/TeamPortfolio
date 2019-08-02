@@ -22,16 +22,16 @@ export default {
     values: []
   }),
   created() {
-    this.setMemberGraph();
+    this.setPortfolioGraph();
   },
   methods: {
-    async setMemberGraph() {
-      const users = await firebaseService.getUsers();
-      let memberCount = [];
+    async setPortfolioGraph() {
+      const portfolios = await firebaseService.getPortfolios();
 
-      users.forEach(user => {
-        let date = user.created_at;
-        console.log(date);
+      let portfolioCount = [];
+
+      portfolios.forEach(portfolio => {
+        let date = portfolio.created_at;
 
         let dateArr = date.split("년 ");
         let year = dateArr[0];
@@ -44,10 +44,10 @@ export default {
 
         let key = year + "-" + month + "-" + day;
 
-        if (memberCount[key]) {
-          memberCount[key] += 1;
+        if (portfolioCount[key]) {
+          portfolioCount[key] += 1;
         } else {
-          memberCount[key] = 1;
+          portfolioCount[key] = 1;
         }
       });
 
@@ -62,10 +62,10 @@ export default {
 
         let key = year + "-" + month + "-" + day;
 
-        if (memberCount[key]) {
+        if (portfolioCount[key]) {
           this.values.push({
             date: key,
-            counts: memberCount[key]
+            counts: portfolioCount[key]
           });
         } else {
           this.values.push({

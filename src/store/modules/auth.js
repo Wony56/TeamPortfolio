@@ -1,6 +1,6 @@
 
 const state = {
-  token: '63790bdb4f81a92a40f46088ef9c4334ec9c0d1b'
+  token: 'a4eef47da13c83137b8263754b5cbd89d2bee652'
 };
 
 const getters = {

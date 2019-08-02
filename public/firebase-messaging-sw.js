@@ -13,31 +13,18 @@ const config = {
 
 firebase.initializeApp(config)
 
-const messaging = firebase.messaging({
-    'messagingSenderId': "363817638878",
-});
+const messaging = firebase.messaging();
+
 
 messaging.setBackgroundMessageHandler(function(payload) {
   console.log('[firebase-messaging-sw.js] Received background message ', payload);
-  var notificationTitle = '알림';
+  var notificationTitle = 'Background Message Title';
   var notificationOptions = {
-    body: '새글 등장',
-    icon: '/firebase-logo.png'
+    body: 'Background Message body.',
+    // icon: '/firebase-logo.png'
   };
 
   return self.registration.showNotification(notificationTitle,
     notificationOptions);
 });
-
-
-// const messaging = firebase.messaging();
-// messaging.setBackgroundMessageHandler(function(payload){
- 
-//     const title = "Hello World";
-//     const options = {
-//             body: payload.data.status
-//     };
- 
-//     return self.registration.showNotification(title,options);
-// });
 

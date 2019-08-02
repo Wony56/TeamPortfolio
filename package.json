@@ -15,6 +15,7 @@
     "filepond-plugin-file-validate-type": "^1.2.4",
     "filepond-plugin-image-preview": "^4.2.1",
     "firebase": "^5.11.1",
+    "firebase-admin": "^8.3.0",
     "jquery": "^3.4.1",
     "laue": "^0.2.1",
     "masonry-layout": "^4.2.2",

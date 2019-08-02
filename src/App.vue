@@ -22,7 +22,6 @@
       </v-content>
       <!-- Footer -->
       <Footer />
-      <v-btn v-on:click="postPush">버튼</v-btn>
     </v-app>
   </div>
 </template>

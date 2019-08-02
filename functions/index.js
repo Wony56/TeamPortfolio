@@ -8,59 +8,36 @@ admin.initializeApp({
 });
 var db = admin.firestore();
 
-
 exports.createPost = functions.firestore
 .document('posts/{Id}')
-.onCreate((snap, context) => {
-    db.collection('tokens').get().then((snapshot) => {
-            snapshot.forEach(doc => {
-                if (doc.data()['token']) {
-                    var message = {
-                        data: {
-                            title: 'New',
-                            body: 'New Post'
-                        },
-                        token: doc.data()['token']
-                    };
-                    admin.messaging().send(message)
-                        .then((response) => {
-                            console.log('Successfully sent message:', response);
-                        })
-                        .catch((error) => {
-                            console.log('Error sending message:', error);
-                        });
-                }
-            });
+.onCreate((snap) => {
+    const payload = {
+        notification:{
+            title: '새글',
+            body: '새글이 등록되었습니다.'
+        }
+    }
+    db.collection('tokens').get().then((snapshot)=>{
+        snapshot.forEach(doc => {
+          console.log(doc.data()['token'])
+          admin.messaging().sendToDevice(doc.data()['token'], payload);
         })
-        .catch(err => {
-            console.log('Error getting documents', err);
-        });
+    })
 });
 
-exports.createPortfolios = functions.firestore
+exports.createPortfolio = functions.firestore
 .document('portfolios/{Id}')
-.onCreate((snap, context) => {
-    db.collection('tokens').get().then((snapshot) => {
-            snapshot.forEach(doc => {
-                if (doc.data()['token']) {
-                    var message = {
-                        data: {
-                            title: 'New',
-                            body: 'New Portfolio'
-                        },
-                        token: doc.data()['token']
-                    };
-                    admin.messaging().send(message)
-                        .then((response) => {
-                            console.log('Successfully sent message:', response);
-                        })
-                        .catch((error) => {
-                            console.log('Error sending message:', error);
-                        });
-                }
-            });
+.onCreate((snap) => {
+    const payload = {
+        notification:{
+            title: '새 포트폴리오',
+            body: '새 포트폴리오가이 등록되었습니다.'
+        }
+    }
+    db.collection('tokens').get().then((snapshot)=>{
+        snapshot.forEach(doc => {
+          console.log(doc.data()['token'])
+          admin.messaging().sendToDevice(doc.data()['token'], payload);
         })
-        .catch(err => {
-            console.log('Error getting documents', err);
-        });
+    })
 });

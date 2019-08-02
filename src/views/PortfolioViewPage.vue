@@ -3,64 +3,58 @@
     <ImgBanner>
       <div style="line-height:1.2em;font-size:1.2em; color:black;" slot="text">Portfolio</div>
     </ImgBanner>
-    <v-container id="magi">
-              <!-- 뒤로가기 -->
-    <v-layout justify-end>
-      <v-btn color="#ff6f61" flat @click="$router.go(-1)">뒤로</v-btn>
-    </v-layout>
-    <v-layout column text-xs-center justify-center >
-      <v-flex d-flex xs12 md10 sm10 >
-        <v-card flat style="background-color:#ff6f61; color:#fff;">
-          <v-card-text class="headline">글제목</v-card-text>
-        </v-card>
-      </v-flex>
-      <v-flex d-flex xs12 md10 sm10>
-        <v-layout row>
-          <v-flex d-flex xs12 sm4 md4>
-            <v-card flat min-height=400 max-height=400>
-              <v-card-text>
-                사진
-              </v-card-text>
-            </v-card>
+  <v-container>
+      <form>
+        <v-text-field v-model="title" color="#ff6f61" readonly placeholder="제목을 입력해주세요." required></v-text-field>
+        <v-text-field
+          v-model="authorName"
+          color="#ff6f61"
+          readonly
+          placeholder="제목을 입력해주세요."
+          required
+        ></v-text-field>
+        <v-text-field v-model="created_at" color="#ff6f61" readonly required></v-text-field>
+
+        <div v-if="!modifyFlag">
+          <VueMarkdown :source="body"></VueMarkdown>
+        </div>
+        <div v-else>
+          <markdown-editor v-model="body" ref="MarkdownEditor"></markdown-editor>
+        </div>
+
+        <v-spacer></v-spacer>
+
+        <v-layout row style="margin: 30px;">
+          <v-flex v-for="(img, index) in imgs" :key="index">
+            <v-img class="white--text" width="200px" height="200px" :src="img">
+              <v-btn  v-if="modifyFlag" text icon color="yellow" @click="deletePicture(index, img)">
+                <v-icon>delete</v-icon>
+              </v-btn>
+            </v-img>
           </v-flex>
-          <v-flex d-flex xs12 sm8 md8>
-            <v-card flat>
-              <v-card-title>
-                내용
-              </v-card-title>
+        </v-layout>
+
+        <div v-if="modifyFlag">
+          <v-spacer></v-spacer>
+
+          <UploadForm></UploadForm>
+        </div>
+
+        <v-spacer></v-spacer>
+
+                <!--댓글 부분-->
+        <v-layout justify-center text-xs-center>
+          <v-flex row wrap>
+            <v-card max-height="50">
+              <v-card-text style="background-color:#ff6f61; color:#fff">Comments</v-card-text>
             </v-card>
           </v-flex>
         </v-layout>
-      </v-flex>
-    </v-layout>
-    <v-layout justify-end>
-      <v-card-actions>
-        <v-btn style="background-color:#ff6f61; color:#fff">
-          수정
-        </v-btn>
-        <v-btn style="background-color:#ff6f61; color:#fff">
-          수정완료
-        </v-btn>
-        <v-btn style="background-color:#ff6f61; color:#fff">
-          취소
-        </v-btn>
-        <v-btn style="background-color:#ff6f61; color:#fff">
-          삭제
-        </v-btn>
-      </v-card-actions>
-    </v-layout>
-    <v-layout justify-center text-xs-center>
-      <v-flex row wrap>
-        <v-card max-height="50">
-          <v-card-text style="background-color:#ff6f61; color:#fff">Comments</v-card-text>
-        </v-card>
-      </v-flex>
-    </v-layout>
-    <v-layout justify-end text-xs-right>
-        <v-flex row wrap>
-          <v-card min-height="50" max-height="170">
-            <v-card-text>
-              <v-textarea
+        <v-layout justify-end text-xs-right>
+          <v-flex row wrap>
+            <v-card min-height="50" max-height="170">
+              <v-card-text>
+                <v-textarea
                   v-model="replyContent"
                   label="댓글입력"
                   auto-grow
@@ -68,47 +62,77 @@
                   row-height="15"
                   flat
                   color="#ff6f61"
-                >
-              </v-textarea>
-            </v-card-text>
-            <v-card-text>
-              <v-btn flat color="#ff6f61" @click="addReply()">댓글 추가</v-btn>
-            </v-card-text>
-          </v-card>
-        </v-flex>
-      </v-layout>
- <!--하나씩 카드로 나눠서 보여주는걸로 할 예정-->
-      <v-layout v-for="(reply, index) in replies[focusPage - 1]" :key="index">
-        <v-flex row wrap>
-          <br />
-          <v-card min-height="100">
-          <v-text-field
+                ></v-textarea>
+              </v-card-text>
+              <v-card-text>
+                <v-btn flat color="#ff6f61" @click="addReply()">댓글 추가</v-btn>
+              </v-card-text>
+            </v-card>
+          </v-flex>
+        </v-layout>
+        <!--하나씩 카드로 나눠서 보여주는걸로 할 예정-->
+        <v-layout v-for="(reply, index) in replies[focusPage - 1]" :key="index">
+          <v-flex row wrap>
+            <br />
+            <v-card min-height="100">
+              <v-text-field
                 :id="index"
                 v-model="reply.replyContent"
                 :readonly="selectedIndex != index"
-          >
-          </v-text-field>
-          <v-layout justify-end text-xs-right>
-            <v-card-text style="color:gray">
+              ></v-text-field>
+              <v-layout justify-end text-xs-right>
+                <v-card-text style="color:gray">
                   {{reply.author}} |
                   {{reply.created_at}}
-              <v-btn
+                  <v-btn
                     v-if="!replyFlag"
                     text
                     flat
                     color="#ff6f61"
                     @click="checkReplyAuthority(index)"
-              >수정
-              </v-btn>
-              <v-btn v-else text flat color="black" @click="modifyReply(index)">수정완료</v-btn>
-              <v-btn v-if="replyFlag" text flat color="black" @click="replyFlag = false">취소</v-btn>
-              <v-btn text flat color="#ff6f61" @click="removeReply(index)">삭제</v-btn>
-            </v-card-text>
-          </v-layout>
-          </v-card>
-        </v-flex>
-      </v-layout>
+                  >수정</v-btn>
+
+                  <v-btn v-else text flat color="black" @click="modifyReply(index)">수정완료</v-btn>
+
+                  <v-btn v-if="replyFlag" text flat color="black" @click="replyFlag = false">취소</v-btn>
+
+                  <v-btn text flat color="#ff6f61" @click="removeReply(index)">삭제</v-btn>
+                </v-card-text>
+              </v-layout>
+            </v-card>
+          </v-flex>
+        </v-layout>
+        <v-pagination
+          v-model="focusPage"
+          :length="totalPage"
+          :total-visible="5"
+          color="#ff6616"
+        ></v-pagination>
+
+        <v-layout justify-center>
+          <v-btn v-if="!modifyFlag" style="background-color:#ff6f61; color:#ffff" @click="checkAuthentication()">수정</v-btn>
+
+          <v-btn v-if="modifyFlag" style="background-color:black; color:#ffff" @click="modifyPortfolio()">수정완료</v-btn>
+
+          <v-btn v-if="!modifyFlag" style="background-color:#ff6f61; color:#ffff" @click="$router.go(-1)">취소</v-btn>
+          <v-btn v-if="modifyFlag" style="background-color:#ff6f61; color:#ffff" @click="modifyFlag = false">취소</v-btn>
+        </v-layout>
+      </form>
     </v-container>
+
+    <!--=========================================MODAL====================================================-->
+    <v-dialog v-model="dialog" persistent max-width="290">
+      <v-card>
+        <v-card-title class="headline">{{modalTitle}}</v-card-title>
+        <v-card-text>{{modalContent}}</v-card-text>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn v-if="flag" color="green darken-1" flat to="/portfolio">Close</v-btn>
+          <v-btn v-else color="blue darken-1" flat @click="dialog = false">Close</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+    <!--=================================================================================================-->
   </div>
 </template>
 
@@ -165,6 +189,7 @@ export default {
   computed: {
     ...mapState({
       user: state => state.user.user,
+      loggedIn: state => state.user.loggedIn,
       imgurLink: state => state.images.imgurLinks
     })
   },

@@ -134,7 +134,7 @@
         <v-card-text>{{modalContent}}</v-card-text>
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn v-if="movePage == 1" color="green darken-1" flat @click="location.reload()">Close</v-btn>
+          <v-btn v-if="movePage == 1" color="green darken-1" flat @click="$router.go(0)">Close</v-btn>
           <v-btn v-else-if="movePage == 2" color="green darken-1" flat to="/post">Close</v-btn>
           <v-btn v-else color="blue darken-1" flat @click="dialog = false">Close</v-btn>
         </v-card-actions>

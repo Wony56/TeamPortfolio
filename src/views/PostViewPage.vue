@@ -107,6 +107,7 @@
             </v-card>
           </v-flex>
         </v-layout>
+        <v-layout justify-center>
         <v-pagination
           v-if="loadMore"
           v-model="focusPage"
@@ -114,6 +115,7 @@
           :total-visible="5"
           color="#ff6616"
         ></v-pagination>
+        </v-layout>
       </v-flex>
     </v-layout>
 
@@ -342,21 +344,27 @@ export default {
   font-family: "Nanum Gothic", sans-serif;
 }
 
-#magi {
+#magi 
+{
   margin-top: -150px;
 }
-@media (min-width: 768px) {
-  #magi {
+@media (min-width: 768px) 
+{
+  #magi 
+  {
     margin-top: -250px;
   }
 }
-@media (min-width: 1024px) {
-  #magi {
+@media (min-width: 1024px) 
+{
+  #magi 
+  {
     margin-top: -650px;
   }
 }
 
-.choosingcolor {
+.choosingcolor 
+{
   background-color: #ff6f61;
   color: #fff;
 }

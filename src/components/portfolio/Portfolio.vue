@@ -11,7 +11,7 @@
       <span class="grey--text" v-line-clamp="4">{{body}}</span>
     </v-card-text>
     <v-btn
-      :to="{ name: 'portfolioview', params: { portfolioInfo: this.id}}"
+      :to="{ name: 'portfolioview', params: { portfolioId: this.id}}"
     >MORE</v-btn>
     
       <div>{{imgItems}}</div>
@@ -31,7 +31,11 @@ export default {
   data: () => ({
     loading: false,
     selection: 1
-  })
+  }),
+  mounted() {
+
+    console.log("!!!!!!!!!!!!!!!!!!!!!!!!   ", this.id);
+  }
 };
 </script>
 <style>

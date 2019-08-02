@@ -28,36 +28,28 @@ export const router = new Router({
 		{
 			path: '/post',
 			name: 'post',
-			component: PostPage,
-			children: 
-			[
-				{
-					path: "write",
-					component: PostWriterPage
-				}
-			]
+			component: PostPage
 		},
 		{
 			path: '/portfolio',
 			name: 'portfolio',
-			component: PortfolioPage,
-			children: 
-			[
-				{
-					path: "write",
-					component: PortfolioWriterPage
-				}
-			]
+			component: PortfolioPage
 		},
 		{
 			path: '/portfoliowriter',
 			name: 'portfoliowriter',
-			component: PortfolioWriterPage
+			component: PortfolioWriterPage,
+			meta: {
+				writeAuth: true
+			}
 		},
 		{
 			path: '/postwriterpage',
 			name: 'postwriterpage',
-			component: PostWriterPage
+			component: PostWriterPage,
+			meta: {
+				writeAuth: true
+			}
 		},
 		{
 			path: '/postview/:postIndex',
@@ -73,7 +65,7 @@ export const router = new Router({
 			}
 		},
 		{
-			path: '/portfolioview/:portfolioInfo',
+			path: '/portfolioview/:portfolioIndex',
 			name: 'portfolioview',
 			component: PortfolioViewPage
 		}
@@ -86,6 +78,7 @@ export const router = new Router({
 router.beforeEach(async (to, from, next) => {
 	const currentUser = firebase.auth().currentUser;
 	const requiresAuth = to.matched.some(record => record.meta.requiresAuth);
+	const writeAuth = to.matched.some(record => record.meta.writeAuth);
 
 	if(currentUser){
 		store.state.user.user = await firebaseService.getUser(currentUser);
@@ -95,11 +88,18 @@ router.beforeEach(async (to, from, next) => {
 		store.state.user.loggedIn = false;
 	}
 
-	if(requiresAuth && !currentUser){
+	if((requiresAuth && !currentUser) || (writeAuth && !currentUser)){
 		alert("접근권한이 없습니다.");
 		next("home");
 	}else if(requiresAuth && currentUser){
 		if(store.state.user.user.tier !== 'diamond'){
+			alert("접근권한이 없습니다.");
+			next("home");
+		}else{
+			next();
+		}
+	}else if(writeAuth && currentUser){
+		if(store.state.user.user.tier === 'bronze'){
 			alert("접근권한이 없습니다.");
 			next("home");
 		}else{

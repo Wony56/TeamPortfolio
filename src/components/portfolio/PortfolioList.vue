@@ -15,7 +15,7 @@
     </div>
 
     <v-flex xs12 text-xs-center round my-5>
-      <v-btn style="background-color:#ff6f61; color:#ffff;" to="/portfoliowriter">
+      <v-btn v-if="flag" style="background-color:#ff6f61; color:#ffff;" to="/portfoliowriter">
         <v-icon size="25" class="mr-2 notranslate">fa-pencil</v-icon>글쓰기
       </v-btn>
       <v-btn style="background-color:#ff6f61; color:#ffff;" v-if="load" @click="loadMorePortfolios()">
@@ -40,7 +40,8 @@ export default {
     return {
       portfolios: [],
       limit: this.limits,
-      load: this.loadMore
+      load: this.loadMore,
+      flag: true
     };
   },
   components: {
@@ -48,6 +49,9 @@ export default {
   },
   mounted() {
     this.getPortfolios();
+    this.flag = this.user.loggedIn;
+
+    console.log(this.flag);
   },
   computed: mapState({
     loggedIn: state => state.user.loggedIn

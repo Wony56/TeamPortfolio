@@ -322,7 +322,25 @@ export default {
 		})
 	},
 
-	modifyPortfoilo(id, author, title, body, img, reply) {
+	modifyPortfoilo(id, author, title, body, img, replies) {
+
+		console.log(id);
+		console.log(author);
+		console.log(title);
+		console.log(body);
+		console.log(img);
+		console.log(replies);
+
+		let reply = [];
+
+		for(let i = 0; i < replies.length; i++) {
+
+			for(let j = 0; j < replies[i].length; j++) {
+
+				reply.push(replies[i][j]);
+			}
+		}
+		console.log(reply);
 
 		return firestore.collection(PORTFOLIOS).doc(id).update({
 			

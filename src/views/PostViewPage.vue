@@ -194,7 +194,8 @@ export default {
   },
   computed: {
     ...mapState({
-      user: state => state.user.user
+      user: state => state.user.user,
+      loggedIn: state => state.user.loggedIn
     })
   },
   methods: {
@@ -307,10 +308,8 @@ export default {
 
       if(select === "POST") {
 
-        if ((this.user.loggedIn === true) && (this.postId == this.user.uid || this.user.tier == "diamond")) {
+        if ((this.loggedIn === true) && (this.authorUid == this.user.uid || this.user.tier == "diamond")) {
           
-          console.log("???");
-
           this.postFlag = true;
           this.originContent = this.postInfo.content;
 
@@ -348,7 +347,7 @@ export default {
         this.postFlag = false;
     },
     deletePost() {
-      if ((this.user.loggedIn === true) && (this.postId == this.user.uid || this.user.tier == "diamond")) {
+      if ((this.loggedIn === true) && (this.authorUid == this.user.uid || this.user.tier == "diamond")) {
         this.movePage = 2;
 
         FirebaseService.deletePost(this.articleId);

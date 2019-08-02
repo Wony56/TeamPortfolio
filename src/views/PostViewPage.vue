@@ -306,7 +306,12 @@ export default {
 
       if(select === "POST") {
 
-        if ((this.user.loggedIn === true) && (this.postId == this.user.uid || this.user.tier == "diamond")) {
+        console.log(this.user.user);
+        console.log(this.user.loggedIn);
+        console.log(this.user.uid);
+        console.log(this.postInfo.authorUid);
+
+        if ((this.user.loggedIn === true) && (this.authorUid == this.user.uid || this.user.tier == "diamond")) {
           
           console.log("???");
 
@@ -347,7 +352,7 @@ export default {
         this.postFlag = false;
     },
     deletePost() {
-      if ((this.user.loggedIn === true) && (this.postId == this.user.uid || this.user.tier == "diamond")) {
+      if ((this.user.loggedIn === true) && (this.authorUid == this.user.uid || this.user.tier == "diamond")) {
         this.movePage = 2;
 
         FirebaseService.deletePost(this.articleId);

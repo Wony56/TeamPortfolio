@@ -1,5 +1,5 @@
 <template>
-  <la-cartesian :width="450" :height="200"  :bound="[0]" :data="values">
+  <la-cartesian :width="450" :height="200" :bound="[0]" :data="values">
     <defs>
       <linearGradient id="area-fill" x1="0" y1="0" x2="0" y2="1">
         <stop stop-color="#ff6f61" offset="0%" stop-opacity="0.4"></stop>
@@ -33,14 +33,9 @@ export default {
       posts.forEach(post => {
         let date = post.created_at;
 
-        let dateArr = date.split("년 ");
-        let year = dateArr[0];
-
-        dateArr = dateArr[1].split("월 ");
-        let month = dateArr[0];
-
-        dateArr = dateArr[1].split("일");
-        let day = dateArr[0];
+        let year = date.getFullYear();
+        let month = date.getMonth() + 1;
+        let day = date.getDate();
 
         let key = year + "-" + month + "-" + day;
 

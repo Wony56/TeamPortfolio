@@ -2,6 +2,7 @@
   <div>
     <v-app>
       <Header />
+
       <v-content id="contents">
         <router-view />
 
@@ -20,32 +21,42 @@
           </v-card>
         </v-dialog>
       </v-content>
-      <!-- Footer -->
+
       <Footer />
+
+      <LoginSnackbar />
+      <LogoutSnackbar />
     </v-app>
   </div>
 </template>
  <script>
-  (function(d, s, id){
-      var js, fjs = d.getElementsByTagName(s)[0];
-      if (d.getElementById(id)) {return;}
-      js = d.createElement(s); js.id = id;
-      js.src = "https:\/\/danbee.ai/js/plugins/frogue-embed/frogue-embed.min.js";
-      fjs.parentNode.insertBefore(js, fjs);
-  }(document, 'script', 'frdogue-embed'));
-  </script>
+(function(d, s, id) {
+  var js,
+    fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) {
+    return;
+  }
+  js = d.createElement(s);
+  js.id = id;
+  js.src = "https://danbee.ai/js/plugins/frogue-embed/frogue-embed.min.js";
+  fjs.parentNode.insertBefore(js, fjs);
+})(document, "script", "frdogue-embed");
+</script>
 <script>
 import store from "./store";
-import Header from "./components/base/Header.vue";
-import Footer from "./components/base/Footer.vue";
+import Header from "./components/base/Header";
+import Footer from "./components/base/Footer";
+import LoginSnackbar from "./components/snackbar/LoginSnackbar";
+import LogoutSnackbar from "./components/snackbar/LogoutSnackbar";
 
-export default 
-{
+export default {
   name: "App",
   store,
   components: {
     Header,
-    Footer
+    Footer,
+    LoginSnackbar,
+    LogoutSnackbar
   },
   data() {
     return {
@@ -90,9 +101,9 @@ export default
       } else {
         this.show = false;
       }
-    },
+    }
+  },
   computed: {
-
     activeFab() {
       switch (this.tabs) {
         case "one":
@@ -120,8 +131,7 @@ export default
       this.right = !val;
     }
   }
-  }
-}
+};
 </script>
 
 

@@ -31,13 +31,14 @@
     </v-card-text>
     <v-card-actions>
       <v-btn block @click="changeLoginToSignup" flat color="black">SIGN UP</v-btn>
-      <v-btn block @click="closeLoginModal" flat color="black">CLOSE</v-btn>
+      <v-btn block @click="closeLogin" flat color="black">CLOSE</v-btn>
     </v-card-actions>
   </v-card>
 </template>
 
 <script>
 import firebaseService from "../../services/FirebaseService";
+import { mapMutations } from "vuex";
 
 export default {
   name: "LoginModal",
@@ -56,31 +57,39 @@ export default {
     };
   },
   methods: {
-    closeLoginModal() {
-      this.$store.commit("closeLoginModal");
+    ...mapMutations(["closeLoginModal", "openSignupModal", "showLoginBar"]),
+    closeLogin() {
+      this.closeLoginModal();
       this.$refs.form.reset();
     },
-    async changeLoginToSignup() {
-      await this.$store.commit("closeLoginModal");
-      this.$store.commit("openSignupModal");
-      this.$refs.form.reset();
+    changeLoginToSignup() {
+      this.closeLogin();
+      this.openSignupModal();
     },
     loginWithEmail() {
       if (this.$refs.form.validate()) {
-        firebaseService.loginWithEmail(this.email, this.password);
-        this.$store.commit("closeLoginModal");
-        this.$refs.form.reset();
+        firebaseService
+          .loginWithEmail(this.email, this.password)
+          .then(async () => {
+            this.showLoginBar();
+            await this.closeLogin();
+            this.$router.replace("/");
+          });
       }
     },
     loginWithGoogle() {
-      firebaseService.loginWithGoogle();
-      this.$store.commit("closeLoginModal");
-      this.$refs.form.reset();
+      firebaseService.loginWithGoogle().then(async () => {
+        this.showLoginBar();
+        await this.closeLogin();
+        this.$router.replace("/");
+      });
     },
     loginWithFacebook() {
-      firebaseService.loginWithFacebook();
-      this.$store.commit("closeLoginModal");
-      this.$refs.form.reset();
+      firebaseService.loginWithFacebook().then(async () => {
+        this.showLoginBar();
+        await this.closeLogin();
+        this.$router.replace("/");
+      });
     }
   }
 };

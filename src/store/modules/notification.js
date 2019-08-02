@@ -1,8 +1,18 @@
 const state = {
-    snackbar: false,
-    snackbarText: ''
+    loginBar: false,
+    logoutBar: false
+}
+
+const mutations = {
+    showLoginBar(){
+        state.loginBar = true;
+    },
+    showLogoutBar(){
+        state.logoutBar = true;
+    }
 }
 
 export default{
-    state
+    state,
+    mutations
 }

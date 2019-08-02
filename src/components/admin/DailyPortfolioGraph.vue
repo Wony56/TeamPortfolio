@@ -33,14 +33,9 @@ export default {
       portfolios.forEach(portfolio => {
         let date = portfolio.created_at;
 
-        let dateArr = date.split("년 ");
-        let year = dateArr[0];
-
-        dateArr = dateArr[1].split("월 ");
-        let month = dateArr[0];
-
-        dateArr = dateArr[1].split("일");
-        let day = dateArr[0];
+        let year = date.getFullYear();
+        let month = date.getMonth() + 1;
+        let day = date.getDate();
 
         let key = year + "-" + month + "-" + day;
 

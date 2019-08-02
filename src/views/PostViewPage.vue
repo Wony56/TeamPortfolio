@@ -11,15 +11,14 @@
         </v-layout>
         <!-- 본문 부분 -->
         <v-card min-height="400" flat>
-          <v-divider></v-divider>
           <v-layout text-xs-center>
             <v-card-text class="headline" style="background-color:#ff6f61; color:#fff">{{postInfo.title}}</v-card-text>
           </v-layout>
 
           <v-divider></v-divider>
 
-          <v-layout>
-            <v-card-text style="background-color:#ff6f61; color:#fff">작성일 : {{postInfo.created_at}}</v-card-text>
+          <v-layout justify-end>
+            <v-card-title style="color:gray;">작성일 : {{postInfo.created_at}}</v-card-title>
           </v-layout>
           <v-divider></v-divider>
 
@@ -116,6 +115,7 @@
             </v-card>
           </v-flex>
         </v-layout>
+        <v-layout justify-center>
         <v-pagination
           v-if="loadMore"
           v-model="focusPage"
@@ -123,6 +123,7 @@
           :total-visible="5"
           color="#ff6616"
         ></v-pagination>
+        </v-layout>
       </v-flex>
     </v-layout>
 
@@ -402,21 +403,27 @@ export default {
   font-family: "Nanum Gothic", sans-serif;
 }
 
-#magi {
+#magi 
+{
   margin-top: -150px;
 }
-@media (min-width: 768px) {
-  #magi {
+@media (min-width: 768px) 
+{
+  #magi 
+  {
     margin-top: -250px;
   }
 }
-@media (min-width: 1024px) {
-  #magi {
+@media (min-width: 1024px) 
+{
+  #magi 
+  {
     margin-top: -650px;
   }
 }
 
-.choosingcolor {
+.choosingcolor 
+{
   background-color: #ff6f61;
   color: #fff;
 }

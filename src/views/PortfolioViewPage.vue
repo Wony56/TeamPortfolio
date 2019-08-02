@@ -158,6 +158,7 @@ export default {
     totalPage: 10,
     focusPage: 1,
     selectedIndex: -1,
+    replyContent: "",
 
     articleId: "",
     author: {},
@@ -222,6 +223,7 @@ export default {
         this.dialog = true;
         return;
       }
+
       let reply = this.getReplyInfo();
       this.replies[this.focusPage - 1].push(reply);
       FirebaseService.addReply(this.articleId, reply, "PORTFOLIO");

@@ -8,7 +8,6 @@
 
     <!-- Portfolio -->
     <PortfolioList :limits="6" :load-more="true"></PortfolioList>
-
   </div>
 </template>
 

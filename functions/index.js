@@ -31,13 +31,51 @@ exports.createPortfolio = functions.firestore
     const payload = {
         notification:{
             title: '새 포트폴리오',
-            body: '새 포트폴리오가이 등록되었습니다.'
+            body: '새 포트폴리오가 등록되었습니다.'
         }
     }
     db.collection('tokens').get().then((snapshot)=>{
         snapshot.forEach(doc => {
           console.log(doc.data()['token'])
           admin.messaging().sendToDevice(doc.data()['token'], payload);
+        })
+    })
+});
+
+exports.createPostReply = functions.firestore
+.document('posts/{Id}/reply/{replyId}')
+.onCreate((snap) => {
+    const payload = {
+        notification:{
+            title: 'New 댓글',
+            body: 'Post에 새로운 댓글이 등록되었습니다.'
+        }
+    }
+    db.collection('tokens').get().then((snapshot)=>{
+        snapshot.forEach(doc => {
+            if(doc.data()['tier']=='diamond'){
+                console.log(doc.data()['token'])
+                admin.messaging().sendToDevice(doc.data()['token'], payload);
+            }
+        })
+    })
+});
+
+exports.createPortfolioReply = functions.firestore
+.document('portfolios/{Id}/reply/{replyId}')
+.onCreate((snap) => {
+    const payload = {
+        notification:{
+            title: 'New 댓글',
+            body: 'Portfolio에 새로운 댓글이 등록되었습니다.'
+        }
+    }
+    db.collection('tokens').get().then((snapshot)=>{
+        snapshot.forEach(doc => {
+            if(doc.data()['tier']=='diamond'){
+                console.log(doc.data()['token'])
+                admin.messaging().sendToDevice(doc.data()['token'], payload);
+            }
         })
     })
 });

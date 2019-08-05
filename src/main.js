@@ -2,6 +2,8 @@ import Vue from 'vue'
 import Vuetify from 'vuetify'
 import VueSimplemde from 'vue-simplemde'
 import VueMq from 'vue-mq'
+import Notifications from 'vue-notification'
+import velocity      from 'velocity-animate'
 import lineClamp from 'vue-line-clamp'
 import App from './App.vue'
 import Router from 'vue-router'
@@ -42,7 +44,7 @@ Vue.use(Vuetify,
 })
 Vue.use(Laue);
 Vue.use(VueSimplemde)
-
+Vue.use(Notifications, { velocity })
 Vue.use(Autocomplete)
 
 Vue.use(VueMq,{

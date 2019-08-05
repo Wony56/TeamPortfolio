@@ -5,15 +5,16 @@
       <td class="text-xs-left">{{ props.item.name }}</td>
       <td class="text-xs-right">{{ props.item.email }}</td>
       <!-- <td class="text-xs-right">{{ props.item.date }}</td> -->
-      <td class="text-xs-right">
-        
-          <v-select
-            :items="tiers"
-            v-model="props.item.tier"
-            single-line
-            @change="tierChange(`${props.item.uid}`, `${props.item.tier}`)"
-          ></v-select>
-      
+      <td class="text-xs-right" v-if="user.uid !== props.item.uid">
+        <v-select
+          :items="tiers"
+          v-model="props.item.tier"
+          single-line
+          @change="tierChange(`${props.item.uid}`, `${props.item.tier}`)"
+        ></v-select>
+      </td>
+      <td class="text-xs-right" v-else>
+        <v-text-field :value="`${props.item.tier}`" readonly></v-text-field>
       </td>
     </template>
     <template
@@ -25,14 +26,15 @@
 
 <script>
 import firebaseService from "../../services/FirebaseService";
+import { mapState, mapMutations } from "vuex";
 
 export default {
   data: () => ({
     max25chars: v => v.length <= 25 || "Input too long!",
     pagination: {},
     dialog: false,
-     headers: [
-    //   { text: "UID", align: "center", value: "uid", sortable: false },
+    headers: [
+      //   { text: "UID", align: "center", value: "uid", sortable: false },
       { text: "이름", align: "left", value: "name", sortable: false },
       { text: "email", align: "right", value: "email", sortable: false },
       // { text: "가입일", align: "center", value: "date", sortable: false },
@@ -41,10 +43,14 @@ export default {
     desserts: [],
     tiers: ["bronze", "silver", "gold", "diamond"]
   }),
+  computed: mapState({
+    user: state => state.user.user
+  }),
   created() {
     this.initialize();
   },
   methods: {
+    ...mapMutations(["showTierBar"]),
     async initialize() {
       let users = await firebaseService.getUsers();
 
@@ -63,14 +69,13 @@ export default {
     async tierChange(uid, tier) {
       await firebaseService.modifyTier(uid, tier);
 
-      alert("등급 변경완료!");
+      this.showTierBar();
     }
   }
 };
 </script>
 <style>
-*
-{
-  font-family: 'Nanum Gothic', sans-serif;
+* {
+  font-family: "Nanum Gothic", sans-serif;
 }
 </style>

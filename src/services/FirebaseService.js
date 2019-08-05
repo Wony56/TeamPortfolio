@@ -180,6 +180,8 @@ export default {
 		return postsCollection.orderBy('created_at', 'desc').get().then(docSnapshots => {
 			return docSnapshots.docs.map(doc => {
 				let data = doc.data();
+				
+				data.created_at = new Date(data.created_at.toDate());
 
 				return data;
 			});
@@ -364,7 +366,6 @@ export default {
 	modifyPortfolioImage(id, img) {
 
 		return firestore.collection(PORTFOLIOS).doc(id).update({
-			
 			img
 		}).catch(error => {
 			alert(error.message);
@@ -379,7 +380,7 @@ export default {
 			.then((docSnapshots) => {
 				return docSnapshots.docs.map((doc) => {
 					let data = doc.data()
-					// data.created_at = data.created_at.toDate()
+
 					return data
 				})
 			})
@@ -401,9 +402,9 @@ export default {
 
 			this.postLogData(result.user, 'Log in');
 			return result;
-		}).catch(function (error) {
-			console.error('[Google Login Error]', error);
-		})
+		}).catch(error => {
+			store.commit("showLoginErrorBar", {message: error.message});
+		});
 	},
 	loginWithFacebook() {
 		let provider = new firebase.auth.FacebookAuthProvider();
@@ -417,8 +418,8 @@ export default {
 
 			this.postLogData(result.user, 'Log in');
 			return result;
-		}).catch(function (error) {
-			console.error('[Facebook Login Error]', error)
+		}).catch(error => {
+			store.commit("showLoginErrorBar", {message: error.message});
 		});
 	},
 	loginWithEmail(email, password) {
@@ -431,15 +432,14 @@ export default {
 
 			this.postLogData(result.user, 'Log in');
 			return result;
-		}).catch(err => {
-			let errorCode = err.code;
+		}).catch(error => {
+			let errorCode = error.code;
 
-			if (errorCode == 'auth/invalid-email') {
-				alert('Invalid email...');
-			} else if (errorCode == 'auth/user-not-found' || errorCode == 'auth/wrong-password') {
-				alert('아이디 또는 패스워드가 틀렸습니다.')
+			if (errorCode === 'auth/invalid-email') {
+				store.commit("showLoginErrorBar", {message: "유효하지 않은 email입니다."});
+			} else if (errorCode === 'auth/user-not-found' || errorCode === 'auth/wrong-password') {
+				store.commit("showLoginErrorBar", {message: "아이디 또는 패스워드가 틀렸습니다."});
 			}
-			console.log('[Email Login Error]', err);
 		})
 	},
 	signUpEmail(email, name, password) {
@@ -456,26 +456,24 @@ export default {
 
 			this.postLogData(result.user, 'Log in');
 			return result;
-		}).catch(err => {
-			let errorCode = err.code;
-
-			if (errorCode == 'auth/weak-password') {
-				alert('The password is too weak.');
-			} else if (errorCode == 'auth/invalid-email') {
-				alert('Email is invalid.');
-			} else if (errorCode == 'auth/email-already-in-use') {
-				alert('"This account already exists...');
+		}).catch(error => {
+			let errorCode = error.code;
+			
+			if (errorCode === 'auth/weak-password') {
+				store.commit("showLoginErrorBar", {message: "패스워드가 매우 취약합니다."});
+			}else if (errorCode == 'auth/invalid-email') {
+				store.commit("showLoginErrorBar", {message: "유효하지 않은 email입니다."});
+			} else if (errorCode === 'auth/email-already-in-use') {
+				store.commit("showLoginErrorBar", {message: "이미 존재하는 계정입니다..."});
 			}
-
-			console.log(err);
-		})
+		});
 	},
 	logout() {
 		return firebase.auth().signOut().then(() => {
 			this.postLogData(store.state.user.user, 'Log out');
 			this.deleteToken(store.state.user.user);
-		}).catch(err => {
-			console.log(err);
+		}).catch(error => {
+			store.commit("showLoginErrorBar", {message: error.message});
 		});
 	}
 }

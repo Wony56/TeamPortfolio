@@ -28,7 +28,7 @@ export const router = new Router({
 			path: '/post',
 			name: 'post',
 			component: PostPage,
-			children: 
+			children:
 			[
 				{
 					path: "write",
@@ -40,7 +40,7 @@ export const router = new Router({
 			path: '/portfolio',
 			name: 'portfolio',
 			component: PortfolioPage,
-			children: 
+			children:
 			[
 				{
 					path: "write",

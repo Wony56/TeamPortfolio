@@ -7,7 +7,7 @@
     </ImgBanner>
 
     <!-- Portfolio -->
-    <PortfolioList :limits="6" :load-more="true"></PortfolioList>
+    <PortfolioList></PortfolioList>
   </div>
 </template>
 

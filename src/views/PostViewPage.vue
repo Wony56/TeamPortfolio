@@ -104,11 +104,8 @@
                     color="#ff6f61"
                     @click="authorizationCheck('REPLY', index)"
                   >수정</v-btn>
-
                   <v-btn v-else text flat color="black" @click="modifyReply(index)">수정완료</v-btn>
-
                   <v-btn v-if="replyFlag" text flat color="black" @click="replyFlag = false">취소</v-btn>
-
                   <v-btn text flat color="#ff6f61" @click="removeReply(index)">삭제</v-btn>
                 </v-card-text>
               </v-layout>
@@ -261,7 +258,7 @@ export default {
       
       this.replyContent = "";
     },
-    removeReply(index) {
+    async removeReply(index) {
       if (
         this.replies[this.focusPage - 1][index].uid == this.user.uid ||
         this.user.tier == "diamond"
@@ -271,13 +268,48 @@ export default {
         this.replies[this.focusPage - 1].splice(index, 1);
 
         if(this.replies[this.focusPage - 1].length == 0) {
-          this.totalPage -= 1;
-          this.focusPage -= 1;
+          if(this.totalPage != 1)
+            this.totalPage -= 1;
+          
+          if(this.focusPage != 1)
+            this.focusPage -= 1;
+        }
+        let origin =  await FirebaseService.getPostReply(this.articleId);
+        this.replies = [];
+
+        console.log("ORIGIN ", origin);
+
+        if(origin.length > 0) {
+
+          let index = 0;
+          let flag = false;
+          this.totalPage = parseInt(origin.length / 5);
+
+          console.log("TOTALPAGE ", this.totalPage);
+
+          for (let page = 0; page <= this.totalPage; page++) {
+            let temp = [];
+
+            for (let count = 0; count < 5; count++) {
+              if (origin[index] === undefined) {
+
+                flag = true;
+                break;
+              }
+              temp.push(origin[index++]);
+            }
+            if(temp.length > 0)
+              this.replies.push(temp);
+            if(flag)
+              break;
+          }
+          this.totalPage = this.replies.length;
         }
       } else {
 
          this.setModalContent("오류", "권한이 없습니다.");
       }
+      console.log("RESULT? ", this.replies);
     },
     modifyReply(index) {
       if (

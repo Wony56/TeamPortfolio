@@ -49,9 +49,7 @@ export default {
   },
   mounted() {
     this.getPortfolios();
-    this.flag = this.user.loggedIn;
-
-    console.log(this.flag);
+    console.log(this.loggedIn);
   },
   computed: mapState({
     loggedIn: state => state.user.loggedIn

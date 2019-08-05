@@ -4,9 +4,9 @@
     :color="'#ff6f61'"
     :top="true"
     :bottom="false"
-    :timeout="3000"
+    :timeout="2000"
   >
-    <v-icon color="white" class="mr-3">notifications</v-icon>
+    <v-icon color="white" class="mr-3">power_settings_new</v-icon>
     <div class="snack">{{user.displayName}}님, 환영합니다!</div>
   </v-snackbar>
 </template>

@@ -85,8 +85,13 @@ export default {
   methods: {
     signupWithEmail() {
       if (this.$refs.form.validate()) {
-        firebaseService.signUpEmail(this.email, this.name, this.password);
-        this.$store.commit("closeSignupModal");
+        firebaseService
+          .signUpEmail(this.email, this.name, this.password)
+          .then(res => {
+            if (res) {
+              this.$store.commit("closeSignupModal");
+            }
+          });
         this.$refs.form.reset();
       }
     },
@@ -98,7 +103,7 @@ export default {
 };
 </script>
 <style>
-*{
-  font-family: 'Nanum Gothic', sans-serif;
+* {
+  font-family: "Nanum Gothic", sans-serif;
 }
 </style>

@@ -11,6 +11,7 @@ const WEBLOGS = 'weblogs';
 const USERS = 'users';
 const IMAGES = 'images';
 const TOKENS = 'tokens';
+const COMMENTS = 'comments';
 
 // Setup Firebase
 const config = {
@@ -70,78 +71,108 @@ export default {
 		console.log('삭제완료')
 		return firestore.collection(TOKENS).doc(user.uid).delete()
 	},
-
-	addReply(articleId, replyInfo, flag) {
+//=============================================================================================================
+//=============================================================================================================
+//=============================================================================================================
+	addReply(replyInfo) {
 
 		replyInfo.created_at = new Date();
 
-		if(flag === "POST") {
-			const postCollection = firestore.collection(POSTS).doc(articleId)
-			return postCollection
-				.update({ 'reply': firebase.firestore.FieldValue.arrayUnion(replyInfo)
-			});
-		}
-		else {
-			const postCollection = firestore.collection(PORTFOLIOS).doc(articleId)
-			return postCollection
-				.update({ 'reply': firebase.firestore.FieldValue.arrayUnion(replyInfo)
-			});
-		}
+		// if(flag === "POST") {
+		// 	const postCollection = firestore.collection(POSTS).doc(articleId)
+		// 	return postCollection
+		// 		.update({ 'reply': firebase.firestore.FieldValue.arrayUnion(replyInfo)
+		// 	});
+		// }
+		// else {
+		// 	const postCollection = firestore.collection(PORTFOLIOS).doc(articleId)
+		// 	return postCollection
+		// 		.update({ 'reply': firebase.firestore.FieldValue.arrayUnion(replyInfo)
+		// 	});
+		// }
+		const postCollection = firestore.collection(COMMENTS);
+		return postCollection.add(replyInfo);
 	},
-	removeReply(articleId, replyInfo, flag) {
+	removeReply(commentId, replyInfo) {
 
-		if(flag === "POST") {
-			const postCollection = firestore.collection(POSTS).doc(articleId)
-			return postCollection
-				.update({ 'reply': firebase.firestore.FieldValue.arrayRemove(replyInfo) 
-			})
-		}
-		else {
-			const postCollection = firestore.collection(PORTFOLIOS).doc(articleId)
-			return postCollection
-				.update({ 'reply': firebase.firestore.FieldValue.arrayRemove(replyInfo) 
-			})
-		}
+		// if(flag === "POST") {
+		// 	const postCollection = firestore.collection(POSTS).doc(articleId)
+		// 	return postCollection
+		// 		.update({ 'reply': firebase.firestore.FieldValue.arrayRemove(replyInfo) 
+		// 	})
+		// }
+		// else {
+		// 	const postCollection = firestore.collection(PORTFOLIOS).doc(articleId)
+		// 	return postCollection
+		// 		.update({ 'reply': firebase.firestore.FieldValue.arrayRemove(replyInfo) 
+		// 	})
+		// }
+		const postCollection = firestore.collection(COMMENTS).doc(commentId);
+		return postCollection.delete(replyInfo);
 	},
-	modifyReply(articleId, index, replyContent, flag) {
+	modifyReply(commentId, editedContent) {
 
-		if(flag === "POST") {
-			return firestore.collection(POSTS).doc(articleId).get().then((doc) => {
+		// if(flag === "POST") {
+		// 	return firestore.collection(POSTS).doc(articleId).get().then((doc) => {
 
-				let ret = doc.data();
-				ret.reply[index].replyContent = replyContent;
-				ret.reply[index].created_at = new Date();
+		// 		let ret = doc.data();
+		// 		ret.reply[index].replyContent = replyContent;
+		// 		ret.reply[index].created_at = new Date();
 
-				return firestore.collection(POSTS).doc(articleId).update({
+		// 		return firestore.collection(POSTS).doc(articleId).update({
 
-					title: ret.title,
-					content: ret.content,
-					reply: ret.reply,
-					author: ret.author,
-					authorUid: ret.authorUid,
-					created_at: ret.created_at
-				})
-			});
-		}
-		else {
-			return firestore.collection(PORTFOLIOS).doc(articleId).get().then((doc) => {
+		// 			title: ret.title,
+		// 			content: ret.content,
+		// 			reply: ret.reply,
+		// 			author: ret.author,
+		// 			authorUid: ret.authorUid,
+		// 			created_at: ret.created_at
+		// 		})
+		// 	});
+		// }
+		// else {
+		// 	return firestore.collection(PORTFOLIOS).doc(articleId).get().then((doc) => {
 
-				let ret = doc.data();
-				ret.reply[index].replyContent = replyContent;
-				ret.reply[index].created_at = new Date();
+		// 		let ret = doc.data();
+		// 		ret.reply[index].replyContent = replyContent;
+		// 		ret.reply[index].created_at = new Date();
 
-				return firestore.collection(PORTFOLIOS).doc(articleId).update({
+		// 		return firestore.collection(PORTFOLIOS).doc(articleId).update({
 
-					author: ret.author,
-					body: ret.body,
-					created_at: ret.created_at,
-					img: ret.img,
-					title: ret.title,
-					reply: ret.reply
-				})
-			});
-		}
+		// 			author: ret.author,
+		// 			body: ret.body,
+		// 			created_at: ret.created_at,
+		// 			img: ret.img,
+		// 			title: ret.title,
+		// 			reply: ret.reply
+		// 		})
+		// 	});
+		// }
+		const collection = firestore.collection(COMMENTS).doc(commentId);
+		return collection.update({
+
+			replyContent: editedContent,
+			created_at: new Date()
+		});
 	},
+	getComments(articleId) {
+
+		const collection = firestore.collection(COMMENTS);
+		return collection.where("capital", "==", true)
+		.get()
+		.then(function(querySnapshot) {
+			querySnapshot.forEach(function(doc) {
+				// doc.data() is never undefined for query doc snapshots
+				console.log(doc.id, " => ", doc.data());
+			});
+		})
+		.catch(function(error) {
+			console.log("Error getting documents: ", error);
+		});
+	},
+	//=============================================================================================================
+	//=============================================================================================================
+	//=============================================================================================================
 	modifyPost(articleId, postInfo, replies) {
 
 		let reply = [];
@@ -245,9 +276,6 @@ export default {
 					data.id = doc.id;
 					data.created_at = data.created_at.toDate();
 
-					console.log(data.reply);
-					console.log(data.reply.length);
-
 					for(let i = 0; i < data.reply.length; i++)
 						data.reply[i].created_at = data.reply[i].created_at.toDate();
 					return data
@@ -275,18 +303,12 @@ export default {
 			.get()
 			.then((doc) => {
 
-				console.log(doc.id);
 				let data = doc.data();
 
 				data.created_at = data.created_at.toDate();
 
 				for(let i = 0; i < data.reply.length; i++)
 					data.reply[i].created_at = data.reply[i].created_at.toDate();
-				// data.created_at = data.created_at.toDate();
-				//data.articleId = doc.id;
-
-				console.log('Document data:', data);
-				//console.log('Article ID: ', data.articleId);
 				return data;
 			})
 			.catch(err => {
@@ -303,22 +325,19 @@ export default {
 					let data = doc.data()
 
 					data.id = doc.id;
-					console.log("ID ", data.id);
 
 					data.created_at = data.created_at.toDate();
 
 					for(let i = 0; i < data.reply.length; i++)
 						data.reply[i].created_at = data.reply[i].created_at.toDate();
-						
-					//data.created_at = data.created_at.toDate();
 					return data;
 				})
 			})
 	},
-	postPortfolio(author, title, body, img) {
+	postPortfolio(author, title, content, img) {
 		return firestore.collection(PORTFOLIOS).add({
 			author,
-			body,
+			content,
 			created_at: new Date(),
 			img,
 			title,
@@ -326,34 +345,27 @@ export default {
 		})
 	},
 
-	modifyPortfoilo(id, author, title, body, img, replies) {
-
-		console.log(id);
-		console.log(author);
-		console.log(title);
-		console.log(body);
-		console.log(img);
-		console.log(replies);
+	modifyPortfoilo(articleId, portfoiloInfo) {
 
 		let reply = [];
 
-		for(let i = 0; i < replies.length; i++) {
+		for(let i = 0; i < portfoiloInfo.reply.length; i++) {
 
-			for(let j = 0; j < replies[i].length; j++) {
+			for(let j = 0; j < portfoiloInfo.reply[i].length; j++) {
 
-				reply.push(replies[i][j]);
+				reply.push(portfoiloInfo.reply[i][j]);
 			}
 		}
 		console.log(reply);
 
-		return firestore.collection(PORTFOLIOS).doc(id).update({
+		return firestore.collection(PORTFOLIOS).doc(articleId).update({
 			
-			author,
-			body,
-			img,
+			author: portfoiloInfo.author,
+			content: portfoiloInfo.content,
+			img: portfoiloInfo.img,
 			created_at: new Date(),
-			title,
-			reply
+			title: portfoiloInfo.title,
+			reply: reply
 
 		}).catch(error => {
 			alert(error.message);
@@ -369,6 +381,10 @@ export default {
 			alert(error.message);
 		})
 	},
+	deletePortfolio(id) {
+
+		return firestore.collection(PORTFOLIOS).doc(id).delete();
+	},
 
 	getImage() {
 		const imagesCollection = firestore.collection(IMAGES)
@@ -378,9 +394,36 @@ export default {
 			.then((docSnapshots) => {
 				return docSnapshots.docs.map((doc) => {
 					let data = doc.data()
-					// data.created_at = data.created_at.toDate()
 					return data
 				})
+			})
+	},
+	getPortfoiloReply(id) {
+
+		const portfoliosCollection = firestore.collection(PORTFOLIOS).doc(id);
+		return portfoliosCollection
+			.get()
+			.then((doc) => {
+				
+				let ret = doc.data();
+				
+				for(let i = 0; i < ret.reply.length; i++)
+					ret.reply[i].created_at =  ret.reply[i].created_at.toDate();
+				return ret.reply;
+			})
+	},
+	getPostReply(id) {
+
+		const portfoliosCollection = firestore.collection(POSTS).doc(id);
+		return portfoliosCollection
+			.get()
+			.then((doc) => {
+				
+				let ret = doc.data();
+				
+				for(let i = 0; i < ret.reply.length; i++)
+					ret.reply[i].created_at =  ret.reply[i].created_at.toDate();
+				return ret.reply;
 			})
 	},
 	postImage(img) {
@@ -411,7 +454,6 @@ export default {
 			if(!await this.getUser(result.user)){
 				await this.postUser(result.user);
 			}
-
 			store.state.user.user = await this.getUser(result.user);
 
 			this.postLogData(result.user, 'Log in');

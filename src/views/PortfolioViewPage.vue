@@ -5,27 +5,27 @@
     </ImgBanner>
   <v-container>
       <form>
-        <v-text-field v-model="title" color="#ff6f61" readonly placeholder="제목을 입력해주세요." required></v-text-field>
+        <v-text-field v-model="portfolioInfo.title" color="#ff6f61" readonly placeholder="제목을 입력해주세요." :required="!modifyFlag"></v-text-field>
         <v-text-field
-          v-model="authorName"
+          v-model="portfolioInfo.author.name"
           color="#ff6f61"
           readonly
           placeholder="제목을 입력해주세요."
           required
         ></v-text-field>
-        <v-text-field v-model="created_at" color="#ff6f61" readonly required></v-text-field>
+        <v-text-field v-model="portfolioInfo.created_at" color="#ff6f61" readonly required></v-text-field>
 
         <div v-if="!modifyFlag">
-          <VueMarkdown :source="body"></VueMarkdown>
+          <VueMarkdown :source="portfolioInfo.content"></VueMarkdown>
         </div>
         <div v-else>
-          <markdown-editor v-model="body" ref="MarkdownEditor"></markdown-editor>
+          <markdown-editor v-model="portfolioInfo.content" ref="MarkdownEditor"></markdown-editor>
         </div>
 
         <v-spacer></v-spacer>
 
         <v-layout row style="margin: 30px;">
-          <v-flex v-for="(img, index) in imgs" :key="index">
+          <v-flex v-for="(img, index) in portfolioInfo.img" :key="index">
             <v-img class="white--text" width="200px" height="200px" :src="img">
               <v-btn  v-if="modifyFlag" text icon color="yellow" @click="deletePicture(index, img)">
                 <v-icon>delete</v-icon>
@@ -71,7 +71,7 @@
           </v-flex>
         </v-layout>
         <!--하나씩 카드로 나눠서 보여주는걸로 할 예정-->
-        <v-layout v-for="(reply, index) in replies[focusPage - 1]" :key="index">
+        <v-layout v-for="(reply, index) in portfolioInfo.reply[focusPage - 1]" :key="index">
           <v-flex row wrap>
             <br />
             <v-card min-height="100">
@@ -111,11 +111,10 @@
 
         <v-layout justify-center>
           <v-btn v-if="!modifyFlag" style="background-color:#ff6f61; color:#ffff" @click="checkAuthentication()">수정</v-btn>
-
           <v-btn v-if="modifyFlag" style="background-color:black; color:#ffff" @click="modifyPortfolio()">수정완료</v-btn>
-
-          <v-btn v-if="!modifyFlag" style="background-color:#ff6f61; color:#ffff" @click="$router.go(-1)">취소</v-btn>
+          <v-btn v-if="!modifyFlag" style="background-color:#ff6f61; color:#ffff" @click="$router.go(0)">취소</v-btn>
           <v-btn v-if="modifyFlag" style="background-color:#ff6f61; color:#ffff" @click="modifyFlag = false">취소</v-btn>
+          <v-btn  style="background-color:#ff6f61; color:#ffff" @click="deletePortfoilo()">삭제</v-btn>
         </v-layout>
       </form>
     </v-container>
@@ -160,14 +159,19 @@ export default {
     replyContent: "",
 
     articleId: "",
-    author: {},
-    body: {},
-    created_at: "",
-    imgs: [],
+    portfolioInfo: {
 
-    authorUid: "",
-    title: "",
-    authorName: "",
+      title: {type: String},
+      author: {
+
+        name: {type: String},
+        uid: {type: String},
+      },
+      content: {type: String},
+      created_at: { type: Date },
+      img: { type: Array },
+      reply: { type: Array }
+    },
 
     dialog: false,
     flag: true,
@@ -194,6 +198,9 @@ export default {
     })
   },
   mounted() {
+    this.$store.state.images.imgurLinks = [];
+    this.$store.state.images.images = [];
+
     this.articleId = this.$route.params.portfolioId;
     this.getPortfolio();
   },
@@ -206,63 +213,69 @@ export default {
         created_at: { type: Date }
       };
     },
-    getPostInfo() {
-      return {
-        author: this.user.displayName,
-        content: this.content,
-        created_at: this.created_at,
-        authorUid: this.user.uid,
-        reply: this.replies,
-        title: this.title
-      };
-    },
     addReply() {
-      if (this.user.uid == undefined) {
-        this.modalTitle = "WARNING";
-        this.modalContent = "로그인 해주세요.";
-        this.dialog = true;
+      if (this.user == undefined || this.loggedIn == false) {
+        this.setModalContent("알림", "로그인을 해주시길 바랍니다.");
         return;
       }
-
       let reply = this.getReplyInfo();
-      this.replies[this.focusPage - 1].push(reply);
+      this.paginations(reply);
       FirebaseService.addReply(this.articleId, reply, "PORTFOLIO");
-
+      
       this.replyContent = "";
     },
-    removeReply(index) {
+    async removeReply(index) {
       if (
-        this.replies[this.focusPage - 1][index].uid == this.user.uid ||
+        this.portfolioInfo.reply[this.focusPage - 1][index].uid == this.user.uid ||
         this.user.tier == "diamond"
       ) {
-        let reply = this.replies[this.focusPage - 1][index];
 
-        FirebaseService.removeReply(this.articleId, reply, "PORTFOLIO");
-        this.replies[this.focusPage - 1].splice(index, 1);
-      } else {
-        this.modalTitle = "ERROR";
-        this.modalContent = "권한이 없습니다.";
-        this.dialog = true;
-      }
-    },
-    checkReplyAuthority(index) {
-      if (
-        this.replies[this.focusPage - 1][index].uid == this.user.uid ||
-        this.user.tier == "diamond"
-      ) {
-        if (this.selectedIndex == -1) this.selectedIndex = index;
-        else this.selectedIndex = -1;
+        FirebaseService.removeReply(this.articleId, this.portfolioInfo.reply[this.focusPage - 1][index], "PORTFOLIO");
+        this.portfolioInfo.reply[this.focusPage - 1].splice(index, 1);
 
-        this.replyFlag = true;
+        if(this.portfolioInfo.reply[this.focusPage - 1].length == 0) {
+
+          if(this.totalPage != 1)
+            this.totalPage -= 1;
+          
+          if(this.focusPage != 1)
+            this.focusPage -= 1;
+        }
+        let origin =  await FirebaseService.getPortfoiloReply(this.articleId);
+        this.portfolioInfo.reply = [];
+
+        if(origin.length > 0) {
+
+          let index = 0;
+          let flag = false;
+          this.totalPage = parseInt(origin.length / 5);
+
+          for (let page = 0; page <= this.totalPage; page++) {
+            let temp = [];
+
+            for (let count = 0; count < 5; count++) {
+              if (origin[index] === undefined) {
+
+                flag = true;
+                break;
+              }
+              temp.push(origin[index++]);
+            }
+            if(temp.length > 0)
+              this.portfolioInfo.reply.push(temp);
+            if(flag)
+              break;
+          }
+          this.totalPage = this.portfolioInfo.reply.length;
+        }
       } else {
-        this.modalTitle = "ERROR";
-        this.modalContent = "권한이 없습니다.";
-        this.dialog = true;
+
+         this.setModalContent("오류", "권한이 없습니다.");
       }
     },
     modifyReply(index) {
       if (
-        this.replies[this.focusPage - 1][index].uid == this.user.uid ||
+        this.portfolioInfo.reply[this.focusPage - 1][index].uid == this.user.uid ||
         this.user.tier == "diamond"
       ) {
         FirebaseService.modifyReply(
@@ -274,14 +287,46 @@ export default {
         this.selectedIndex = -1;
         this.replyFlag = false;
       } else {
-        this.modalTitle = "ERROR";
-        this.modalContent = "권한이 없습니다.";
-        this.dialog = true;
+
+         this.setModalContent("오류", "권한이 없습니다.");
       }
     },
 
+    authorizationCheck(select, index) {
 
+      if (this.user === undefined || this.user.loggedIn == false) {
 
+        this.setModalContent("알림", "로그인을 해주시길 바랍니다.");
+        return;
+      }
+
+      if(select === "PORTFOLIO") {
+
+        if ((this.loggedIn === true) && (this.authorUid == this.user.uid || this.user.tier == "diamond")) {
+          
+          this.postFlag = true;
+          this.originContent = this.postInfo.content;
+
+        } else {
+          this.setModalContent("오류", "권한이 없습니다.");
+        }
+      }
+      else {
+
+        if (this.portfolioInfo.reply[this.focusPage - 1][index].uid == this.user.uid ||
+          this.user.tier == "diamond"
+        ) {
+          if (this.selectedIndex == -1) 
+            this.selectedIndex = index;
+          else 
+            this.selectedIndex = -1;
+
+          this.replyFlag = true;
+        } else {
+          this.setModalContent("오류", "권한이 없습니다.");
+        }
+      }
+    },
     checkAuthentication() {
 
       if (this.authorUid == this.user.uid || this.user.tier == "diamond") {
@@ -297,112 +342,128 @@ export default {
       console.log(this.imgurLink);
       for(let i = 0; i < this.imgurLink.length; i++) {
         
-        this.imgs.push(this.imgurLink[i]);
+        this.portfolioInfo.img.push(this.imgurLink[i]);
       }
-      FirebaseService.modifyPortfoilo(this.articleId, this.author, this.title, this.body, this.imgs, this.replies);
+      FirebaseService.modifyPortfoilo(this.articleId, this.portfolioInfo);
 
       this.$store.state.images.imgurLinks = [];
       this.$store.state.images.images = [];
 
-      this.modalTitle = "수정완료";
-      this.modalContent = "글 수정을 완료하였습니다.";
+      this.setModalContent("수정완료", "포트폴리오 수정을 완료하였습니다.");
       this.flag = true;
       this.dialog = true;
     },
+    deletePortfoilo() {
 
-    // async postPortfolio() {
-    //   if (this.title === "") {
-    //     this.modalTitle = "WARNING";
-    //     this.modalContent = "제목을 입력해주세요.";
-    //     this.dialog = true;
-    //     this.flag = false;
-    //   } else if (this.content === "") {
-    //     this.modalTitle = "WARNING";
-    //     this.modalContent = "내용을 입력해주세요.";
-    //     this.dialog = true;
-    //     this.flag = false;
-    //   } else if (this.image === "") {
-    //     this.modalTitle = "WARNING";
-    //     this.modalContent = "이미지를 한 개 이상 첨부해주세요.";
-    //     this.dialog = true;
-    //     this.flag = false;
-    //   } else {
-    //     try {
-    //       await FirebaseService.postPortfolio(
-    //         {
-    //           uid: this.$store.state.user.user.uid,
-    //           name: this.$store.state.user.user.displayName
-    //         },
-    //         this.title,
-    //         this.content,
-    //         this.$store.state.images.imgurLinks
-    //       );
-    //       this.$store.state.images.imgurLinks = [];
+      if ((this.loggedIn === true) && (this.portfolioInfo.author.uid == this.user.uid || this.user.tier == "diamond")) {
+        this.movePage = 2;
 
-    //       this.dialog = true;
-    //       this.flag = true;
-    //       this.modalTitle = "성공";
-    //       this.modalContent = "글을 성공적으로 작성하였습니다.";
-    //     } catch (error) {
-    //       console.log(error);
-    //     }
-    //   }
-    // },
+        FirebaseService.deletePortfolio(this.articleId);
+        this.setModalContent("성공", "포트폴리오가 성공적으로 삭제 되었습니다.");
+      } else {
+        this.setModalContent("오류", "권한이 없습니다.");
+      }
+    },
     async getPortfolio() {
       let ret = await FirebaseService.getPortfolioById(this.articleId);
 
-      console.log("RET> ", ret);
+      this.portfolioInfo.img = new Array();
+      this.portfolioInfo.reply = new Array();
 
-      this.author = ret.author;
-      this.body = ret.body;
-      this.created_at = ret.created_at;
-      this.imgs = ret.img;
-      this.title = ret.title;
+      for(let idx = 0; idx < ret.img.length; idx++) {
 
-      this.authorName = this.author.name;
-      this.authorUid = this.author.uid;
+        console.log(ret.img[idx]);
+        this.portfolioInfo.img.push(ret.img[idx]);
+      }
 
-       let index = 0;
+      console.log(this.portfolioInfo.img);
+
+      this.portfolioInfo.author.name = ret.author.name;
+      this.portfolioInfo.author.uid = ret.author.uid;
+      this.portfolioInfo.content = ret.content;
+      this.portfolioInfo.created_at = ret.created_at;
+      this.portfolioInfo.img = ret.img;
+      this.portfolioInfo.title = ret.title;
 
       this.loadMore = true;
 
-      if(ret.reply !== undefined) {
-      this.totalPage = parseInt(ret.reply.length / 5) + 1;
+      if(ret.reply.length > 0) {
 
-      console.log(this.totalPage);
+        let index = 0;
+        let flag = false;
+        this.totalPage = parseInt(ret.reply.length / 5);
 
-      for (let page = 0; page <= this.totalPage; page++) {
-        let temp = [];
+        for (let page = 0; page <= this.totalPage; page++) {
+          let temp = [];
 
-        for (let count = 0; count < 5; count++) {
-          if (ret.reply[index] === undefined) break;
-          temp.push(ret.reply[index++]);
+          for (let count = 0; count < 5; count++) {
+            if (ret.reply[index] === undefined) {
+
+              flag = true;
+              break;
+            }
+            temp.push(ret.reply[index++]);
+          }
+          if(temp.length > 0)
+            this.portfolioInfo.reply.push(temp);
+          if(flag)
+            break;
         }
-        this.replies.push(temp);
+        this.totalPage = this.portfolioInfo.reply.length;
       }
+      else {
+
+        this.totalPage = 1;
       }
-      console.log(this.replies);
-      this.articleId = this.$route.params.portfolioId;
-
-      console.log("ARTICLE 받았나요? ", this.articleId);
-
     },
     async deletePicture(index, src) {
+
       let start = src.lastIndexOf("/");
       let end = src.lastIndexOf(".");
       let imageDeleteHash = src.substring(start + 1, end);
 
       console.log(imageDeleteHash);
       
-      console.log("BEFORE DELETE ", this.imgs);
+      console.log("BEFORE DELETE ", this.portfolioInfo.img);
 
       let flag = await this.deleteImage(imageDeleteHash);
-      this.imgs.splice(index, 1);
+      this.portfolioInfo.img.splice(index, 1);
 
-      console.log(this.imgs);
-      FirebaseService.modifyPortfolioImage(this.articleId, this.imgs);
+      console.log(this.portfolioInfo.img);
+      FirebaseService.modifyPortfolioImage(this.articleId, this.portfolioInfo.img);
 
       console.log("flag> ", flag);
+    },
+    setModalContent(title, content) {
+
+        this.modalTitle = title;
+        this.modalContent = content;
+        this.dialog = !this.dialog;
+    },
+    paginations(data) {
+
+      console.log("BEFORE ", this.portfolioInfo.reply);
+      console.log("REPLY ", data);
+
+      if(this.portfolioInfo.reply[this.totalPage - 1] === undefined) {
+        
+        this.portfolioInfo.reply.push([data]);
+
+        console.log(this.portfolioInfo.reply);
+        return;
+      }
+
+      if(this.portfolioInfo.reply[this.totalPage - 1].length == 5) {
+
+        console.log("IF ", this.portfolioInfo.reply[this.totalPage - 1]);
+        this.totalPage += 1;
+        this.portfolioInfo.reply.push([data]);
+      } else {
+
+        console.log("ELSE ", this.portfolioInfo.reply[this.totalPage - 1]);
+        this.portfolioInfo.reply[this.totalPage - 1].push(data);
+      }
+      console.log("AFTER ", this.portfolioInfo.reply);
     },
     ...mapActions(["deleteImage"])
   }

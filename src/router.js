@@ -92,7 +92,6 @@ router.beforeEach(async (to, from, next) => {
 
 	if((requiresAuth && !currentUser) || (writeAuth && !currentUser)){
 		store.commit("showLockingBar");
-		next("home");
 	}else if(requiresAuth && currentUser){
 		if(store.state.user.user.tier !== 'diamond'){
 			store.commit("showLockingBar");

@@ -5,9 +5,14 @@
         <span style="color:black;">Portfolio</span>
       </div>
     </ImgBanner>
-
-    <!-- Portfolio -->
-    <PortfolioList></PortfolioList>
+    <v-container>
+      <!-- Portfolio -->
+      <v-layout>
+        <v-flex xs12>
+          <PortfolioList :limits="6" :load-more="true"></PortfolioList>
+        </v-flex>
+      </v-layout>
+    </v-container>
   </div>
 </template>
 
@@ -17,6 +22,10 @@ import PortfolioList from "../components/portfolio/PortfolioList";
 
 export default {
   name: "PortfolioPage",
+  mounted() {
+
+    // this.$store.state.images.imgurLinks = [];
+  },
   components: {
     ImgBanner,
     PortfolioList

@@ -64,9 +64,11 @@ firebase.auth().onAuthStateChanged(async user => {
 	}else{
 		store.state.user.loggedIn = false;
 	}
+
+
 	new Vue({
 		router,
 		store,
 		render: h => h(App)
-	  }).$mount('#app')
+	}).$mount('#app')
 })

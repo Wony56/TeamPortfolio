@@ -10,6 +10,7 @@ import PortfolioWriterPage from './views/PortfolioWriterPage.vue'
 import PostWriterPage from './views/PostWriterPage.vue'
 import PostViewPage from './views/PostViewPage.vue'
 import Adminpage from './views/AdminPage.vue'
+import PortfolioViewPage from './views/PortfolioViewPage.vue'
 
 export const router = new Router({
 	mode: 'history',
@@ -27,36 +28,28 @@ export const router = new Router({
 		{
 			path: '/post',
 			name: 'post',
-			component: PostPage,
-			children:
-			[
-				{
-					path: "write",
-					component: PostWriterPage
-				}
-			]
+			component: PostPage
 		},
 		{
 			path: '/portfolio',
 			name: 'portfolio',
-			component: PortfolioPage,
-			children:
-			[
-				{
-					path: "write",
-					component: PortfolioWriterPage
-				}
-			]
+			component: PortfolioPage
 		},
 		{
 			path: '/portfoliowriter',
 			name: 'portfoliowriter',
-			component: PortfolioWriterPage
+			component: PortfolioWriterPage,
+			meta: {
+				writeAuth: true
+			}
 		},
 		{
 			path: '/postwriterpage',
 			name: 'postwriterpage',
-			component: PostWriterPage
+			component: PostWriterPage,
+			meta: {
+				writeAuth: true
+			}
 		},
 		{
 			path: '/postview/:postIndex',
@@ -70,7 +63,13 @@ export const router = new Router({
 			meta: {
 				requiresAuth: true
 			}
+		},
+		{
+			path: '/portfolioview/:portfolioIndex',
+			name: 'portfolioview',
+			component: PortfolioViewPage
 		}
+
 	],
 	scrollBehavior(to, from, savedPosition) {
 		return { x: 0, y: 0 };
@@ -80,7 +79,9 @@ export const router = new Router({
 router.beforeEach(async (to, from, next) => {
 	const currentUser = firebase.auth().currentUser;
 	const requiresAuth = to.matched.some(record => record.meta.requiresAuth);
+	const writeAuth = to.matched.some(record => record.meta.writeAuth);
 
+	
 	if(currentUser){
 		store.state.user.user = await firebaseService.getUser(currentUser);
 		store.state.user.loggedIn = true;
@@ -89,13 +90,19 @@ router.beforeEach(async (to, from, next) => {
 		store.state.user.loggedIn = false;
 	}
 
-	if(requiresAuth && !currentUser){
-		alert("접근권한이 없습니다.");
+	if((requiresAuth && !currentUser) || (writeAuth && !currentUser)){
+		store.commit("showLockingBar");
 		next("home");
 	}else if(requiresAuth && currentUser){
 		if(store.state.user.user.tier !== 'diamond'){
-			alert("접근권한이 없습니다.");
+			store.commit("showLockingBar");
 			next("home");
+		}else{
+			next();
+		}
+	}else if(writeAuth && currentUser){
+		if(store.state.user.user.tier === 'bronze'){
+			store.commit("showLockingBar");
 		}else{
 			next();
 		}

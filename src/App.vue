@@ -2,6 +2,7 @@
   <div>
     <v-app>
       <Header />
+
       <v-content id="contents">
         <router-view />
 
@@ -19,87 +20,62 @@
             </v-card-actions>
           </v-card>
         </v-dialog>
-
-        <v-dialog v-model="favorite" persistent max-width="400">
-          <v-card>
-            <v-card-title
-              class="headline"
-              style="background-color:#ff6f61; color:#ffff; font-weight: 800;"
-            >즐겨찾기</v-card-title>
-            <v-card-text>{{favoriteKey}} + D 키를 눌러 북마크에 추가해주세요.</v-card-text>
-            <v-card-actions>
-              <v-spacer></v-spacer>
-              <v-btn color="black" flat @click="favorite = false">확인</v-btn>
-            </v-card-actions>
-          </v-card>
-        </v-dialog>
-
-        <v-card id="create">
-          <v-speed-dial
-            v-model="fab"
-            :top="top"
-            :bottom="bottom"
-            :right="right"
-            :left="left"
-            :direction="direction"
-            :transition="transition"
-            :open-on-hover="hover"
-          >
-            <template v-slot:activator>
-              <v-btn v-show="show" v-model="fab" color="#ff6f61" dark fab>
-                <v-icon class="notranslate">add</v-icon>
-                <v-icon class="notranslate">close</v-icon>
-              </v-btn>
-            </template>
-            <v-btn fab dark small v-show="show" color="yellow" @click="bookmark">
-              <v-icon class="notranslate">star</v-icon>
-            </v-btn>
-            <v-btn fab dark small v-show="show" color="indigo" @click="moveTop">
-              <v-icon class="notranslate">keyboard_capslock</v-icon>
-            </v-btn>
-            <v-btn
-              fab
-              small
-              @click="refresh"
-              v-show="show"
-              href="#googtrans(en|ko)"
-              class="lang-es lang-select"
-              data-lang="ko"
-            >
-              <v-img src="../img/icons/south-korea.png" />
-            </v-btn>
-            <v-btn
-              @click="refresh"
-              fab
-              small
-              v-show="show"
-              href="#googtrans(en|en)"
-              class="lang-en lang-select"
-              data-lang="en"
-            >
-              <v-img src="../img/icons/united-states.png" />
-            </v-btn>
-          </v-speed-dial>
-        </v-card>
       </v-content>
-
-      <!-- Footer -->
       <Footer />
+
+      <LoginSnackbar />
+      <LogoutSnackbar />
+      <TierChangeSnackbar />
+      <LoginErrorSnackbar />
+      <LockingSnackbar />
     </v-app>
   </div>
 </template>
-
+ <script>
+(function(d, s, id) {
+  var js,
+    fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) {
+    return;
+  }
+  js = d.createElement(s);
+  js.id = id;
+  js.src = "https://danbee.ai/js/plugins/frogue-embed/frogue-embed.min.js";
+  fjs.parentNode.insertBefore(js, fjs);
+})(document, "script", "frdogue-embed");
+</script>
 <script>
 import store from "./store";
 import Header from "./components/base/Header.vue";
 import Footer from "./components/base/Footer.vue";
+import LoginSnackbar from "./components/snackbar/LoginSnackbar";
+import LogoutSnackbar from "./components/snackbar/LogoutSnackbar";
+import TierChangeSnackbar from "./components/snackbar/TierChangeSnackbar";
+import LoginErrorSnackbar from "./components/snackbar/LoginErrorSnackbar";
+import LockingSnackbar from "./components/snackbar/LockingSnakbar";
+
+import Firebase from "./services/FirebaseService";
+
+var key = "AIzaSyDCo_1aj9Q1FYra6QCPzkV6Fya6nHqSZr4";
+var to = "";
+var notification = {
+  title: "새글!",
+  body: "이건새글",
+  icon: "firebase-logo.png",
+  click_action: "http://localhost:8080"
+};
 
 export default {
   name: "App",
   store,
   components: {
     Header,
-    Footer
+    Footer,
+    LoginSnackbar,
+    LogoutSnackbar,
+    TierChangeSnackbar,
+    LoginErrorSnackbar,
+    LockingSnackbar
   },
   data() {
     return {
@@ -117,7 +93,9 @@ export default {
       right: true,
       bottom: true,
       left: false,
-      transition: "slide-y-reverse-transition"
+      transition: "slide-y-reverse-transition",
+
+      token: ""
     };
   },
   created() {
@@ -137,10 +115,6 @@ export default {
       setTimeout(function() {
         window.location.reload(1);
       }, 500);
-    },
-    moveTop() {
-      window.scrollTo(0, 0);
-      document.body.scrollTop = 0;
     },
     handleScroll() {
       if (window.scrollY >= 500) {
@@ -178,7 +152,35 @@ export default {
       }
 
       return triggerDefault;
+    },
+    postPush() {
+      fetch("https://fcm.googleapis.com/fcm/send", {
+        method: "POST",
+        headers: {
+          Authorization: "key=" + key,
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          notification: notification,
+          to: to
+        })
+      })
+        .then(function(response) {
+          console.log(response);
+        })
+        .catch(function(error) {
+          console.error(error);
+        });
+    },
+    async loadToken() {
+      await Firebase.getToken().then(ret => {
+        // this.to = ret;
+        to = ret;
+      });
     }
+  },
+  mounted() {
+    this.loadToken();
   },
   computed: {
     activeFab() {
@@ -210,6 +212,8 @@ export default {
   }
 };
 </script>
+
+
 
 <style>
 #create .v-speed-dial {

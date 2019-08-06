@@ -1,11 +1,13 @@
-import Vue from 'vue'
-import Vuex from 'vuex'
+import Vue from 'vue';
+import Vuex from 'vuex';
 import auth from "./store/modules/auth";
 import images from "./store/modules/images";
 import user from './store/modules/user';
 import modal from './store/modules/modal';
 import notification from './store/modules/notification';
 import admin from './store/modules/admin';
+import article from './store/articles/article'
+import message from './store/pwa/pushMessage'
 
 Vue.use(Vuex)
 
@@ -24,7 +26,7 @@ export default new Vuex.Store({
         dialogNumber: "dialog0",
 
         id: "ryuhojin",
-        token: "ZVEyzUs6pWXdv44x2Qxk",
+        token: "y4eoDG8jQ29sSs9_mpF2",
         color: "pink"
       },
       {
@@ -35,7 +37,7 @@ export default new Vuex.Store({
         dialogNumber: "dialog1",
 
         id: "Eomazing",
-        token: "fNzX96z-yzcyNyuR8TTU",
+        token: "phLEf4A8LuBfkhsotEwg",
         color: "purple"
       },
       {
@@ -46,7 +48,7 @@ export default new Vuex.Store({
         dialogNumber: "dialog2",
 
         id: "blackmonkey9256",
-        token: "-5QLJ3LQoXHNZ43fZhQn",
+        token: "HdXsmvT6hBR-mFJyN_YP",
         color: "#429f9e"
       },
       {
@@ -57,7 +59,7 @@ export default new Vuex.Store({
         dialogNumber: "dialog3",
 
         id: "Taylous",
-        token: "J7kwFVv-7zWVHD3_zuU1",
+        token: "zAw5-XwKyMhRkQJuQ4fQ",
         color: "blue"
       },
       {
@@ -68,7 +70,7 @@ export default new Vuex.Store({
         dialogNumber: "dialog4",
 
         id: "hyeonjin23",
-        token: "ScV9uvQp_a6E5dgZzGYd",
+        token: "kWsKbLKaDydDKBgguZnL",
         color: "black"
       }
     ],
@@ -79,6 +81,8 @@ export default new Vuex.Store({
     user,
     modal,
     notification,
-    admin
+    admin,
+    article,
+    message
   }
 });

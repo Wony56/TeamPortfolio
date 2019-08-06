@@ -5,14 +5,14 @@ article,aside,details,figcaption,figure,footer,header,hgroup,main,nav,section,su
 	box-sizing: border-box;
 }
 
-section {
+#body {
 	--color-text: #4800d4;
     --color-bg: #e8e8e8;
-    --color-link: #ff6f61;
-    --color-link-hover: #ff6f61;
+    --color-link: #ec1752;
+    --color-link-hover: #eb1851;
     --color-info: #272526;
     --grid-item-bg: #f1f1f1;
-    --color-close: #ff6f61;
+    --color-close: #ec1752;
 	font-family: Futura, "futura-pt", sans-serif;
 	min-height: 100vh;
 	color: #57585c;

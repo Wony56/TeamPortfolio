@@ -1,47 +1,47 @@
 <template>
-<main>
-  <div class="grid-wrap">
-    <div class="grid">
-
-        <Portfolio
-          v-for="i in portfolios.length" :key="i"
+  <div>
+    <div v-masonry transition-duration="0.3s" class="masonry-container align-center">
+      <div v-masonry-tile flat v-for="i in portfolios.length > limit ? limit : portfolios.length" :key="i" xs12>
+        <Portfolio flat
+          class="ma-3 grid-item"
+          gutter = 10;
           :date="portfolios[i - 1].created_at.toString()"
           :title="portfolios[i - 1].title"
           :body="portfolios[i - 1].body"
           :imgItems="portfolios[i - 1].img"
+          :id="portfolios[i - 1].id"
         ></Portfolio>
-
+      </div>
     </div>
-  </div>
 
-  <div class="container">
     <v-flex xs12 text-xs-center round my-5>
-      <v-btn style="background-color:#ff6f61; color:#ffff" to="/portfoliowriter">
+      <v-btn v-if="flag" style="background-color:#ff6f61; color:#ffff;" to="/portfoliowriter">
         <v-icon size="25" class="mr-2 notranslate">fa-pencil</v-icon>글쓰기
       </v-btn>
-      <v-btn style="background-color:#ff6f61; color:#ffff" v-if="loadMore" v-on:click="loadMorePortfolios">
+      <v-btn style="background-color:#ff6f61; color:#ffff;" v-if="load" @click="loadMorePortfolios()">
         <v-icon size="25" class="mr-2 notranslate">fa-plus</v-icon>더 보기
       </v-btn>
     </v-flex>
   </div>
-</main>
 </template>
 
 <script>
 import Portfolio from "@/components/portfolio/Portfolio";
 import FirebaseService from "@/services/FirebaseService";
 import { mapState } from "vuex";
-// import Macy from "macy";
 
 export default {
   name: "PortfoliosList",
   props: {
-    limits: { type: Number, default: 6 },
+    limits: { type: Number, default: 5 },
     loadMore: { type: Boolean, default: false }
   },
   data() {
     return {
       portfolios: [],
+      limit: this.limits,
+      load: this.loadMore,
+      flag: true
     };
   },
   components: {
@@ -49,26 +49,7 @@ export default {
   },
   mounted() {
     this.getPortfolios();
-
-      // masonry = Macy({
-      //     container: '.macy-container',
-      //     trueOrder: false,
-      //     waitForImages: false,
-      //     useOwnImageLoader: false,
-      //     debug: true,
-      //     mobileFirst: true,
-      //     columns: 1,
-      //     margin: {
-      //         y: 16,
-      //         x: '2%',
-      //     },
-      //     breakAt: {
-      //         1200: 3,
-      //         940: 3,
-      //         520: 2,
-      //         400: 1
-      //     },
-      // });
+    console.log(this.loggedIn);
   },
   computed: mapState({
     loggedIn: state => state.user.loggedIn
@@ -78,9 +59,10 @@ export default {
       this.portfolios = await FirebaseService.getPortfolios();
     },
     loadMorePortfolios() {
-
+      
+      this.limit += 5;
     }
-  },
+  }
 };
 </script>
 
@@ -88,10 +70,12 @@ export default {
 *{
   font-family: 'Nanum Gothic', sans-serif;
 };
-.container {
-  padding: 0 0;
-  margin: 0 auto;
+.mw-700 {
+  max-width: 700px;
+  margin: auto;
+}
+
+.grid-item {
+  margin-bottom: 10px;
 }
 </style>
-
-<style src="../../../public/style/Grid.css"></style>

@@ -83,7 +83,7 @@
         </v-flex>
       </v-layout>
 
-      <GridImage></Gridimage>
+      <GridImage></GridImage>
 
       <!-- Post -->
       <v-layout my-5 justify-center>
@@ -103,9 +103,9 @@
 import ImgBanner from "../components/base/ImgBanner";
 import GridImage from "../components/base/GridImages";
 import PostList from "../components/post/PostList";
+
 //Gitlab API
 import GitlabAPI from "../components/gitlab/GitlabApi.vue";
-
 const BASE_URL = "https://lab.ssafy.com/api/v4";
 
 export default {
@@ -127,13 +127,21 @@ export default {
 
     GridImage,
     GitlabAPI
+  },  
+  watch: {
+    loaded: function(newVal, oldVal) {
+      if (newVal && !oldVal) {
+
+        //
+      }
+    }
   },
   methods: {
     getImgUrl(img) {
       return require("../assets/" + img);
     },
     async getRepositories(userId, token, color) {
-      console.log("토끈?> " + token);
+
       this.mainColor = color;
       this.datas = [];
 

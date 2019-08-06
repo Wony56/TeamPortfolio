@@ -53,11 +53,23 @@ export default {
       let posts = await firebaseService.getPosts();
 
       posts.forEach(post => {
+        const date = new Date(post.created_at);
+
         let row = {
           id: post.id,
-          author: post.author,
+          author: post.author.name,
           title: post.title,
-          date: post.created_at
+          date:
+            date.getFullYear() +
+            "년 " +
+            date.getMonth() +
+            "월 " +
+            date.getDate() +
+            "일 " +
+            date.getHours() +
+            "시 " +
+            date.getMinutes() +
+            "분"
         };
 
         this.desserts.push(row);

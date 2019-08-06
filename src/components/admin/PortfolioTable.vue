@@ -58,8 +58,11 @@ export default {
             date.getMonth() +
             "월 " +
             date.getDate() +
-            "일" +
-            date.getHours()
+            "일 " +
+            date.getHours() +
+            "시 " +
+            date.getMinutes() +
+            "분"
         };
 
         this.desserts.push(row);

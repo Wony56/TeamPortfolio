@@ -57,7 +57,12 @@ export default {
     };
   },
   methods: {
-    ...mapMutations(["closeLoginModal", "openSignupModal", "showLoginBar"]),
+    ...mapMutations([
+      "closeLoginModal",
+      "openSignupModal",
+      "showLoginBar",
+      "showLoginErrorBar"
+    ]),
     closeLogin() {
       this.closeLoginModal();
       this.$refs.form.reset();
@@ -70,25 +75,31 @@ export default {
       if (this.$refs.form.validate()) {
         firebaseService
           .loginWithEmail(this.email, this.password)
-          .then(async () => {
-            this.showLoginBar();
-            await this.closeLogin();
-            this.$router.replace("/");
+          .then(async res => {
+            if (res) {
+              this.closeLogin();
+              this.showLoginBar();
+              this.$router.replace("/");
+            }
           });
       }
     },
     loginWithGoogle() {
-      firebaseService.loginWithGoogle().then(async () => {
-        this.showLoginBar();
-        await this.closeLogin();
-        this.$router.replace("/");
+      firebaseService.loginWithGoogle().then(async res => {
+        if (res) {
+          this.closeLogin();
+          this.showLoginBar();
+          this.$router.replace("/");
+        }
       });
     },
     loginWithFacebook() {
-      firebaseService.loginWithFacebook().then(async () => {
-        this.showLoginBar();
-        await this.closeLogin();
-        this.$router.replace("/");
+      firebaseService.loginWithFacebook().then(async res => {
+        if (res) {
+          this.closeLogin();
+          this.showLoginBar();
+          this.$router.replace("/");
+        }
       });
     }
   }

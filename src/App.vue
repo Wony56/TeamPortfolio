@@ -25,6 +25,9 @@
 
       <LoginSnackbar />
       <LogoutSnackbar />
+      <TierChangeSnackbar />
+      <LoginErrorSnackbar />
+      <LockingSnackbar />
     </v-app>
   </div>
 </template>
@@ -47,6 +50,9 @@ import Header from "./components/base/Header.vue";
 import Footer from "./components/base/Footer.vue";
 import LoginSnackbar from "./components/snackbar/LoginSnackbar";
 import LogoutSnackbar from "./components/snackbar/LogoutSnackbar";
+import TierChangeSnackbar from "./components/snackbar/TierChangeSnackbar";
+import LoginErrorSnackbar from "./components/snackbar/LoginErrorSnackbar";
+import LockingSnackbar from "./components/snackbar/LockingSnakbar";
 
 import Firebase from "./services/FirebaseService";
 
@@ -66,7 +72,10 @@ export default {
     Header,
     Footer,
     LoginSnackbar,
-    LogoutSnackbar
+    LogoutSnackbar,
+    TierChangeSnackbar,
+    LoginErrorSnackbar,
+    LockingSnackbar
   },
   data() {
     return {

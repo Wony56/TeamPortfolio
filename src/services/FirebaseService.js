@@ -12,6 +12,7 @@ const WEBLOGS = 'weblogs';
 const USERS = 'users';
 const IMAGES = 'images';
 const TOKENS = 'tokens';
+const COMMENTS = 'comments';
 
 // Setup Firebase
 const config = {
@@ -87,95 +88,63 @@ export default {
 		console.log('삭제완료')
 		return firestore.collection(TOKENS).doc(user.uid).delete()
 	},
-
-	addReply(articleId, replyInfo, flag) {
+//=============================================================================================================
+//=============================================================================================================
+//=============================================================================================================
+	addComment(replyInfo) {
 
 		replyInfo.created_at = new Date();
 
-		if(flag === "POST") {
-			const postCollection = firestore.collection(POSTS).doc(articleId)
-			return postCollection
-				.update({ 'reply': firebase.firestore.FieldValue.arrayUnion(replyInfo)
-			});
-		}
-		else {
-			const postCollection = firestore.collection(PORTFOLIOS).doc(articleId)
-			return postCollection
-				.update({ 'reply': firebase.firestore.FieldValue.arrayUnion(replyInfo)
-			});
-		}
+		const postCollection = firestore.collection(COMMENTS);
+		return postCollection.add(replyInfo);
 	},
-	removeReply(articleId, replyInfo, flag) {
+	deleteComment(commentId) {
 
-		if(flag === "POST") {
-			const postCollection = firestore.collection(POSTS).doc(articleId)
-			return postCollection
-				.update({ 'reply': firebase.firestore.FieldValue.arrayRemove(replyInfo) 
-			})
-		}
-		else {
-			const postCollection = firestore.collection(PORTFOLIOS).doc(articleId)
-			return postCollection
-				.update({ 'reply': firebase.firestore.FieldValue.arrayRemove(replyInfo) 
-			})
-		}
+		return firestore.collection(COMMENTS).doc(commentId).delete();
 	},
-	modifyReply(articleId, index, replyContent, flag) {
+	modifyComment(commentId, editedContent) {
 
-		if(flag === "POST") {
-			return firestore.collection(POSTS).doc(articleId).get().then((doc) => {
+		const collection = firestore.collection(COMMENTS).doc(commentId);
+		return collection.update({
 
-				let ret = doc.data();
-				ret.reply[index].replyContent = replyContent;
-				ret.reply[index].created_at = new Date();
-
-				return firestore.collection(POSTS).doc(articleId).update({
-
-					title: ret.title,
-					content: ret.content,
-					reply: ret.reply,
-					author: ret.author,
-					authorUid: ret.authorUid,
-					created_at: ret.created_at
-				})
-			});
-		}
-		else {
-			return firestore.collection(PORTFOLIOS).doc(articleId).get().then((doc) => {
-
-				let ret = doc.data();
-				ret.reply[index].replyContent = replyContent;
-				ret.reply[index].created_at = new Date();
-
-				return firestore.collection(PORTFOLIOS).doc(articleId).update({
-
-					author: ret.author,
-					body: ret.body,
-					created_at: ret.created_at,
-					img: ret.img,
-					title: ret.title,
-					reply: ret.reply
-				})
-			});
-		}
+			replyContent: editedContent,
+			created_at: new Date()
+		});
 	},
-	modifyPost(articleId, postInfo, replies) {
+	getComments(articleId) {
 
-		let reply = [];
-		let index = 0;
+		const collection = firestore.collection(COMMENTS);
+		return collection.where("articleId", "==", articleId)
+			.orderBy("created_at")
+			.get()
+			.then(function (querySnapshot) {
+				
+				let ret = [];
 
-		for(let i = 0; i < replies.length; i++) {
+				querySnapshot.forEach(function (doc) {
 
-			for(let j = 0; j < replies[i].length; j++)
-				reply[index++] = replies[i][j];
-		}
+					let temp = doc.data();
+					temp.commentId = doc.id;
+					temp.created_at = new Date(temp.created_at.toDate());
+
+					ret.push(temp);
+				});
+				return ret;
+			});
+	},
+	//=============================================================================================================
+	//=============================================================================================================
+	//=============================================================================================================
+	modifyPost(articleId, postInfo) {
+
+		console.log(articleId);
+		console.log(postInfo);
 
 		return firestore.collection(POSTS).doc(articleId).set({
+			
+			author: postInfo.author,
 			title: postInfo.title,
 			content: postInfo.content,
-			reply: reply,
-			author: postInfo.author,
-			authorUid: postInfo.authorUid,
 			created_at: new Date()
 		})
 	},
@@ -197,6 +166,8 @@ export default {
 		return postsCollection.orderBy('created_at', 'desc').get().then(docSnapshots => {
 			return docSnapshots.docs.map(doc => {
 				let data = doc.data();
+				
+				data.created_at = new Date(data.created_at.toDate());
 
 				return data;
 			});
@@ -243,11 +214,11 @@ export default {
 			.then((doc) => {
 
 				let data = doc.data();
-				data.articleId = doc.id;
+				// data.articleId = doc.id;
 				data.created_at = data.created_at.toDate();
 
-				for(let i = 0; i < data.reply.length; i++)
-					data.reply[i].created_at = data.reply[i].created_at.toDate();
+				// for(let i = 0; i < data.reply.length; i++)
+				// 	data.reply[i].created_at = data.reply[i].created_at.toDate();
 				
 				return data;
 			})
@@ -267,23 +238,18 @@ export default {
 					data.id = doc.id;
 					data.created_at = data.created_at.toDate();
 
-					console.log(data.reply);
-					console.log(data.reply.length);
-
-					for(let i = 0; i < data.reply.length; i++)
-						data.reply[i].created_at = data.reply[i].created_at.toDate();
+					// for(let i = 0; i < data.reply.length; i++)
+					// 	data.reply[i].created_at = data.reply[i].created_at.toDate();
 					return data
 				})
 			})
 	},
-	postPost(title, content, reply, author, authorUid) {
+	postPost(title, content, author) {
 
 		return firestore.collection(POSTS).add({
 			title,
 			content,
-			reply,
 			author,
-			authorUid,
 			created_at: new Date()
 		}).catch(function (error) {
 
@@ -297,18 +263,12 @@ export default {
 			.get()
 			.then((doc) => {
 
-				console.log(doc.id);
 				let data = doc.data();
 
 				data.created_at = data.created_at.toDate();
 
-				for(let i = 0; i < data.reply.length; i++)
-					data.reply[i].created_at = data.reply[i].created_at.toDate();
-				// data.created_at = data.created_at.toDate();
-				//data.articleId = doc.id;
-
-				console.log('Document data:', data);
-				//console.log('Article ID: ', data.articleId);
+				// for(let i = 0; i < data.reply.length; i++)
+				// 	data.reply[i].created_at = data.reply[i].created_at.toDate();
 				return data;
 			})
 			.catch(err => {
@@ -325,57 +285,47 @@ export default {
 					let data = doc.data()
 
 					data.id = doc.id;
-					console.log("ID ", data.id);
 
 					data.created_at = data.created_at.toDate();
 
-					for(let i = 0; i < data.reply.length; i++)
-						data.reply[i].created_at = data.reply[i].created_at.toDate();
-						
-					//data.created_at = data.created_at.toDate();
+					// for(let i = 0; i < data.reply.length; i++)
+					// 	data.reply[i].created_at = data.reply[i].created_at.toDate();
 					return data;
 				})
 			})
 	},
-	postPortfolio(author, title, body, img) {
+	postPortfolio(author, title, content, img) {
 		return firestore.collection(PORTFOLIOS).add({
 			author,
-			body,
+			content,
 			created_at: new Date(),
 			img,
 			title,
-			reply: new Array()
+			// reply: new Array()
 		})
 	},
 
-	modifyPortfoilo(id, author, title, body, img, replies) {
+	modifyPortfoilo(articleId, portfoiloInfo) {
 
-		console.log(id);
-		console.log(author);
-		console.log(title);
-		console.log(body);
-		console.log(img);
-		console.log(replies);
+		// let reply = [];
 
-		let reply = [];
+		// for(let i = 0; i < portfoiloInfo.reply.length; i++) {
 
-		for(let i = 0; i < replies.length; i++) {
+		// 	for(let j = 0; j < portfoiloInfo.reply[i].length; j++) {
 
-			for(let j = 0; j < replies[i].length; j++) {
+		// 		reply.push(portfoiloInfo.reply[i][j]);
+		// 	}
+		// }
+		// console.log(reply);
 
-				reply.push(replies[i][j]);
-			}
-		}
-		console.log(reply);
-
-		return firestore.collection(PORTFOLIOS).doc(id).update({
+		return firestore.collection(PORTFOLIOS).doc(articleId).update({
 			
-			author,
-			body,
-			img,
+			author: portfoiloInfo.author,
+			content: portfoiloInfo.content,
+			img: portfoiloInfo.img,
 			created_at: new Date(),
-			title,
-			reply
+			title: portfoiloInfo.title,
+			// reply: reply
 
 		}).catch(error => {
 			alert(error.message);
@@ -385,11 +335,14 @@ export default {
 	modifyPortfolioImage(id, img) {
 
 		return firestore.collection(PORTFOLIOS).doc(id).update({
-			
 			img
 		}).catch(error => {
 			alert(error.message);
 		})
+	},
+	deletePortfolio(id) {
+
+		return firestore.collection(PORTFOLIOS).doc(id).delete();
 	},
 
 	getImage() {
@@ -400,11 +353,42 @@ export default {
 			.then((docSnapshots) => {
 				return docSnapshots.docs.map((doc) => {
 					let data = doc.data()
-					// data.created_at = data.created_at.toDate()
+<<<<<<< HEAD
+=======
+
+>>>>>>> lee
 					return data
 				})
 			})
 	},
+	// getPortfoiloReply(id) {
+
+	// 	const portfoliosCollection = firestore.collection(PORTFOLIOS).doc(id);
+	// 	return portfoliosCollection
+	// 		.get()
+	// 		.then((doc) => {
+				
+	// 			let ret = doc.data();
+				
+	// 			for(let i = 0; i < ret.reply.length; i++)
+	// 				ret.reply[i].created_at =  ret.reply[i].created_at.toDate();
+	// 			return ret.reply;
+	// 		})
+	// },
+	// getPostReply(id) {
+
+	// 	const portfoliosCollection = firestore.collection(POSTS).doc(id);
+	// 	return portfoliosCollection
+	// 		.get()
+	// 		.then((doc) => {
+				
+	// 			let ret = doc.data();
+				
+	// 			for(let i = 0; i < ret.reply.length; i++)
+	// 				ret.reply[i].created_at =  ret.reply[i].created_at.toDate();
+	// 			return ret.reply;
+	// 		})
+	// },
 	postImage(img) {
 		return firestore.collection(IMAGES).add({
 			// title,
@@ -422,9 +406,9 @@ export default {
 
 			this.postLogData(result.user, 'Log in');
 			return result;
-		}).catch(function (error) {
-			console.error('[Google Login Error]', error);
-		})
+		}).catch(error => {
+			store.commit("showLoginErrorBar", {message: error.message});
+		});
 	},
 	loginWithFacebook() {
 		let provider = new firebase.auth.FacebookAuthProvider();
@@ -433,13 +417,12 @@ export default {
 			if(!await this.getUser(result.user)){
 				await this.postUser(result.user);
 			}
-
 			store.state.user.user = await this.getUser(result.user);
 
 			this.postLogData(result.user, 'Log in');
 			return result;
-		}).catch(function (error) {
-			console.error('[Facebook Login Error]', error)
+		}).catch(error => {
+			store.commit("showLoginErrorBar", {message: error.message});
 		});
 	},
 	loginWithEmail(email, password) {
@@ -452,15 +435,14 @@ export default {
 
 			this.postLogData(result.user, 'Log in');
 			return result;
-		}).catch(err => {
-			let errorCode = err.code;
+		}).catch(error => {
+			let errorCode = error.code;
 
-			if (errorCode == 'auth/invalid-email') {
-				alert('Invalid email...');
-			} else if (errorCode == 'auth/user-not-found' || errorCode == 'auth/wrong-password') {
-				alert('아이디 또는 패스워드가 틀렸습니다.')
+			if (errorCode === 'auth/invalid-email') {
+				store.commit("showLoginErrorBar", {message: "유효하지 않은 email입니다."});
+			} else if (errorCode === 'auth/user-not-found' || errorCode === 'auth/wrong-password') {
+				store.commit("showLoginErrorBar", {message: "아이디 또는 패스워드가 틀렸습니다."});
 			}
-			console.log('[Email Login Error]', err);
 		})
 	},
 	signUpEmail(email, name, password) {
@@ -477,26 +459,24 @@ export default {
 
 			this.postLogData(result.user, 'Log in');
 			return result;
-		}).catch(err => {
-			let errorCode = err.code;
-
-			if (errorCode == 'auth/weak-password') {
-				alert('The password is too weak.');
-			} else if (errorCode == 'auth/invalid-email') {
-				alert('Email is invalid.');
-			} else if (errorCode == 'auth/email-already-in-use') {
-				alert('"This account already exists...');
+		}).catch(error => {
+			let errorCode = error.code;
+			
+			if (errorCode === 'auth/weak-password') {
+				store.commit("showLoginErrorBar", {message: "패스워드가 매우 취약합니다."});
+			}else if (errorCode == 'auth/invalid-email') {
+				store.commit("showLoginErrorBar", {message: "유효하지 않은 email입니다."});
+			} else if (errorCode === 'auth/email-already-in-use') {
+				store.commit("showLoginErrorBar", {message: "이미 존재하는 계정입니다..."});
 			}
-
-			console.log(err);
-		})
+		});
 	},
 	logout() {
 		return firebase.auth().signOut().then(() => {
 			this.postLogData(store.state.user.user, 'Log out');
 			this.deleteToken(store.state.user.user);
-		}).catch(err => {
-			console.log(err);
+		}).catch(error => {
+			store.commit("showLoginErrorBar", {message: error.message});
 		});
 	}
 }

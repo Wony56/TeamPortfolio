@@ -40,7 +40,10 @@ export default {
   data: () => ({
     title: "",
     content: "",
-    image: "",
+    image: [],
+
+    modalTitle: "",
+    modalContent: "",
     dialog: false
   }),
   components: {
@@ -48,16 +51,23 @@ export default {
     markdownEditor,
     uploadform: UploadForm
   },
+  mounted() {
+    this.$store.state.images.imgurLinks = [];
+    this.$store.state.images.images = [];
+  },
   methods: {
     async postPortfolio() {
+
       this.image = this.$store.state.images.imgurLinks;
 
+      console.log("IMAGE?? ", this.image);
+
       if (this.title === "") {
-        alert("제목을 입력하세요");
+        this.setModalContent("알림", "제목을 입력해주세요.");
       } else if (this.content === "") {
-        alert("내용을 입력하세요");
+        this.setModalContent("알림", "내용을 입력해주세요.");
       } else if (this.image === "") {
-        alert("이미지를 첨부하세요");
+        this.setModalContent("알림", "이미지를 하나라도 업로드 해주세요.");
       } else {
         try {
           await FirebaseService.postPortfolio(
@@ -69,15 +79,21 @@ export default {
             this.content,
             this.image
           );
-
-          this.$store.state.images.imgurLinks = [];
-          this.$store.state.images.images = [];
-          
+          this.setModalContent("성공", "포트폴리오 작성 성공하였습니다.");
           this.dialog = true;
+
         } catch (error) {
           console.log(error);
         }
       }
+      this.$store.state.images.imgurLinks = [];
+      this.$store.state.images.images = [];
+      
+    },
+    setModalContent(title, content) {
+
+      this.modalTitle = title;
+      this.modalContent = content;
     }
   }
 };

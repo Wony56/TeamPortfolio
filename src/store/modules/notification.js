@@ -1,14 +1,28 @@
 const state = {
     loginBar: false,
-    logoutBar: false
+    loginErrorBar: false,
+    logoutBar: false,
+    tierBar: false,
+    lockBar: false,
+    errorMessage: ''
 }
 
 const mutations = {
-    showLoginBar(){
+    showLoginBar(state){
         state.loginBar = true;
     },
-    showLogoutBar(){
+    showLogoutBar(state){
         state.logoutBar = true;
+    },
+    showTierBar(state){
+        state.tierBar = true;
+    },
+    showLoginErrorBar(state, payload){
+        state.errorMessage = payload.message;
+        state.loginErrorBar = true;
+    },
+    showLockingBar(state){
+        state.lockBar = true;
     }
 }
 

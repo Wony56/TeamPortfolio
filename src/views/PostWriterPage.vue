@@ -55,12 +55,16 @@ export default {
   methods: {
     postPost() {
       
+      let author = {
+
+        name: this.user.displayName,
+        uid: this.user.uid
+      };
+
       let msg = FirebaseService.postPost(
         this.title,
         this.content,
-        new Array(),
-        this.user.displayName,
-        this.user.uid
+        author
       );
 
       if(msg == 'fail')

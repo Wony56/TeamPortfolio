@@ -43,7 +43,6 @@ export default {
         } else {
           memberCount[key] = 1;
         }
-        console.log("pre" + " " + key);
       });
 
       for (let i = 5; i >= 0; i--) {
@@ -68,7 +67,6 @@ export default {
             counts: 0
           });
         }
-        console.log("after" + " " + key);
       }
     }
   }

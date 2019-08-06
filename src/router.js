@@ -69,6 +69,7 @@ export const router = new Router({
 			name: 'portfolioview',
 			component: PortfolioViewPage
 		}
+
 	],
 	scrollBehavior(to, from, savedPosition) {
 		return { x: 0, y: 0 };
@@ -90,19 +91,18 @@ router.beforeEach(async (to, from, next) => {
 	}
 
 	if((requiresAuth && !currentUser) || (writeAuth && !currentUser)){
-		alert("접근권한이 없습니다.");
+		store.commit("showLockingBar");
 		next("home");
 	}else if(requiresAuth && currentUser){
 		if(store.state.user.user.tier !== 'diamond'){
-			alert("접근권한이 없습니다.");
+			store.commit("showLockingBar");
 			next("home");
 		}else{
 			next();
 		}
 	}else if(writeAuth && currentUser){
 		if(store.state.user.user.tier === 'bronze'){
-			alert("접근권한이 없습니다.");
-			next("home");
+			store.commit("showLockingBar");
 		}else{
 			next();
 		}

@@ -74,3 +74,9 @@ firebase.auth().onAuthStateChanged(async user => {
 		render: h => h(App)
 	}).$mount('#app')
 })
+
+if ('serviceWorker' in navigator){
+    navigator.serviceWorker.register('/sw.js')
+        .then((reg) => console.log('service worker registerd', reg))
+        .catch((err) => console.log('service worker registerd', err));
+}

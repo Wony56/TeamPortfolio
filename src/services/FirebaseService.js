@@ -29,23 +29,23 @@ const firestore = firebase.firestore()
 const messaging = firebase.messaging()
 
 messaging.requestPermission()
-	.then(function(){
+	.then(function () {
 		console.log("Have permission");
 		return messaging.getToken();
 	})
-	.then(function(token){
+	.then(function (token) {
 		console.log(token);
 	})
-	.catch(function(arr){
+	.catch(function (arr) {
 		console.log("Error Occured");
 	});
 
-messaging.onMessage(function(payload) {
+messaging.onMessage(function (payload) {
 	store.state.message = payload;
 
 	console.log(payload);
 	console.log(store.state.message.notification.body);
-	
+
 	console.log('onMessage: ', payload);
 })
 
@@ -71,9 +71,9 @@ export default {
 		console.log('삭제완료')
 		return firestore.collection(TOKENS).doc(user.uid).delete()
 	},
-//=============================================================================================================
-//=============================================================================================================
-//=============================================================================================================
+	//=============================================================================================================
+	//=============================================================================================================
+	//=============================================================================================================
 	addComment(replyInfo) {
 
 		replyInfo.created_at = new Date();
@@ -101,7 +101,7 @@ export default {
 			.orderBy("created_at")
 			.get()
 			.then(function (querySnapshot) {
-				
+
 				let ret = [];
 
 				querySnapshot.forEach(function (doc) {
@@ -115,6 +115,15 @@ export default {
 				return ret;
 			});
 	},
+	deleteAllComment(articleId) {
+
+		var collection = firestore.collection(COMMENTS).where('articleId', '==', articleId);
+		collection.get().then(function (querySnapshot) {
+			querySnapshot.forEach(function (doc) {
+				doc.ref.delete();
+			});
+		});
+	},
 	//=============================================================================================================
 	//=============================================================================================================
 	//=============================================================================================================
@@ -124,7 +133,7 @@ export default {
 		console.log(postInfo);
 
 		return firestore.collection(POSTS).doc(articleId).set({
-			
+
 			author: postInfo.author,
 			title: postInfo.title,
 			content: postInfo.content,
@@ -166,7 +175,7 @@ export default {
 			console.log(error)
 		})
 	},
-	modifyTier(uid, tier){
+	modifyTier(uid, tier) {
 		return firestore.collection(USERS).doc(uid).update({
 			tier
 		}).catch(error => {
@@ -190,12 +199,8 @@ export default {
 			.then((doc) => {
 
 				let data = doc.data();
-				// data.articleId = doc.id;
 				data.created_at = data.created_at.toDate();
 
-				// for(let i = 0; i < data.reply.length; i++)
-				// 	data.reply[i].created_at = data.reply[i].created_at.toDate();
-				
 				return data;
 			})
 			.catch(err => {
@@ -214,8 +219,6 @@ export default {
 					data.id = doc.id;
 					data.created_at = data.created_at.toDate();
 
-					// for(let i = 0; i < data.reply.length; i++)
-					// 	data.reply[i].created_at = data.reply[i].created_at.toDate();
 					return data
 				})
 			})
@@ -240,11 +243,8 @@ export default {
 			.then((doc) => {
 
 				let data = doc.data();
-
 				data.created_at = data.created_at.toDate();
 
-				// for(let i = 0; i < data.reply.length; i++)
-				// 	data.reply[i].created_at = data.reply[i].created_at.toDate();
 				return data;
 			})
 			.catch(err => {
@@ -261,11 +261,8 @@ export default {
 					let data = doc.data()
 
 					data.id = doc.id;
-
 					data.created_at = data.created_at.toDate();
 
-					// for(let i = 0; i < data.reply.length; i++)
-					// 	data.reply[i].created_at = data.reply[i].created_at.toDate();
 					return data;
 				})
 			})
@@ -277,31 +274,17 @@ export default {
 			created_at: new Date(),
 			img,
 			title,
-			// reply: new Array()
 		})
 	},
 
 	modifyPortfoilo(articleId, portfoiloInfo) {
 
-		// let reply = [];
-
-		// for(let i = 0; i < portfoiloInfo.reply.length; i++) {
-
-		// 	for(let j = 0; j < portfoiloInfo.reply[i].length; j++) {
-
-		// 		reply.push(portfoiloInfo.reply[i][j]);
-		// 	}
-		// }
-		// console.log(reply);
-
 		return firestore.collection(PORTFOLIOS).doc(articleId).update({
-			
-			author: portfoiloInfo.author,
+
 			content: portfoiloInfo.content,
 			img: portfoiloInfo.img,
 			created_at: new Date(),
 			title: portfoiloInfo.title,
-			// reply: reply
 
 		}).catch(error => {
 			alert(error.message);
@@ -311,7 +294,7 @@ export default {
 	modifyPortfolioImage(id, img) {
 
 		return firestore.collection(PORTFOLIOS).doc(id).update({
-			
+
 			img
 		}).catch(error => {
 			alert(error.message);
@@ -334,34 +317,7 @@ export default {
 				})
 			})
 	},
-	// getPortfoiloReply(id) {
 
-	// 	const portfoliosCollection = firestore.collection(PORTFOLIOS).doc(id);
-	// 	return portfoliosCollection
-	// 		.get()
-	// 		.then((doc) => {
-				
-	// 			let ret = doc.data();
-				
-	// 			for(let i = 0; i < ret.reply.length; i++)
-	// 				ret.reply[i].created_at =  ret.reply[i].created_at.toDate();
-	// 			return ret.reply;
-	// 		})
-	// },
-	// getPostReply(id) {
-
-	// 	const portfoliosCollection = firestore.collection(POSTS).doc(id);
-	// 	return portfoliosCollection
-	// 		.get()
-	// 		.then((doc) => {
-				
-	// 			let ret = doc.data();
-				
-	// 			for(let i = 0; i < ret.reply.length; i++)
-	// 				ret.reply[i].created_at =  ret.reply[i].created_at.toDate();
-	// 			return ret.reply;
-	// 		})
-	// },
 	postImage(img) {
 		return firestore.collection(IMAGES).add({
 			// title,
@@ -372,7 +328,7 @@ export default {
 	loginWithGoogle() {
 		let provider = new firebase.auth.GoogleAuthProvider()
 		return firebase.auth().signInWithPopup(provider).then(async result => {
-			if(!await this.getUser(result.user)){
+			if (!await this.getUser(result.user)) {
 				await this.postUser(result.user);
 			}
 			store.state.user.user = await this.getUser(result.user);
@@ -387,7 +343,7 @@ export default {
 		let provider = new firebase.auth.FacebookAuthProvider();
 
 		return firebase.auth().signInWithPopup(provider).then(async result => {
-			if(!await this.getUser(result.user)){
+			if (!await this.getUser(result.user)) {
 				await this.postUser(result.user);
 			}
 			store.state.user.user = await this.getUser(result.user);
@@ -400,7 +356,7 @@ export default {
 	},
 	loginWithEmail(email, password) {
 		return firebase.auth().signInWithEmailAndPassword(email, password).then(async result => {
-			if(!await this.getUser(result.user)){
+			if (!await this.getUser(result.user)) {
 				await this.postUser(result.user);
 			}
 
@@ -425,7 +381,7 @@ export default {
 				displayName: name
 			});
 
-			if(!await this.getUser(result.user)){
+			if (!await this.getUser(result.user)) {
 				await this.postUser(result.user);
 			}
 

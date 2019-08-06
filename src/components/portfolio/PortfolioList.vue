@@ -3,7 +3,7 @@
     <div v-masonry transition-duration="0.3s" class="masonry-container align-center">
       <div v-masonry-tile flat v-for="i in portfolios.length > limit ? limit : portfolios.length" :key="i" xs12>
         <Portfolio flat
-          class="ma-3 grid-item"
+          class="grid-item"
           gutter = 10;
           :date="portfolios[i - 1].created_at.toString()"
           :title="portfolios[i - 1].title"
@@ -59,7 +59,7 @@ export default {
       this.portfolios = await FirebaseService.getPortfolios();
     },
     loadMorePortfolios() {
-      
+
       this.limit += 5;
     }
   }

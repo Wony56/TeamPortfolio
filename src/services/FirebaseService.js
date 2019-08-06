@@ -45,7 +45,7 @@ messaging.onMessage(function(payload) {
 
 	console.log(payload);
 	console.log(store.state.message.notification.body);
-	
+
 	console.log('onMessage: ', payload);
 })
 
@@ -98,13 +98,13 @@ export default {
 		// if(flag === "POST") {
 		// 	const postCollection = firestore.collection(POSTS).doc(articleId)
 		// 	return postCollection
-		// 		.update({ 'reply': firebase.firestore.FieldValue.arrayRemove(replyInfo) 
+		// 		.update({ 'reply': firebase.firestore.FieldValue.arrayRemove(replyInfo)
 		// 	})
 		// }
 		// else {
 		// 	const postCollection = firestore.collection(PORTFOLIOS).doc(articleId)
 		// 	return postCollection
-		// 		.update({ 'reply': firebase.firestore.FieldValue.arrayRemove(replyInfo) 
+		// 		.update({ 'reply': firebase.firestore.FieldValue.arrayRemove(replyInfo)
 		// 	})
 		// }
 		const postCollection = firestore.collection(COMMENTS).doc(commentId);
@@ -211,7 +211,7 @@ export default {
 		return postsCollection.orderBy('created_at', 'desc').get().then(docSnapshots => {
 			return docSnapshots.docs.map(doc => {
 				let data = doc.data();
-				
+
 				data.created_at = new Date(data.created_at.toDate());
 
 				return data;
@@ -260,7 +260,7 @@ export default {
 
 				for(let i = 0; i < data.reply.length; i++)
 					data.reply[i].created_at = data.reply[i].created_at.toDate();
-				
+
 				return data;
 			})
 			.catch(err => {
@@ -362,7 +362,7 @@ export default {
 		console.log(reply);
 
 		return firestore.collection(PORTFOLIOS).doc(articleId).update({
-			
+
 			author: portfoiloInfo.author,
 			content: portfoiloInfo.content,
 			img: portfoiloInfo.img,
@@ -396,10 +396,6 @@ export default {
 			.then((docSnapshots) => {
 				return docSnapshots.docs.map((doc) => {
 					let data = doc.data()
-<<<<<<< HEAD
-=======
-
->>>>>>> lee
 					return data
 				})
 			})
@@ -410,9 +406,9 @@ export default {
 		return portfoliosCollection
 			.get()
 			.then((doc) => {
-				
+
 				let ret = doc.data();
-				
+
 				for(let i = 0; i < ret.reply.length; i++)
 					ret.reply[i].created_at =  ret.reply[i].created_at.toDate();
 				return ret.reply;
@@ -424,9 +420,9 @@ export default {
 		return portfoliosCollection
 			.get()
 			.then((doc) => {
-				
+
 				let ret = doc.data();
-				
+
 				for(let i = 0; i < ret.reply.length; i++)
 					ret.reply[i].created_at =  ret.reply[i].created_at.toDate();
 				return ret.reply;
@@ -504,7 +500,7 @@ export default {
 			return result;
 		}).catch(error => {
 			let errorCode = error.code;
-			
+
 			if (errorCode === 'auth/weak-password') {
 				store.commit("showLoginErrorBar", {message: "패스워드가 매우 취약합니다."});
 			}else if (errorCode == 'auth/invalid-email') {

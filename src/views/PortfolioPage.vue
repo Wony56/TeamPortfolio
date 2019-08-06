@@ -8,7 +8,7 @@
     <v-container>
       <!-- Portfolio -->
       <v-layout>
-        <v-flex xs12>
+        <v-flex>
           <PortfolioList :limits="6" :load-more="true"></PortfolioList>
         </v-flex>
       </v-layout>

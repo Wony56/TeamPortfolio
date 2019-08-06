@@ -21,7 +21,6 @@
 import { mapState, mapMutations } from "vuex";
 import firebaseService from "../../services/FirebaseService";
 import DeleteDialog from "../modal/DeleteDialog.vue";
-import { Promise } from "q";
 
 export default {
   data: () => ({
@@ -35,7 +34,7 @@ export default {
       },
       { text: "글제목", align: "right", value: "title" },
       { text: "작성일", align: "right", value: "date" },
-      { text: "삭제", align: "center" }
+      { text: "삭제", align: "center", sortable: false }
     ],
     desserts: []
   }),
@@ -65,13 +64,10 @@ export default {
       });
     },
     deletePost(item) {
-      this.openDeleteDialog();
+      const index = this.desserts.indexOf(item);
+      this.desserts.splice(index, 1);
 
-      if (this.deleteAllowed) {
-        const index = this.desserts.indexOf(item);
-        this.desserts.splice(index, 1);
-        firebaseService.deletePost(item.id);
-      }
+      firebaseService.deletePost(item.id);
     }
   }
 };

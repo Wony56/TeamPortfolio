@@ -74,80 +74,19 @@ export default {
 //=============================================================================================================
 //=============================================================================================================
 //=============================================================================================================
-	addReply(replyInfo) {
+	addComment(replyInfo) {
 
 		replyInfo.created_at = new Date();
 
-		// if(flag === "POST") {
-		// 	const postCollection = firestore.collection(POSTS).doc(articleId)
-		// 	return postCollection
-		// 		.update({ 'reply': firebase.firestore.FieldValue.arrayUnion(replyInfo)
-		// 	});
-		// }
-		// else {
-		// 	const postCollection = firestore.collection(PORTFOLIOS).doc(articleId)
-		// 	return postCollection
-		// 		.update({ 'reply': firebase.firestore.FieldValue.arrayUnion(replyInfo)
-		// 	});
-		// }
 		const postCollection = firestore.collection(COMMENTS);
 		return postCollection.add(replyInfo);
 	},
-	removeReply(commentId, replyInfo) {
+	deleteComment(commentId) {
 
-		// if(flag === "POST") {
-		// 	const postCollection = firestore.collection(POSTS).doc(articleId)
-		// 	return postCollection
-		// 		.update({ 'reply': firebase.firestore.FieldValue.arrayRemove(replyInfo) 
-		// 	})
-		// }
-		// else {
-		// 	const postCollection = firestore.collection(PORTFOLIOS).doc(articleId)
-		// 	return postCollection
-		// 		.update({ 'reply': firebase.firestore.FieldValue.arrayRemove(replyInfo) 
-		// 	})
-		// }
-		const postCollection = firestore.collection(COMMENTS).doc(commentId);
-		return postCollection.delete(replyInfo);
+		return firestore.collection(COMMENTS).doc(commentId).delete();
 	},
-	modifyReply(commentId, editedContent) {
+	modifyComment(commentId, editedContent) {
 
-		// if(flag === "POST") {
-		// 	return firestore.collection(POSTS).doc(articleId).get().then((doc) => {
-
-		// 		let ret = doc.data();
-		// 		ret.reply[index].replyContent = replyContent;
-		// 		ret.reply[index].created_at = new Date();
-
-		// 		return firestore.collection(POSTS).doc(articleId).update({
-
-		// 			title: ret.title,
-		// 			content: ret.content,
-		// 			reply: ret.reply,
-		// 			author: ret.author,
-		// 			authorUid: ret.authorUid,
-		// 			created_at: ret.created_at
-		// 		})
-		// 	});
-		// }
-		// else {
-		// 	return firestore.collection(PORTFOLIOS).doc(articleId).get().then((doc) => {
-
-		// 		let ret = doc.data();
-		// 		ret.reply[index].replyContent = replyContent;
-		// 		ret.reply[index].created_at = new Date();
-
-		// 		return firestore.collection(PORTFOLIOS).doc(articleId).update({
-
-		// 			author: ret.author,
-		// 			body: ret.body,
-		// 			created_at: ret.created_at,
-		// 			img: ret.img,
-		// 			title: ret.title,
-		// 			reply: ret.reply
-		// 		})
-		// 	});
-		// }
 		const collection = firestore.collection(COMMENTS).doc(commentId);
 		return collection.update({
 
@@ -158,38 +97,37 @@ export default {
 	getComments(articleId) {
 
 		const collection = firestore.collection(COMMENTS);
-		return collection.where("capital", "==", true)
-		.get()
-		.then(function(querySnapshot) {
-			querySnapshot.forEach(function(doc) {
-				// doc.data() is never undefined for query doc snapshots
-				console.log(doc.id, " => ", doc.data());
+		return collection.where("articleId", "==", articleId)
+			.orderBy("created_at")
+			.get()
+			.then(function (querySnapshot) {
+				
+				let ret = [];
+
+				querySnapshot.forEach(function (doc) {
+
+					let temp = doc.data();
+					temp.commentId = doc.id;
+					temp.created_at = new Date(temp.created_at.toDate());
+
+					ret.push(temp);
+				});
+				return ret;
 			});
-		})
-		.catch(function(error) {
-			console.log("Error getting documents: ", error);
-		});
 	},
 	//=============================================================================================================
 	//=============================================================================================================
 	//=============================================================================================================
-	modifyPost(articleId, postInfo, replies) {
+	modifyPost(articleId, postInfo) {
 
-		let reply = [];
-		let index = 0;
-
-		for(let i = 0; i < replies.length; i++) {
-
-			for(let j = 0; j < replies[i].length; j++)
-				reply[index++] = replies[i][j];
-		}
+		console.log(articleId);
+		console.log(postInfo);
 
 		return firestore.collection(POSTS).doc(articleId).set({
+			
+			author: postInfo.author,
 			title: postInfo.title,
 			content: postInfo.content,
-			reply: reply,
-			author: postInfo.author,
-			authorUid: postInfo.authorUid,
 			created_at: new Date()
 		})
 	},
@@ -255,11 +193,11 @@ export default {
 			.then((doc) => {
 
 				let data = doc.data();
-				data.articleId = doc.id;
+				// data.articleId = doc.id;
 				data.created_at = data.created_at.toDate();
 
-				for(let i = 0; i < data.reply.length; i++)
-					data.reply[i].created_at = data.reply[i].created_at.toDate();
+				// for(let i = 0; i < data.reply.length; i++)
+				// 	data.reply[i].created_at = data.reply[i].created_at.toDate();
 				
 				return data;
 			})
@@ -279,20 +217,18 @@ export default {
 					data.id = doc.id;
 					data.created_at = data.created_at.toDate();
 
-					for(let i = 0; i < data.reply.length; i++)
-						data.reply[i].created_at = data.reply[i].created_at.toDate();
+					// for(let i = 0; i < data.reply.length; i++)
+					// 	data.reply[i].created_at = data.reply[i].created_at.toDate();
 					return data
 				})
 			})
 	},
-	postPost(title, content, reply, author, authorUid) {
+	postPost(title, content, author) {
 
 		return firestore.collection(POSTS).add({
 			title,
 			content,
-			reply,
 			author,
-			authorUid,
 			created_at: new Date()
 		}).catch(function (error) {
 
@@ -310,8 +246,8 @@ export default {
 
 				data.created_at = data.created_at.toDate();
 
-				for(let i = 0; i < data.reply.length; i++)
-					data.reply[i].created_at = data.reply[i].created_at.toDate();
+				// for(let i = 0; i < data.reply.length; i++)
+				// 	data.reply[i].created_at = data.reply[i].created_at.toDate();
 				return data;
 			})
 			.catch(err => {
@@ -331,8 +267,8 @@ export default {
 
 					data.created_at = data.created_at.toDate();
 
-					for(let i = 0; i < data.reply.length; i++)
-						data.reply[i].created_at = data.reply[i].created_at.toDate();
+					// for(let i = 0; i < data.reply.length; i++)
+					// 	data.reply[i].created_at = data.reply[i].created_at.toDate();
 					return data;
 				})
 			})
@@ -344,22 +280,22 @@ export default {
 			created_at: new Date(),
 			img,
 			title,
-			reply: new Array()
+			// reply: new Array()
 		})
 	},
 
 	modifyPortfoilo(articleId, portfoiloInfo) {
 
-		let reply = [];
+		// let reply = [];
 
-		for(let i = 0; i < portfoiloInfo.reply.length; i++) {
+		// for(let i = 0; i < portfoiloInfo.reply.length; i++) {
 
-			for(let j = 0; j < portfoiloInfo.reply[i].length; j++) {
+		// 	for(let j = 0; j < portfoiloInfo.reply[i].length; j++) {
 
-				reply.push(portfoiloInfo.reply[i][j]);
-			}
-		}
-		console.log(reply);
+		// 		reply.push(portfoiloInfo.reply[i][j]);
+		// 	}
+		// }
+		// console.log(reply);
 
 		return firestore.collection(PORTFOLIOS).doc(articleId).update({
 			
@@ -368,7 +304,7 @@ export default {
 			img: portfoiloInfo.img,
 			created_at: new Date(),
 			title: portfoiloInfo.title,
-			reply: reply
+			// reply: reply
 
 		}).catch(error => {
 			alert(error.message);
@@ -404,34 +340,34 @@ export default {
 				})
 			})
 	},
-	getPortfoiloReply(id) {
+	// getPortfoiloReply(id) {
 
-		const portfoliosCollection = firestore.collection(PORTFOLIOS).doc(id);
-		return portfoliosCollection
-			.get()
-			.then((doc) => {
+	// 	const portfoliosCollection = firestore.collection(PORTFOLIOS).doc(id);
+	// 	return portfoliosCollection
+	// 		.get()
+	// 		.then((doc) => {
 				
-				let ret = doc.data();
+	// 			let ret = doc.data();
 				
-				for(let i = 0; i < ret.reply.length; i++)
-					ret.reply[i].created_at =  ret.reply[i].created_at.toDate();
-				return ret.reply;
-			})
-	},
-	getPostReply(id) {
+	// 			for(let i = 0; i < ret.reply.length; i++)
+	// 				ret.reply[i].created_at =  ret.reply[i].created_at.toDate();
+	// 			return ret.reply;
+	// 		})
+	// },
+	// getPostReply(id) {
 
-		const portfoliosCollection = firestore.collection(POSTS).doc(id);
-		return portfoliosCollection
-			.get()
-			.then((doc) => {
+	// 	const portfoliosCollection = firestore.collection(POSTS).doc(id);
+	// 	return portfoliosCollection
+	// 		.get()
+	// 		.then((doc) => {
 				
-				let ret = doc.data();
+	// 			let ret = doc.data();
 				
-				for(let i = 0; i < ret.reply.length; i++)
-					ret.reply[i].created_at =  ret.reply[i].created_at.toDate();
-				return ret.reply;
-			})
-	},
+	// 			for(let i = 0; i < ret.reply.length; i++)
+	// 				ret.reply[i].created_at =  ret.reply[i].created_at.toDate();
+	// 			return ret.reply;
+	// 		})
+	// },
 	postImage(img) {
 		return firestore.collection(IMAGES).add({
 			// title,

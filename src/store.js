@@ -6,8 +6,9 @@ import user from './store/modules/user';
 import modal from './store/modules/modal';
 import notification from './store/modules/notification';
 import admin from './store/modules/admin';
-import article from './store/articles/article'
-import message from './store/pwa/pushMessage'
+import article from './store/articles/article';
+import message from './store/pwa/pushMessage';
+import document from './store/modules/document';
 
 Vue.use(Vuex)
 
@@ -78,6 +79,7 @@ export default new Vuex.Store({
     notification,
     admin,
     article,
-    message
+    message,
+    document
   }
 });

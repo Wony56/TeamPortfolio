@@ -8,22 +8,49 @@
       <v-card-actions>
         <v-spacer></v-spacer>
 
-        <v-btn color="red darken-1" flat @click="closeDialog(false)">거부</v-btn>
+        <v-btn color="red darken-1" flat @click="closeDeleteDialog">거부</v-btn>
 
-        <v-btn color="red darken-1" flat @click="closeDialog(true)">동의</v-btn>
+        <v-btn color="red darken-1" flat @click="confirmDelete">동의</v-btn>
       </v-card-actions>
     </v-card>
   </v-dialog>
 </template>
 
 <script>
-import { mapMutations } from "vuex";
+import { mapState, mapMutations } from "vuex";
+import firebaseService from "../../services/FirebaseService";
 
 export default {
+  computed: mapState({
+    type: state => state.document.type,
+    document: state => state.document.document,
+    postTables: state => state.admin.postTables,
+    portfolioTables: state => state.admin.portfolioTables
+  }),
   methods: {
-    ...mapMutations(["closeDeleteDialog"]),
-    closeDialog(allowed) {
-      this.$store.commit("closeDeleteDialog", { allowed: allowed });
+    ...mapMutations([
+      "countPost",
+      "countPortfolio",
+      "closeDeleteDialog",
+      "resetDocument"
+    ]),
+    async confirmDelete() {
+      if (this.type === "post") {
+        await firebaseService.deletePost(this.document.id);
+
+        const index = this.postTables.indexOf(this.document);
+        this.postTables.splice(index, 1);
+        this.countPost();
+      } else if (this.type === "portfolio") {
+        await firebaseService.deletePortfolio(this.document.id);
+
+        const index = this.portfolioTables.indexOf(this.document);
+        this.portfolioTables.splice(index, 1);
+        this.countPortfolio();
+      }
+
+      this.resetDocument();
+      this.closeDeleteDialog();
     }
   }
 };

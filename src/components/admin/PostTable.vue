@@ -1,26 +1,25 @@
 <template>
-  <v-data-table :headers="headers" :items="desserts">
+  <v-data-table :headers="headers" :items="postTables">
     <template class="row" slot="items" slot-scope="props">
       <td class="text-xs-left">{{ props.item.author }}</td>
       <td class="text-xs-right post-title">{{ props.item.title }}</td>
       <td class="text-xs-right">{{ props.item.date }}</td>
       <td class="text-xs-right">
-        <v-btn flat icon color="red" @click="deletePost(props.item)">
+        <v-btn flat icon color="red" @click="deletePost('post', props.item)">
           <v-icon>delete_forever</v-icon>
         </v-btn>
       </td>
     </template>
-    <template slot="pageText" slot-scope="{ pageStart, pageStop }">
-      From {{ pageStart }} to {{ pageStop }}
-      <DeleteDialog />
-    </template>
+    <template
+      slot="pageText"
+      slot-scope="{ pageStart, pageStop }"
+    >From {{ pageStart }} to {{ pageStop }}</template>
   </v-data-table>
 </template>
 
 <script>
 import { mapState, mapMutations } from "vuex";
 import firebaseService from "../../services/FirebaseService";
-import DeleteDialog from "../modal/DeleteDialog.vue";
 
 export default {
   data: () => ({
@@ -38,48 +37,20 @@ export default {
     ],
     desserts: []
   }),
-  components: {
-    DeleteDialog
-  },
   computed: mapState({
-    deleteAllowed: state => state.modal.deleteAllowed
+    postTables: state => state.admin.postTables
   }),
   created() {
     this.initialize();
   },
   methods: {
-    ...mapMutations(["openDeleteDialog"]),
+    ...mapMutations(["setPostTables", "openDeleteDialog", "setDocument"]),
     async initialize() {
-      let posts = await firebaseService.getPosts();
-
-      posts.forEach(post => {
-        const date = new Date(post.created_at);
-
-        let row = {
-          id: post.id,
-          author: post.author.name,
-          title: post.title,
-          date:
-            date.getFullYear() +
-            "년 " +
-            date.getMonth() +
-            "월 " +
-            date.getDate() +
-            "일 " +
-            date.getHours() +
-            "시 " +
-            date.getMinutes() +
-            "분"
-        };
-
-        this.desserts.push(row);
-      });
+      this.setPostTables();
     },
-    deletePost(item) {
-      const index = this.desserts.indexOf(item);
-      this.desserts.splice(index, 1);
-
-      firebaseService.deletePost(item.id);
+    deletePost(type, item) {
+      this.$store.commit("setDocument", { type: type, document: item });
+      this.openDeleteDialog();
     }
   }
 };

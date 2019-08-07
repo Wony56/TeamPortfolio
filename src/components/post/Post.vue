@@ -2,8 +2,7 @@
   <v-layout  py-4 px-4 justify-center align-center row wrap>
     <v-flex xs10>
       <h2 class="title" v-line-clamp="1">{{title}}</h2>
-      <!-- <h2 style="color:gray" class="title" v-line-clamp="1"> {{id}}</h2> -->
-      <div  style="color:gray" class="caption">{{date}}</div>
+      <div style="color:gray" class="caption">{{date}}</div>
     </v-flex>
     <v-flex xs2 fill-height fill-width>
         <v-btn text-xs-right
@@ -28,17 +27,6 @@ export default {
     content: { type: String },
     id: { type: String }
   }
-  // ,
-  // computed: {
-  //   formatedDate() {
-
-  //     let time = this.date.toDate();
-
-  //     console.log(time);
-  //     return `${time.getFullYear()}년 ${time.getMonth() +
-  //       1}월 ${time.getDate()}일`;
-  //   }
-  // }
 };
 </script>
 

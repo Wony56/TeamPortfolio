@@ -29,147 +29,6 @@ const firestore = firebase.firestore()
 const messaging = firebase.messaging()
 
 messaging.requestPermission()
-<<<<<<< HEAD
-	.then(function(){
-		console.log("Have permission");
-		return messaging.getToken();
-	})
-	.then(function(token){
-		console.log(token);
-	})
-	.catch(function(arr){
-		console.log("Error Occured");
-	});
-
-messaging.onMessage(function(payload) {
-	store.state.message = payload;
-
-	console.log(payload);
-	console.log(store.state.message.notification.body);
-
-	console.log('onMessage: ', payload);
-})
-
-export default {
-	getToken() {
-		return messaging.getToken()
-			.then(token => {
-				return token;
-			})
-			.catch(err => {
-				console.log("Error Occured");
-			});
-	},
-	async postToken(user) {
-		let token = await this.getToken();
-
-		return firestore.collection(TOKENS).doc(user.uid).set({
-			uid: user.uid,
-			token: token
-		});
-	},
-	deleteToken(user) {
-		console.log('삭제완료')
-		return firestore.collection(TOKENS).doc(user.uid).delete()
-	},
-//=============================================================================================================
-//=============================================================================================================
-//=============================================================================================================
-	addReply(replyInfo) {
-
-		replyInfo.created_at = new Date();
-
-		// if(flag === "POST") {
-		// 	const postCollection = firestore.collection(POSTS).doc(articleId)
-		// 	return postCollection
-		// 		.update({ 'reply': firebase.firestore.FieldValue.arrayUnion(replyInfo)
-		// 	});
-		// }
-		// else {
-		// 	const postCollection = firestore.collection(PORTFOLIOS).doc(articleId)
-		// 	return postCollection
-		// 		.update({ 'reply': firebase.firestore.FieldValue.arrayUnion(replyInfo)
-		// 	});
-		// }
-		const postCollection = firestore.collection(COMMENTS);
-		return postCollection.add(replyInfo);
-	},
-	removeReply(commentId, replyInfo) {
-
-		// if(flag === "POST") {
-		// 	const postCollection = firestore.collection(POSTS).doc(articleId)
-		// 	return postCollection
-		// 		.update({ 'reply': firebase.firestore.FieldValue.arrayRemove(replyInfo)
-		// 	})
-		// }
-		// else {
-		// 	const postCollection = firestore.collection(PORTFOLIOS).doc(articleId)
-		// 	return postCollection
-		// 		.update({ 'reply': firebase.firestore.FieldValue.arrayRemove(replyInfo)
-		// 	})
-		// }
-		const postCollection = firestore.collection(COMMENTS).doc(commentId);
-		return postCollection.delete(replyInfo);
-	},
-	modifyReply(commentId, editedContent) {
-
-		// if(flag === "POST") {
-		// 	return firestore.collection(POSTS).doc(articleId).get().then((doc) => {
-
-		// 		let ret = doc.data();
-		// 		ret.reply[index].replyContent = replyContent;
-		// 		ret.reply[index].created_at = new Date();
-
-		// 		return firestore.collection(POSTS).doc(articleId).update({
-
-		// 			title: ret.title,
-		// 			content: ret.content,
-		// 			reply: ret.reply,
-		// 			author: ret.author,
-		// 			authorUid: ret.authorUid,
-		// 			created_at: ret.created_at
-		// 		})
-		// 	});
-		// }
-		// else {
-		// 	return firestore.collection(PORTFOLIOS).doc(articleId).get().then((doc) => {
-
-		// 		let ret = doc.data();
-		// 		ret.reply[index].replyContent = replyContent;
-		// 		ret.reply[index].created_at = new Date();
-
-		// 		return firestore.collection(PORTFOLIOS).doc(articleId).update({
-
-		// 			author: ret.author,
-		// 			body: ret.body,
-		// 			created_at: ret.created_at,
-		// 			img: ret.img,
-		// 			title: ret.title,
-		// 			reply: ret.reply
-		// 		})
-		// 	});
-		// }
-		const collection = firestore.collection(COMMENTS).doc(commentId);
-		return collection.update({
-
-			replyContent: editedContent,
-			created_at: new Date()
-		});
-	},
-	getComments(articleId) {
-
-		const collection = firestore.collection(COMMENTS);
-		return collection.where("capital", "==", true)
-		.get()
-		.then(function(querySnapshot) {
-			querySnapshot.forEach(function(doc) {
-				// doc.data() is never undefined for query doc snapshots
-				console.log(doc.id, " => ", doc.data());
-			});
-		})
-		.catch(function(error) {
-			console.log("Error getting documents: ", error);
-=======
 	.then(function () {
 		console.log("Have permission");
 		return messaging.getToken();
@@ -263,26 +122,12 @@ export default {
 			querySnapshot.forEach(function (doc) {
 				doc.ref.delete();
 			});
->>>>>>> 9767669079ed3fcd3a9c8758e31f2ae5b989481f
 		});
 	},
 	//=============================================================================================================
 	//=============================================================================================================
 	//=============================================================================================================
-<<<<<<< HEAD
-	modifyPost(articleId, postInfo, replies) {
-
-		let reply = [];
-		let index = 0;
-
-		for(let i = 0; i < replies.length; i++) {
-
-			for(let j = 0; j < replies[i].length; j++)
-				reply[index++] = replies[i][j];
-		}
-=======
 	modifyPost(articleId, postInfo) {
->>>>>>> 9767669079ed3fcd3a9c8758e31f2ae5b989481f
 
 		console.log(articleId);
 		console.log(postInfo);
@@ -292,12 +137,6 @@ export default {
 			author: postInfo.author,
 			title: postInfo.title,
 			content: postInfo.content,
-<<<<<<< HEAD
-			reply: reply,
-			author: postInfo.author,
-			authorUid: postInfo.authorUid,
-=======
->>>>>>> 9767669079ed3fcd3a9c8758e31f2ae5b989481f
 			created_at: new Date()
 		})
 	},
@@ -319,11 +158,7 @@ export default {
 		return postsCollection.orderBy('created_at', 'desc').get().then(docSnapshots => {
 			return docSnapshots.docs.map(doc => {
 				let data = doc.data();
-<<<<<<< HEAD
-
-=======
 				
->>>>>>> 9767669079ed3fcd3a9c8758e31f2ae5b989481f
 				data.created_at = new Date(data.created_at.toDate());
 
 				return data;
@@ -367,17 +202,8 @@ export default {
 			.then((doc) => {
 
 				let data = doc.data();
-<<<<<<< HEAD
-				data.articleId = doc.id;
 				data.created_at = data.created_at.toDate();
 
-				for(let i = 0; i < data.reply.length; i++)
-					data.reply[i].created_at = data.reply[i].created_at.toDate();
-
-=======
-				data.created_at = data.created_at.toDate();
-
->>>>>>> 9767669079ed3fcd3a9c8758e31f2ae5b989481f
 				return data;
 			})
 			.catch(err => {
@@ -396,11 +222,6 @@ export default {
 					data.id = doc.id;
 					data.created_at = data.created_at.toDate();
 
-<<<<<<< HEAD
-					for(let i = 0; i < data.reply.length; i++)
-						data.reply[i].created_at = data.reply[i].created_at.toDate();
-=======
->>>>>>> 9767669079ed3fcd3a9c8758e31f2ae5b989481f
 					return data
 				})
 			})
@@ -411,10 +232,6 @@ export default {
 			title,
 			content,
 			author,
-<<<<<<< HEAD
-			authorUid,
-=======
->>>>>>> 9767669079ed3fcd3a9c8758e31f2ae5b989481f
 			created_at: new Date()
 		}).catch(function (error) {
 
@@ -429,16 +246,8 @@ export default {
 			.then((doc) => {
 
 				let data = doc.data();
-<<<<<<< HEAD
-
 				data.created_at = data.created_at.toDate();
 
-				for(let i = 0; i < data.reply.length; i++)
-					data.reply[i].created_at = data.reply[i].created_at.toDate();
-=======
-				data.created_at = data.created_at.toDate();
-
->>>>>>> 9767669079ed3fcd3a9c8758e31f2ae5b989481f
 				return data;
 			})
 			.catch(err => {
@@ -455,16 +264,8 @@ export default {
 					let data = doc.data()
 
 					data.id = doc.id;
-<<<<<<< HEAD
-
 					data.created_at = data.created_at.toDate();
 
-					for(let i = 0; i < data.reply.length; i++)
-						data.reply[i].created_at = data.reply[i].created_at.toDate();
-=======
-					data.created_at = data.created_at.toDate();
-
->>>>>>> 9767669079ed3fcd3a9c8758e31f2ae5b989481f
 					return data;
 				})
 			})
@@ -476,42 +277,17 @@ export default {
 			created_at: new Date(),
 			img,
 			title,
-<<<<<<< HEAD
-			reply: new Array()
-=======
->>>>>>> 9767669079ed3fcd3a9c8758e31f2ae5b989481f
 		})
 	},
 
 	modifyPortfoilo(articleId, portfoiloInfo) {
 
-<<<<<<< HEAD
-		let reply = [];
-
-		for(let i = 0; i < portfoiloInfo.reply.length; i++) {
-
-			for(let j = 0; j < portfoiloInfo.reply[i].length; j++) {
-
-				reply.push(portfoiloInfo.reply[i][j]);
-			}
-		}
-		console.log(reply);
-
 		return firestore.collection(PORTFOLIOS).doc(articleId).update({
 
-			author: portfoiloInfo.author,
-=======
-		return firestore.collection(PORTFOLIOS).doc(articleId).update({
-
->>>>>>> 9767669079ed3fcd3a9c8758e31f2ae5b989481f
 			content: portfoiloInfo.content,
 			img: portfoiloInfo.img,
 			created_at: new Date(),
 			title: portfoiloInfo.title,
-<<<<<<< HEAD
-			reply: reply
-=======
->>>>>>> 9767669079ed3fcd3a9c8758e31f2ae5b989481f
 
 		}).catch(error => {
 			alert(error.message);
@@ -527,10 +303,6 @@ export default {
 		})
 	},
 	deletePortfolio(id) {
-<<<<<<< HEAD
-
-=======
->>>>>>> 9767669079ed3fcd3a9c8758e31f2ae5b989481f
 		return firestore.collection(PORTFOLIOS).doc(id).delete();
 	},
 
@@ -546,38 +318,7 @@ export default {
 				})
 			})
 	},
-<<<<<<< HEAD
-	getPortfoiloReply(id) {
 
-		const portfoliosCollection = firestore.collection(PORTFOLIOS).doc(id);
-		return portfoliosCollection
-			.get()
-			.then((doc) => {
-
-				let ret = doc.data();
-
-				for(let i = 0; i < ret.reply.length; i++)
-					ret.reply[i].created_at =  ret.reply[i].created_at.toDate();
-				return ret.reply;
-			})
-	},
-	getPostReply(id) {
-
-		const portfoliosCollection = firestore.collection(POSTS).doc(id);
-		return portfoliosCollection
-			.get()
-			.then((doc) => {
-
-				let ret = doc.data();
-
-				for(let i = 0; i < ret.reply.length; i++)
-					ret.reply[i].created_at =  ret.reply[i].created_at.toDate();
-				return ret.reply;
-			})
-	},
-=======
-
->>>>>>> 9767669079ed3fcd3a9c8758e31f2ae5b989481f
 	postImage(img) {
 		return firestore.collection(IMAGES).add({
 			// title,
@@ -650,11 +391,7 @@ export default {
 			return result;
 		}).catch(error => {
 			let errorCode = error.code;
-<<<<<<< HEAD
-
-=======
 			
->>>>>>> 9767669079ed3fcd3a9c8758e31f2ae5b989481f
 			if (errorCode === 'auth/weak-password') {
 				store.commit("showLoginErrorBar", {message: "패스워드가 매우 취약합니다."});
 			}else if (errorCode == 'auth/invalid-email') {

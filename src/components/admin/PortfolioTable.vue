@@ -32,14 +32,9 @@ export default {
         align: "left",
         value: "name"
       },
-<<<<<<< HEAD
-      { text: "글제목",align: "right", value: "title" },
-      { text: "작성일",align: "right", value: "date" }
-=======
       { text: "글제목", align: "right", value: "title" },
       { text: "작성일", align: "right", value: "date" },
       { text: "삭제", align: "center", sortable: false }
->>>>>>> 9767669079ed3fcd3a9c8758e31f2ae5b989481f
     ],
     desserts: []
   }),

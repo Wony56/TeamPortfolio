@@ -2,7 +2,7 @@
   <div>
     <v-app>
       <Header />
-
+      <notifications group="foo" animation-type="velocity" position="bottom left"/>
       <v-content id="contents">
         <router-view />
 

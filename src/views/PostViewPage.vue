@@ -12,7 +12,22 @@
         <!-- 본문 부분 -->
         <v-card min-height="400" flat>
           <v-layout text-xs-center>
+<<<<<<< HEAD
             <v-card-text class="headline" style="background-color:#ff6f61; color:#fff">{{postInfo.title}}</v-card-text>
+=======
+            <v-text-field
+              v-model="postInfo.title"
+              class="headline"
+              style="background-color:#ff6f61; color:#fff"
+              :readonly="!postFlag"
+            ></v-text-field>
+          </v-layout>
+          <v-layout text-xs-center>
+            <v-card-text
+              class="headline"
+              style="background-color:#ff6f61; color:#fff"
+            >{{postInfo.author.name}}</v-card-text>
+>>>>>>> 9767669079ed3fcd3a9c8758e31f2ae5b989481f
           </v-layout>
 
           <v-divider></v-divider>
@@ -38,7 +53,11 @@
             <v-btn
               v-if="!postFlag"
               style="background-color:#ff6f61; color:#fff"
+<<<<<<< HEAD
               @click="authorizationCheck('POST', 0)"
+=======
+              @click="authorizationCheck(0)"
+>>>>>>> 9767669079ed3fcd3a9c8758e31f2ae5b989481f
             >수정</v-btn>
             <v-btn v-else style="background-color:#ff6f61; color:#fff" @click="modifyPost()">수정완료</v-btn>
             <v-btn
@@ -54,6 +73,7 @@
             >삭제</v-btn>
           </v-card-actions>
         </v-layout>
+<<<<<<< HEAD
         <!--댓글 부분-->
         <v-layout justify-center text-xs-center>
           <v-flex row wrap>
@@ -121,6 +141,10 @@
           color="#ff6616"
         ></v-pagination>
         </v-layout>
+=======
+
+        <Comment :articleId="id"></Comment>
+>>>>>>> 9767669079ed3fcd3a9c8758e31f2ae5b989481f
       </v-flex>
     </v-layout>
 
@@ -150,10 +174,20 @@ import { mapState } from "vuex";
 // Markdown Viewer
 import VueMarkdown from "vue-markdown";
 
+<<<<<<< HEAD
+=======
+// Comments
+import Comment from "../components/base/Comment";
+
+>>>>>>> 9767669079ed3fcd3a9c8758e31f2ae5b989481f
 export default {
   name: "PostViewPage",
+  props: {
+    articleId: { type: String }
+  },
   data() {
     return {
+<<<<<<< HEAD
       replies: [],
       selectedIndex: -1,
       replyContent: "",
@@ -168,10 +202,16 @@ export default {
 
       focusPage: 1,
       totalPage: 10,
+=======
+      id: "",
+>>>>>>> 9767669079ed3fcd3a9c8758e31f2ae5b989481f
 
+      postFlag: false,
+      dialog: false,
       modalTitle: "",
       modalContent: "",
 
+<<<<<<< HEAD
       postInfo: {
 
         author: {type:String},
@@ -180,6 +220,17 @@ export default {
         created_at: {type:Date},
         reply: {type:Array},
         title: {type:String}
+=======
+      movePage: 0,
+      postInfo: {
+        author: {
+          name: { type: String },
+          uid: { type: String }
+        },
+        content: { type: String },
+        created_at: { type: Date },
+        title: { type: String }
+>>>>>>> 9767669079ed3fcd3a9c8758e31f2ae5b989481f
       },
       originContent: ""
     };
@@ -187,7 +238,12 @@ export default {
   components: {
     ImgBanner,
     MarkdownEditor,
+<<<<<<< HEAD
     VueMarkdown
+=======
+    VueMarkdown,
+    Comment
+>>>>>>> 9767669079ed3fcd3a9c8758e31f2ae5b989481f
   },
   computed: {
     ...mapState({
@@ -195,10 +251,18 @@ export default {
       loggedIn: state => state.user.loggedIn
     })
   },
+  created() {
+    this.id = this.$route.params.postIndex;
+  },
+  mounted() {
+    this.id = this.$route.params.postIndex;
+    this.loadPost();
+  },
   methods: {
     async loadPost(id) {
-      let ret = await FirebaseService.getPostById(this.$route.params.postIndex);
+      let ret = await FirebaseService.getPostById(this.id);
 
+<<<<<<< HEAD
       this.articleId = ret.articleId;
 
       this.postInfo.title = ret.title;
@@ -308,9 +372,32 @@ export default {
       } else {
 
          this.setModalContent("오류", "권한이 없습니다.");
+=======
+      this.postInfo.title = ret.title;
+      this.postInfo.content = ret.content;
+      this.postInfo.author = ret.author;
+      this.postInfo.created_at = ret.created_at;
+    },
+
+    authorizationCheck(index) {
+      if (this.user === undefined) {
+        this.setModalContent("알림", "로그인을 해주시길 바랍니다.");
+        return;
+      }
+
+      if (
+        this.loggedIn === true &&
+        (this.authorUid == this.user.uid || this.user.tier == "diamond")
+      ) {
+        this.postFlag = true;
+        this.originContent = this.postInfo.content;
+      } else {
+        this.setModalContent("오류", "권한이 없습니다.");
+>>>>>>> 9767669079ed3fcd3a9c8758e31f2ae5b989481f
       }
       console.log("RESULT? ", this.replies);
     },
+<<<<<<< HEAD
     modifyReply(index) {
       if (
         this.replies[this.focusPage - 1][index].uid == this.user.uid ||
@@ -407,19 +494,43 @@ export default {
 
         console.log("ELSE ", this.replies[this.totalPage - 1]);
         this.replies[this.totalPage - 1].push(reply);
+=======
+    setModalContent(title, content) {
+      this.modalTitle = title;
+      this.modalContent = content;
+      this.dialog = !this.dialog;
+    },
+    modifyPost() {
+      FirebaseService.modifyPost(this.id, this.postInfo);
+      this.setModalContent("성공", "글을 성공적으로 수정하였습니다.");
+      this.movePage = 1;
+      this.postFlag = false;
+    },
+    deletePost() {
+      if (
+        this.loggedIn === true &&
+        (this.authorUid == this.user.uid || this.user.tier == "diamond")
+      ) {
+        this.movePage = 2;
+
+        FirebaseService.deletePost(this.id);
+        this.setModalContent("성공", "글이 성공적으로 삭제 되었습니다.");
+      } else {
+        this.setModalContent("오류", "권한이 없습니다.");
+>>>>>>> 9767669079ed3fcd3a9c8758e31f2ae5b989481f
       }
       console.log("AFTER ", this.replies);
     },
     cancelPostModify() {
+<<<<<<< HEAD
 
       console.log("test");
 
+=======
+>>>>>>> 9767669079ed3fcd3a9c8758e31f2ae5b989481f
       this.postFlag = !this.postFlag;
       this.postInfo.content = this.originContent;
     }
-  },
-  mounted() {
-    this.loadPost(this.$route.params.postIndex);
   }
 };
 </script>
@@ -448,8 +559,12 @@ export default {
   }
 }
 
+<<<<<<< HEAD
 .choosingcolor 
 {
+=======
+.choosingcolor {
+>>>>>>> 9767669079ed3fcd3a9c8758e31f2ae5b989481f
   background-color: #ff6f61;
   color: #fff;
 }

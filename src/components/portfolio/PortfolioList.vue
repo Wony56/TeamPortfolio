@@ -59,7 +59,11 @@ export default {
       this.portfolios = await FirebaseService.getPortfolios();
     },
     loadMorePortfolios() {
+<<<<<<< HEAD
 
+=======
+      
+>>>>>>> 9767669079ed3fcd3a9c8758e31f2ae5b989481f
       this.limit += 5;
     }
   }

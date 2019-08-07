@@ -21,7 +21,10 @@
 import { mapState, mapMutations } from "vuex";
 import firebaseService from "../../services/FirebaseService";
 import DeleteDialog from "../modal/DeleteDialog.vue";
+<<<<<<< HEAD
 import { Promise } from "q";
+=======
+>>>>>>> 9767669079ed3fcd3a9c8758e31f2ae5b989481f
 
 export default {
   data: () => ({
@@ -35,7 +38,11 @@ export default {
       },
       { text: "글제목", align: "right", value: "title" },
       { text: "작성일", align: "right", value: "date" },
+<<<<<<< HEAD
       { text: "삭제", align: "center" }
+=======
+      { text: "삭제", align: "center", sortable: false }
+>>>>>>> 9767669079ed3fcd3a9c8758e31f2ae5b989481f
     ],
     desserts: []
   }),
@@ -54,17 +61,34 @@ export default {
       let posts = await firebaseService.getPosts();
 
       posts.forEach(post => {
+        const date = new Date(post.created_at);
+
         let row = {
           id: post.id,
+<<<<<<< HEAD
           author: post.author,
+=======
+          author: post.author.name,
+>>>>>>> 9767669079ed3fcd3a9c8758e31f2ae5b989481f
           title: post.title,
-          date: post.created_at
+          date:
+            date.getFullYear() +
+            "년 " +
+            date.getMonth() +
+            "월 " +
+            date.getDate() +
+            "일 " +
+            date.getHours() +
+            "시 " +
+            date.getMinutes() +
+            "분"
         };
 
         this.desserts.push(row);
       });
     },
     deletePost(item) {
+<<<<<<< HEAD
       this.openDeleteDialog();
 
       if (this.deleteAllowed) {
@@ -72,6 +96,12 @@ export default {
         this.desserts.splice(index, 1);
         firebaseService.deletePost(item.id);
       }
+=======
+      const index = this.desserts.indexOf(item);
+      this.desserts.splice(index, 1);
+
+      firebaseService.deletePost(item.id);
+>>>>>>> 9767669079ed3fcd3a9c8758e31f2ae5b989481f
     }
   }
 };

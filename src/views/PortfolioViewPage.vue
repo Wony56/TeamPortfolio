@@ -42,6 +42,7 @@
 
         <v-spacer></v-spacer>
 
+<<<<<<< HEAD
                 <!--댓글 부분-->
         <v-layout justify-center text-xs-center>
           <v-flex row wrap>
@@ -108,6 +109,12 @@
           :total-visible="5"
           color="#ff6616"
         ></v-pagination>
+=======
+        <Comment
+          :articleId="id"
+        >
+        </Comment>
+>>>>>>> 9767669079ed3fcd3a9c8758e31f2ae5b989481f
 
         <v-layout justify-center>
           <v-btn v-if="!modifyFlag" style="background-color:#ff6f61; color:#ffff" @click="checkAuthentication()">수정</v-btn>
@@ -147,11 +154,18 @@ import { mapState } from "vuex";
 // Imgur API
 import { mapActions } from "vuex";
 
+<<<<<<< HEAD
+=======
+// Comment Component
+import Comment from "../components/base/Comment";
+
+>>>>>>> 9767669079ed3fcd3a9c8758e31f2ae5b989481f
 // Markdown Viewer
 import VueMarkdown from 'vue-markdown'
 
 export default {
   data: () => ({
+<<<<<<< HEAD
     replies: [],
     totalPage: 10,
     focusPage: 1,
@@ -159,6 +173,15 @@ export default {
     replyContent: "",
 
     articleId: "",
+=======
+    // replies: [],
+    // totalPage: 10,
+    // focusPage: 1,
+    // selectedIndex: -1,
+    // replyContent: "",
+
+    id: "",
+>>>>>>> 9767669079ed3fcd3a9c8758e31f2ae5b989481f
     portfolioInfo: {
 
       title: {type: String},
@@ -169,16 +192,25 @@ export default {
       },
       content: {type: String},
       created_at: { type: Date },
+<<<<<<< HEAD
       img: { type: Array },
       reply: { type: Array }
+=======
+      img: { type: Array }
+>>>>>>> 9767669079ed3fcd3a9c8758e31f2ae5b989481f
     },
 
     dialog: false,
     flag: true,
     modifyFlag: false,
 
+<<<<<<< HEAD
     replyFlag: false,
     loadMore: false,
+=======
+    // replyFlag: false,
+    // loadMore: false,
+>>>>>>> 9767669079ed3fcd3a9c8758e31f2ae5b989481f
     movePage: false,
 
     modalTitle: "",
@@ -188,7 +220,12 @@ export default {
     ImgBanner,
     MarkdownEditor,
     UploadForm,
+<<<<<<< HEAD
     VueMarkdown
+=======
+    VueMarkdown,
+    Comment
+>>>>>>> 9767669079ed3fcd3a9c8758e31f2ae5b989481f
   },  
   computed: {
     ...mapState({
@@ -197,10 +234,18 @@ export default {
       imgurLink: state => state.images.imgurLinks
     })
   },
+<<<<<<< HEAD
+=======
+  created() {
+
+    this.id = this.$route.params.articleId;
+  },
+>>>>>>> 9767669079ed3fcd3a9c8758e31f2ae5b989481f
   mounted() {
     this.$store.state.images.imgurLinks = [];
     this.$store.state.images.images = [];
 
+<<<<<<< HEAD
     this.articleId = this.$route.params.portfolioId;
     this.getPortfolio();
   },
@@ -290,6 +335,35 @@ export default {
 
          this.setModalContent("오류", "권한이 없습니다.");
       }
+=======
+    this.getPortfolio();
+  },
+  methods: {
+
+    async getPortfolio() {
+
+      console.log(this.id);
+      let ret = await FirebaseService.getPortfolioById(this.id);
+
+      this.portfolioInfo.img = new Array();
+      this.portfolioInfo.reply = new Array();
+
+      for(let idx = 0; idx < ret.img.length; idx++) {
+
+        console.log(ret.img[idx]);
+        this.portfolioInfo.img.push(ret.img[idx]);
+      }
+
+      console.log(this.portfolioInfo.img);
+
+      this.portfolioInfo.author = ret.author;
+      this.portfolioInfo.content = ret.content;
+      this.portfolioInfo.created_at = ret.created_at;
+      this.portfolioInfo.img = ret.img;
+      this.portfolioInfo.title = ret.title;
+
+      this.loadMore = true;
+>>>>>>> 9767669079ed3fcd3a9c8758e31f2ae5b989481f
     },
 
     authorizationCheck(select, index) {
@@ -344,7 +418,11 @@ export default {
         
         this.portfolioInfo.img.push(this.imgurLink[i]);
       }
+<<<<<<< HEAD
       FirebaseService.modifyPortfoilo(this.articleId, this.portfolioInfo);
+=======
+      FirebaseService.modifyPortfoilo(this.id, this.portfolioInfo);
+>>>>>>> 9767669079ed3fcd3a9c8758e31f2ae5b989481f
 
       this.$store.state.images.imgurLinks = [];
       this.$store.state.images.images = [];
@@ -358,12 +436,18 @@ export default {
       if ((this.loggedIn === true) && (this.portfolioInfo.author.uid == this.user.uid || this.user.tier == "diamond")) {
         this.movePage = 2;
 
+<<<<<<< HEAD
         FirebaseService.deletePortfolio(this.articleId);
+=======
+        FirebaseService.deletePortfolio(this.id);
+        FirebaseService.deleteAllComment(this.id);
+>>>>>>> 9767669079ed3fcd3a9c8758e31f2ae5b989481f
         this.setModalContent("성공", "포트폴리오가 성공적으로 삭제 되었습니다.");
       } else {
         this.setModalContent("오류", "권한이 없습니다.");
       }
     },
+<<<<<<< HEAD
     async getPortfolio() {
       let ret = await FirebaseService.getPortfolioById(this.articleId);
 
@@ -416,6 +500,8 @@ export default {
         this.totalPage = 1;
       }
     },
+=======
+>>>>>>> 9767669079ed3fcd3a9c8758e31f2ae5b989481f
     async deletePicture(index, src) {
 
       let start = src.lastIndexOf("/");
@@ -440,6 +526,7 @@ export default {
         this.modalContent = content;
         this.dialog = !this.dialog;
     },
+<<<<<<< HEAD
     paginations(data) {
 
       console.log("BEFORE ", this.portfolioInfo.reply);
@@ -465,6 +552,8 @@ export default {
       }
       console.log("AFTER ", this.portfolioInfo.reply);
     },
+=======
+>>>>>>> 9767669079ed3fcd3a9c8758e31f2ae5b989481f
     ...mapActions(["deleteImage"])
   }
 };

@@ -353,10 +353,6 @@ export default {
 			.then((docSnapshots) => {
 				return docSnapshots.docs.map((doc) => {
 					let data = doc.data()
-<<<<<<< HEAD
-=======
-
->>>>>>> lee
 					return data
 				})
 			})

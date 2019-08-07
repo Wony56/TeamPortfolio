@@ -42,32 +42,13 @@ exports.createPortfolio = functions.firestore
     })
 });
 
-exports.createPostReply = functions.firestore
-.document('posts/{Id}/reply/{replyId}')
+exports.createComment = functions.firestore
+.document('comments/{Id}')
 .onCreate((snap) => {
     const payload = {
         notification:{
             title: 'New 댓글',
-            body: 'Post에 새로운 댓글이 등록되었습니다.'
-        }
-    }
-    db.collection('tokens').get().then((snapshot)=>{
-        snapshot.forEach(doc => {
-            if(doc.data()['tier']=='diamond'){
-                console.log(doc.data()['token'])
-                admin.messaging().sendToDevice(doc.data()['token'], payload);
-            }
-        })
-    })
-});
-
-exports.createPortfolioReply = functions.firestore
-.document('portfolios/{Id}/reply/{replyId}')
-.onCreate((snap) => {
-    const payload = {
-        notification:{
-            title: 'New 댓글',
-            body: 'Portfolio에 새로운 댓글이 등록되었습니다.'
+            body: '새로운 댓글이 등록되었습니다.'
         }
     }
     db.collection('tokens').get().then((snapshot)=>{

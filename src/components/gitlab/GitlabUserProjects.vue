@@ -22,8 +22,14 @@
                   {{element.position}},
                   {{element.birth}}
                 </font>
+
+                <div>
+                  <br>
+                  <font @mouseover="mouseOver2()" color="black">CLICK</font>
+                  <br>
+                </div>
               </span>
-              <figure class="highlight__figure" @mouseover="mouseOver(index)">
+              <figure class="highlight__figure" @mouseover="mouseOver1(index)">
                 <v-img :src="getImgUrl(element.imgUrl)" aspect-ratio="1" width="200" height="280"></v-img>
               </figure>
             </div>
@@ -32,8 +38,9 @@
       </v-layout>
     </v-container>
 
+<!-- ============================================================================================================= -->
     <v-layout justify-center>
-      <v-dialog v-model="dialog" max-width="500">
+      <v-dialog v-model="dialog1" max-width="500">
         <v-card v-for="(data, index) in datas" :key="index">
           <v-card-title class="headline">{{data.name_with_namespace}}</v-card-title>
 
@@ -47,7 +54,24 @@
         </v-card>
       </v-dialog>
     </v-layout>
+<!-- ============================================================================================================= -->
+    <v-layout justify-center>
+      <v-dialog v-model="dialog2" max-width="500">
+        <v-card>
+          <v-card-title class="headline">MODAL2</v-card-title>
+
+          <v-card-text>MODAL2</v-card-text>
+
+          <v-card-actions>
+            <v-spacer></v-spacer>
+
+            <v-btn color="red darken-1" text @click="dialog2 = false">CLOSE</v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-dialog>
+    </v-layout>
   </v-container>
+<!-- ============================================================================================================= -->
 </template>
 
 <script>
@@ -59,7 +83,8 @@ export default {
     return {
       datas: [],
       focus: 0,
-      dialog: false
+      dialog1: false,
+      dialog2: false
     };
   },
   methods: {
@@ -76,7 +101,7 @@ export default {
     showRepoPage(url) {
       window.open(url, "_blank");
     },
-    mouseOver(index) {
+    mouseOver1(index) {
       this.getRepositories(
         this.$store.state.memberData[index].id,
         this.$store.state.memberData[index].token,
@@ -85,7 +110,11 @@ export default {
         console.log(data);
         this.datas = data;
       });
-      this.dialog = true;
+      this.dialog1 = true;
+    },
+    mouseOver2() {
+
+      this.dialog2 = true;
     }
   }
 };

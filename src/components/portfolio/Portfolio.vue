@@ -10,8 +10,11 @@
     <v-card-text>
       <span class="grey--text" v-line-clamp="4">{{body}}</span>
     </v-card-text>
-    <v-btn block flat style="background-color:#ff6f61; color:#fff"
-      :to="{ name: 'portfolioview', params: { articleId: this.id }}"
+    <v-btn
+      block
+      flat
+      style="background-color:#ff6f61; color:#fff"
+      :to="{ name: 'portfolioview', params: { portfolioIndex: this.id }}"
     >MORE</v-btn>
   </v-card>
 </template>
@@ -30,9 +33,7 @@ export default {
     loading: false,
     selection: 1
   }),
-  mounted() {
-
-  }
+  mounted() {}
 };
 </script>
 <style>

@@ -1,14 +1,7 @@
 const state = {
     loginDialog: false,
     signupDialog: false,
-    deleteDialog: false,
-    deleteAllowed: false
-}
-
-const getters = {
-    getDeleteAllowed: function(state){
-        return state.deleteAllowed;
-    }
+    deleteDialog: false
 }
 
 const mutations = {
@@ -26,16 +19,13 @@ const mutations = {
     },
     openDeleteDialog: function(state){
         state.deleteDialog = true;
-        state.deleteAllowed = false;
     },
-    closeDeleteDialog: function(state, payload){
+    closeDeleteDialog: function(state){
         state.deleteDialog = false;
-        state.deleteAllowed = payload.allowed;
     }
 }
 
 export default{
     state,
-    getters,
     mutations
 }

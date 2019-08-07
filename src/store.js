@@ -23,7 +23,6 @@ export default new Vuex.Store({
         name: "Ryu Hojin",
         birth: "1990.12.26",
         imgUrl: "hojin.jpg",
-        dialogNumber: "dialog0",
 
         id: "ryuhojin",
         token: "y4eoDG8jQ29sSs9_mpF2",
@@ -34,7 +33,6 @@ export default new Vuex.Store({
         name: "Eom Yoonju",
         birth: "1990.07.01",
         imgUrl: "yeonju.jpg",
-        dialogNumber: "dialog1",
 
         id: "Eomazing",
         token: "phLEf4A8LuBfkhsotEwg",
@@ -45,7 +43,6 @@ export default new Vuex.Store({
         name: "Lee Seokwon",
         birth: "1992.05.06",
         imgUrl: "seokwon.jpg",
-        dialogNumber: "dialog2",
 
         id: "blackmonkey9256",
         token: "HdXsmvT6hBR-mFJyN_YP",
@@ -56,7 +53,6 @@ export default new Vuex.Store({
         name: "Kim Changyoon",
         birth: "1992.11.22",
         imgUrl: "changyoon.jpg",
-        dialogNumber: "dialog3",
 
         id: "Taylous",
         token: "zAw5-XwKyMhRkQJuQ4fQ",
@@ -67,7 +63,6 @@ export default new Vuex.Store({
         name: "Cho Hyeonjin",
         birth: "1993.06.18",
         imgUrl: "hyeonjin.jpg",
-        dialogNumber: "dialog4",
 
         id: "hyeonjin23",
         token: "kWsKbLKaDydDKBgguZnL",

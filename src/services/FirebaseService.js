@@ -2,6 +2,7 @@ import firebase from 'firebase/app';
 import 'firebase/firestore';
 import 'firebase/auth';
 import "firebase/messaging";
+import Vue from 'vue'
 
 import store from '../store';
 
@@ -28,6 +29,21 @@ firebase.initializeApp(config)
 const firestore = firebase.firestore()
 const messaging = firebase.messaging()
 
+
+firebase.firestore().enablePersistence()
+  .catch(function(err) {
+      if (err.code == 'failed-precondition') {
+          // Multiple tabs open, persistence can only be enabled
+          // in one tab at a a time.
+          // ...
+      } else if (err.code == 'unimplemented') {
+          // The current browser does not support all of the
+          // features required to enable persistence
+          // ...
+      }
+  });
+
+
 messaging.requestPermission()
 	.then(function () {
 		console.log("Have permission");
@@ -40,12 +56,13 @@ messaging.requestPermission()
 		console.log("Error Occured");
 	});
 
-messaging.onMessage(function (payload) {
-	store.state.message = payload;
 
-	console.log(payload);
-	console.log(store.state.message.notification.body);
-
+messaging.onMessage(function(payload) {
+	Vue.notify({
+		group: 'foo',
+		title: payload.notification.title,
+		text: payload.notification.body
+	})
 	console.log('onMessage: ', payload);
 })
 
@@ -61,8 +78,9 @@ export default {
 	},
 	async postToken(user) {
 		let token = await this.getToken();
-
+		
 		return firestore.collection(TOKENS).doc(user.uid).set({
+			tier: user.tier,
 			uid: user.uid,
 			token: token
 		});
@@ -170,10 +188,14 @@ export default {
 		return postsCollection.doc(user.uid).get().then(doc => {
 			if (doc.exists) {
 				let data = doc.data();
-				this.postToken(user);
 				return data;
 			}
 			return;
+		}).then(data => {
+			if (data) {
+				this.postToken(data)
+			}
+			return data
 		}).catch(error => {
 			console.log(error)
 		})

@@ -19,7 +19,7 @@
               auto-grow
               rows="1"
               row-height="15"
-              flat
+              flat 
               color="#ff6f61"
             ></v-textarea>
           </v-card-text>
@@ -37,7 +37,6 @@
           <v-text-field :id="index" v-model="reply.replyContent" :readonly="selectedIndex != index"></v-text-field>
           <v-layout justify-end text-xs-right>
             <v-card-text style="color:gray">
-              {{index}}
               작성자 : {{reply.author}} |
               작성일 : {{reply.created_at}}
               <v-btn

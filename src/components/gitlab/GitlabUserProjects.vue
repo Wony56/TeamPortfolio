@@ -126,24 +126,7 @@
         </v-card>
       </v-dialog>
     </v-layout>
-<!-- ============================================================================================================= -->
-    <v-layout justify-center>
-      <v-dialog v-model="dialog2" max-width="500">
-        <v-card>
-          <v-card-title class="headline">MODAL2</v-card-title>
-
-          <v-card-text>MODAL2</v-card-text>
-
-          <v-card-actions>
-            <v-spacer></v-spacer>
-
-            <v-btn color="red darken-1" text @click="dialog2 = false">CLOSE</v-btn>
-          </v-card-actions>
-        </v-card>
-      </v-dialog>
-    </v-layout>
   </v-container>
-<!-- ============================================================================================================= -->
 </template>
 
 <script>

@@ -25,7 +25,7 @@
 
                 <div>
                   <br>
-                  <font @mouseover="mouseOver2()" color="black">CLICK</font>
+                  <font @mouseover="mouseOver2()" color="black">THIS IS CLICK</font>
                   <br>
                 </div>
               </span>

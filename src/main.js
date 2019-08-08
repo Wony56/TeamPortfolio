@@ -61,12 +61,12 @@ Vue.use(lineClamp,{
 })
 
 firebase.auth().onAuthStateChanged(async user => {
+	
 	if(user){
 		store.state.user.loggedIn = true;
 	}else{
 		store.state.user.loggedIn = false;
 	}
-
 
 	new Vue({
 		router,
@@ -75,8 +75,8 @@ firebase.auth().onAuthStateChanged(async user => {
 	}).$mount('#app')
 })
 
-if ('serviceWorker' in navigator){
-    navigator.serviceWorker.register('/sw.js')
-        .then((reg) => console.log('service worker registerd', reg))
-        .catch((err) => console.log('service worker registerd', err));
-}
+// if ('serviceWorker' in navigator){
+//     navigator.serviceWorker.register('/sw.js')
+//         .then((reg) => console.log('service worker registerd', reg))
+//         .catch((err) => console.log('service worker error', err));
+// }

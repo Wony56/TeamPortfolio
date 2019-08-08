@@ -22,9 +22,6 @@
                   {{element.position}},
                   {{element.birth}}
                 </font>
-
-                <div>
-                </div>
               </span>
               <figure class="highlight__figure">
                 <v-img :src="getImgUrl(element.imgUrl)" aspect-ratio="1" width="200" height="280"></v-img>
@@ -41,7 +38,8 @@
 
 <!-- ============================================================================================================= -->
     <v-layout justify-center>
-      <v-dialog v-model="dialog1" max-width="500">
+      <v-dialog v-model="dialog1" max-width="800">
+          <v-card-title style="background-color:#ff6f61; color:#fff">GIT</v-card-title>
         <v-card v-for="(data, index) in datas" :key="index">
           <v-card-title class="headline">{{data.name_with_namespace}}</v-card-title>
           <v-card-text>{{data.created_at}}</v-card-text>
@@ -128,7 +126,6 @@
       </v-dialog>
     </v-layout>
   </v-container>
-<!-- ============================================================================================================= -->
 </template>
 
 <script>

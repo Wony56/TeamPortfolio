@@ -32,7 +32,9 @@ export default {
       "countPost",
       "countPortfolio",
       "closeDeleteDialog",
-      "resetDocument"
+      "resetDocument",
+      "setDailyPosts",
+      "setDailyPortfolios"
     ]),
     async confirmDelete() {
       if (this.type === "post") {
@@ -41,12 +43,14 @@ export default {
         const index = this.postTables.indexOf(this.document);
         this.postTables.splice(index, 1);
         this.countPost();
+        this.setDailyPosts();
       } else if (this.type === "portfolio") {
         await firebaseService.deletePortfolio(this.document.id);
 
         const index = this.portfolioTables.indexOf(this.document);
         this.portfolioTables.splice(index, 1);
         this.countPortfolio();
+        this.setDailyPortfolios();
       }
 
       this.resetDocument();

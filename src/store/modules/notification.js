@@ -2,6 +2,7 @@ const state = {
     loginBar: false,
     loginErrorBar: false,
     logoutBar: false,
+    signupBar: false,
     tierBar: false,
     lockBar: false,
     errorMessage: ''
@@ -23,6 +24,9 @@ const mutations = {
     },
     showLockingBar(state){
         state.lockBar = true;
+    },
+    showSignupBar(state){
+        state.signupBar = true;
     }
 }
 

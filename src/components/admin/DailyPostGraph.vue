@@ -1,5 +1,5 @@
 <template>
-  <la-cartesian :width="450" :height="200" :bound="[0]" :data="values">
+  <la-cartesian :width="450" :height="200" :bound="[0]" :data="dailyPosts">
     <defs>
       <linearGradient id="area-fill" x1="0" y1="0" x2="0" y2="1">
         <stop stop-color="#ff6f61" offset="0%" stop-opacity="0.4"></stop>
@@ -15,61 +15,18 @@
 </template>
 
 <script>
+import { mapState, mapMutations } from "vuex";
 import firebaseService from "../../services/FirebaseService";
 
 export default {
-  data: () => ({
-    values: []
+  computed: mapState({
+    dailyPosts: state => state.admin.dailyPosts
   }),
   created() {
-    this.setPostGraph();
+    this.setDailyPosts();
   },
   methods: {
-    async setPostGraph() {
-      const posts = await firebaseService.getPosts();
-
-      let postCount = [];
-
-      posts.forEach(post => {
-        let date = post.created_at;
-
-        let year = date.getFullYear();
-        let month = date.getMonth() + 1;
-        let day = date.getDate();
-
-        let key = year + "-" + month + "-" + day;
-
-        if (postCount[key]) {
-          postCount[key] += 1;
-        } else {
-          postCount[key] = 1;
-        }
-      });
-
-      for (let i = 5; i >= 0; i--) {
-        let today = new Date();
-
-        today.setDate(today.getDate() - i);
-
-        let year = today.getFullYear();
-        let month = today.getMonth() + 1;
-        let day = today.getDate();
-
-        let key = year + "-" + month + "-" + day;
-
-        if (postCount[key]) {
-          this.values.push({
-            date: key,
-            counts: postCount[key]
-          });
-        } else {
-          this.values.push({
-            date: key,
-            counts: 0
-          });
-        }
-      }
-    }
+    ...mapMutations(["setDailyPosts"])
   }
 };
 </script>

@@ -27,7 +27,7 @@
 //             console.log('caching shell assets');
 //             caches.addAll(assets);
 //         })
-//     ); 
+//     );
 // });
 
 // // activate event
@@ -57,6 +57,6 @@
 //             if(evt.request.url.indexOf('.html') > -1){
 //                 return caches.match('/fallback.html');
 //             }
-//         })    
+//         })
 //     );
 // });

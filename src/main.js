@@ -32,7 +32,7 @@ Vue.use(SmoothScrollbar)
 Vue.use(ToggleButton)
 Vue.config.productionTip = false
 Vue.use(FlagIcon);
-Vue.use(Vuetify, 
+Vue.use(Vuetify,
 {
 	iconfont: 'fa',
 	theme: {

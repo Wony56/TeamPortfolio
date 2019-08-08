@@ -5,18 +5,12 @@
         <span style="color:black;">Portfolio</span>
       </div>
     </ImgBanner>
-    <v-container>
-      <!-- Portfolio -->
-      <v-layout>
-        <v-flex xs12>
-          <PortfolioList :limits="6" :load-more="true"></PortfolioList>
-        </v-flex>
-      </v-layout>
-    </v-container>
+    <PortfolioList />
   </div>
 </template>
 
 <script>
+
 import ImgBanner from "../components/base/ImgBanner";
 import PortfolioList from "../components/portfolio/PortfolioList";
 
@@ -33,7 +27,5 @@ export default {
 };
 </script>
 <style>
-*{
-  font-family: 'Nanum Gothic', sans-serif;
-}
+
 </style>

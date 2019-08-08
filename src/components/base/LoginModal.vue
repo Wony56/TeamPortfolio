@@ -67,8 +67,8 @@ export default {
       this.closeLoginModal();
       this.$refs.form.reset();
     },
-    changeLoginToSignup() {
-      this.closeLogin();
+    async changeLoginToSignup() {
+      await this.closeLogin();
       this.openSignupModal();
     },
     loginWithEmail() {

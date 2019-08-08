@@ -19,13 +19,11 @@
 
 <script>
 import { mapState, mapMutations } from "vuex";
-import firebaseService from "../../services/FirebaseService";
 
 export default {
   data: () => ({
     max25chars: v => v.length <= 25 || "Input too long!",
     pagination: {},
-    dialog: false,
     headers: [
       {
         text: "작성자",
@@ -46,7 +44,7 @@ export default {
   }),
   methods: {
     ...mapMutations(["setPortfolioTables", "openDeleteDialog", "setDocument"]),
-    async initialize() {
+    initialize() {
       this.setPortfolioTables();
     },
     deletePortfolio(type, item) {

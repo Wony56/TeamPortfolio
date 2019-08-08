@@ -1,5 +1,5 @@
 <template>
-  <la-cartesian :width="450" :height="200" :bound="[0]" :data="values">
+  <la-cartesian :width="450" :height="200" :bound="[0]" :data="dailyMembers">
     <defs>
       <linearGradient id="area-fill" x1="0" y1="0" x2="0" y2="1">
         <stop stop-color="#ff6f61" offset="0%" stop-opacity="0.4"></stop>
@@ -15,60 +15,17 @@
 </template>
 
 <script>
-import firebaseService from "../../services/FirebaseService";
+import { mapState, mapMutations } from "vuex";
 
 export default {
-  data: () => ({
-    values: []
+  computed: mapState({
+    dailyMembers: state => state.admin.dailyMembers
   }),
   created() {
-    this.setMemberGraph();
+    this.setDailyMembers();
   },
   methods: {
-    async setMemberGraph() {
-      const users = await firebaseService.getUsers();
-      let memberCount = [];
-
-      users.forEach(user => {
-        let date = user.created_at;
-
-        let year = date.getFullYear();
-        let month = date.getMonth() + 1;
-        let day = date.getDate();
-
-        let key = year + "-" + month + "-" + day;
-
-        if (memberCount[key]) {
-          memberCount[key] += 1;
-        } else {
-          memberCount[key] = 1;
-        }
-      });
-
-      for (let i = 5; i >= 0; i--) {
-        let today = new Date();
-
-        today.setDate(today.getDate() - i);
-
-        let year = today.getFullYear();
-        let month = today.getMonth() + 1;
-        let day = today.getDate();
-
-        let key = year + "-" + month + "-" + day;
-
-        if (memberCount[key]) {
-          this.values.push({
-            date: key,
-            counts: memberCount[key]
-          });
-        } else {
-          this.values.push({
-            date: key,
-            counts: 0
-          });
-        }
-      }
-    }
+    ...mapMutations(["setDailyMembers"])
   }
 };
 </script>

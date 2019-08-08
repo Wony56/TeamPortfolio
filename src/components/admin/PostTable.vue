@@ -45,7 +45,7 @@ export default {
   },
   methods: {
     ...mapMutations(["setPostTables", "openDeleteDialog", "setDocument"]),
-    async initialize() {
+    initialize() {
       this.setPostTables();
     },
     deletePost(type, item) {

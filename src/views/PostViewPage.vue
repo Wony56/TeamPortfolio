@@ -12,35 +12,26 @@
         <!-- 본문 부분 -->
         <v-card min-height="400" flat>
           <v-layout text-xs-center>
-            <v-text-field
-              v-model="postInfo.title"
-              class="headline"
-              style="background-color:#ff6f61; color:#fff"
-              :readonly="!postFlag"
-            ></v-text-field>
-          </v-layout>
-          <v-layout text-xs-center>
-            <v-card-text
-              class="headline"
-              style="background-color:#ff6f61; color:#fff"
-            >{{postInfo.author.name}}</v-card-text>
+            <v-card-text class="headline" style="background-color:#ff6f61; color:#fff">
+              {{postInfo.title}}
+            </v-card-text>
           </v-layout>
 
           <v-divider></v-divider>
 
           <v-layout justify-end>
-            <v-card-title style="color:gray;">작성일 : {{postInfo.created_at}}</v-card-title>
+            <v-card-title style="color:gray;">작성자  : {{postInfo.author.name}} / 작성일 : {{postInfo.created_at}}</v-card-title>
           </v-layout>
           <v-divider></v-divider>
 
           <!-- 수정버튼 누르기전 -->
           <div v-if="!postFlag">
-            <VueMarkdown :source="postInfo.content"></VueMarkdown>
+            <VueMarkdown class="title mx-3 my-3" :source="postInfo.content"></VueMarkdown>
           </div>
 
           <!-- 수정버튼 누른 후 -->
           <div v-else>
-            <MarkdownEditor v-model="postInfo.content"></MarkdownEditor>
+            <MarkdownEditor class="title mx-3 my-3" v-model="postInfo.content"></MarkdownEditor>
           </div>
         </v-card>
         <!--버튼 부분-->

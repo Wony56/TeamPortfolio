@@ -34,7 +34,7 @@
           </v-layout>
         </v-flex>
         <v-flex d-flex xs12 sm6 md4>
-          <v-layout justify-center text-xs-center min-height=100>
+          <v-layout justify-center text-xs-center min-height="100">
             <v-flex d-flex xs6 sm6 md3>
               <v-card color="green">
                 <v-card-text style="color:#ffff">POST</v-card-text>
@@ -68,7 +68,7 @@
         <v-flex d-flex xs12 sm6 md4>
           <v-layout wrap>
             <v-flex d-flex xs12 sm6 md6>
-              <v-card outlined >
+              <v-card outlined>
                 <v-card-title>POST 관리</v-card-title>
                 <v-divider></v-divider>
                 <v-card-text>
@@ -94,13 +94,14 @@
                 <v-card-title>회원 관리</v-card-title>
                 <v-divider></v-divider>
                 <v-card-text>
-                  <MemberTable/>
+                  <MemberTable />
                 </v-card-text>
               </v-card>
             </v-flex>
           </v-layout>
         </v-flex>
       </v-layout>
+      <DeleteDialog />
     </v-container>
   </div>
 </template>
@@ -113,6 +114,7 @@ import PostTable from "../components/admin/PostTable";
 import MemberTable from "../components/admin/MemberTable";
 import NowLogin from "../components/admin/NowLogin";
 import PortfolioTable from "../components/admin/PortfolioTable";
+import DeleteDialog from "../components/modal/DeleteDialog";
 import { mapMutations, mapState } from "vuex";
 
 export default {
@@ -124,7 +126,8 @@ export default {
     TotalMember,
     PostTable,
     PortfolioTable,
-    MemberTable
+    MemberTable,
+    DeleteDialog
   },
   created() {
     this.countMember();

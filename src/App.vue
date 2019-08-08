@@ -2,7 +2,7 @@
   <div>
     <v-app>
       <Header />
-      <notifications group="foo" animation-type="velocity" position="bottom left"/>
+      <notifications group="foo" animation-type="velocity" position="bottom left" />
       <v-content id="contents">
         <router-view />
 
@@ -28,6 +28,7 @@
       <TierChangeSnackbar />
       <LoginErrorSnackbar />
       <LockingSnackbar />
+      <SignupSnackbar />
     </v-app>
   </div>
 </template>
@@ -53,6 +54,7 @@ import LogoutSnackbar from "./components/snackbar/LogoutSnackbar";
 import TierChangeSnackbar from "./components/snackbar/TierChangeSnackbar";
 import LoginErrorSnackbar from "./components/snackbar/LoginErrorSnackbar";
 import LockingSnackbar from "./components/snackbar/LockingSnakbar";
+import SignupSnackbar from "./components/snackbar/SignupSnackbar";
 
 import Firebase from "./services/FirebaseService";
 
@@ -75,7 +77,8 @@ export default {
     LogoutSnackbar,
     TierChangeSnackbar,
     LoginErrorSnackbar,
-    LockingSnackbar
+    LockingSnackbar,
+    SignupSnackbar
   },
   data() {
     return {

@@ -1,6 +1,6 @@
 <template>
   <div>
-    <v-img :src="imgSrc" aspect-ratio="1.7">
+    <v-img src="/img/livingcoral.jpg" aspect-ratio="1.7">
       <v-layout align-center justify-center row fill-height>
         <v-flex text-xs-center>
           <span class="text-shadow display-2 font-weight-light">
@@ -18,10 +18,8 @@ export default {
   props: {
     imgSrc: {
       type: String,
-      default: "https://source.unsplash.com/random/1600x1300"
     },
-    text: { type: String }
-  }
+  },
 };
 </script>
 <style>

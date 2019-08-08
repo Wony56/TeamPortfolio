@@ -47,13 +47,14 @@
       </v-container>
     </v-card-text>
     <v-card-actions>
-      <v-btn block @click="closeSignupModal" flat color="black">CLOSE</v-btn>
+      <v-btn block @click="closeModal" flat color="black">CLOSE</v-btn>
     </v-card-actions>
   </v-card>
 </template>
 
 <script>
 import firebaseService from "../../services/FirebaseService";
+import { mapMutations } from "vuex";
 
 export default {
   name: "SignUpModal",
@@ -83,20 +84,23 @@ export default {
     };
   },
   methods: {
-    signupWithEmail() {
+    ...mapMutations(["closeSignupModal", "showSignupBar"]),
+    async signupWithEmail() {
       if (this.$refs.form.validate()) {
-        firebaseService
-          .signUpEmail(this.email, this.name, this.password)
-          .then(res => {
-            if (res) {
-              this.$store.commit("closeSignupModal");
-            }
-          });
-        this.$refs.form.reset();
+        let result = await firebaseService.signUpEmail(
+          this.email,
+          this.name,
+          this.password
+        );
+
+        if (result) {
+          this.closeModal();
+          this.showSignupBar();
+        }
       }
     },
-    closeSignupModal() {
-      this.$store.commit("closeSignupModal");
+    closeModal() {
+      this.closeSignupModal();
       this.$refs.form.reset();
     }
   }

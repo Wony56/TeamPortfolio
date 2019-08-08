@@ -13,6 +13,7 @@
 //     caches.open(name).then(cache => {
 //         cache.keys().then(keys => {
 //             if(keys.lenth > size){
+    
 //                 cache.delete(keys[0]).then(ret => {
 
 //                     limitCacheSize(name, size)

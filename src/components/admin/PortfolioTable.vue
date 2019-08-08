@@ -1,11 +1,11 @@
 <template>
-  <v-data-table :headers="headers" :items="desserts">
+  <v-data-table :headers="headers" :items="portfolioTables">
     <template class="row" slot="items" slot-scope="props">
       <td class="text-xs-left">{{ props.item.author }}</td>
       <td class="text-xs-right">{{ props.item.title }}</td>
       <td class="text-xs-right">{{ props.item.date }}</td>
       <td class="text-xs-right">
-        <v-btn flat icon color="red" @click="deletePortfolio(props.item)">
+        <v-btn flat icon color="red" @click="deletePortfolio('portfolio', props.item)">
           <v-icon>delete_forever</v-icon>
         </v-btn>
       </td>
@@ -18,14 +18,12 @@
 </template>
 
 <script>
-import { mapMutations } from "vuex";
-import firebaseService from "../../services/FirebaseService";
+import { mapState, mapMutations } from "vuex";
 
 export default {
   data: () => ({
     max25chars: v => v.length <= 25 || "Input too long!",
     pagination: {},
-    dialog: false,
     headers: [
       {
         text: "작성자",
@@ -41,38 +39,17 @@ export default {
   created() {
     this.initialize();
   },
+  computed: mapState({
+    portfolioTables: state => state.admin.portfolioTables
+  }),
   methods: {
-    async initialize() {
-      let portfolios = await firebaseService.getPortfolios();
-
-      portfolios.forEach(portfolio => {
-        const date = new Date(portfolio.created_at);
-
-        let row = {
-          id: portfolio.id,
-          author: portfolio.author.name,
-          title: portfolio.title,
-          date:
-            date.getFullYear() +
-            "년 " +
-            date.getMonth() +
-            "월 " +
-            date.getDate() +
-            "일 " +
-            date.getHours() +
-            "시 " +
-            date.getMinutes() +
-            "분"
-        };
-
-        this.desserts.push(row);
-      });
+    ...mapMutations(["setPortfolioTables", "openDeleteDialog", "setDocument"]),
+    initialize() {
+      this.setPortfolioTables();
     },
-    deletePortfolio(item) {
-      const index = this.desserts.indexOf(item);
-      this.desserts.splice(index, 1);
-
-      firebaseService.deletePortfolio(item.id);
+    deletePortfolio(type, item) {
+      this.$store.commit("setDocument", { type: type, document: item });
+      this.openDeleteDialog();
     }
   }
 };

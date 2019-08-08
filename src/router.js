@@ -68,7 +68,7 @@ export const router = new Router({
 			path: '/portfolioview/:portfolioIndex',
 			name: 'portfolioview',
 			component: PortfolioViewPage
-		}		
+		}
 	],
 	scrollBehavior(to, from, savedPosition) {
 		return { x: 0, y: 0 };

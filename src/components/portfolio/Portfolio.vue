@@ -1,5 +1,13 @@
 <template>
-  <v-card :loading="loading" class="mx-auto my-auto" width="500" height="100%">
+  <div class="box">
+    <img v-for="(imgItem,i) in imgItems" :key="i" :src="imgItem" alt="">
+    <!-- <v-carousel class="notranslate" hide-delimiters>
+      <v-carousel-item v-for="(imgItem,i) in imgItems" :key="i" :src="imgItem"></v-carousel-item>
+    </v-carousel> -->
+    <h2>{{title}}</h2>
+    <p>{{body}}</p>
+  </div>
+  <!-- <v-card :loading="loading" class="mx-auto my-auto" width="500" height="100%">
     <v-carousel class="notranslate" hide-delimiters>
       <v-carousel-item v-for="(imgItem,i) in imgItems" :key="i" :src="imgItem"></v-carousel-item>
     </v-carousel>
@@ -13,7 +21,7 @@
     <v-btn block flat style="background-color:#ff6f61; color:#fff"
       :to="{ name: 'portfolioview', params: { articleId: this.id }}"
     >MORE</v-btn>
-  </v-card>
+  </v-card> -->
 </template>
 
 <script>

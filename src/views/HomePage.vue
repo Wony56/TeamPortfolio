@@ -1,11 +1,7 @@
 <template>
   <div style="font-size:1.5vw">
     <ImgBanner>
-      <div
-        class="notranslate"
-        style="line-height:1.2em; font-size: 2em; color:black;"
-        slot="text"
-      >122 : Want to do</div>
+     
     </ImgBanner>
 
     <!-- About Team -->

@@ -40,10 +40,13 @@
 
 <!-- ============================================================================================================= -->
     <v-layout justify-center>
+<<<<<<< HEAD
       <v-dialog v-model="dialog1" max-width="500">
+=======
+      <v-dialog v-model="dialog" max-width="800">
+>>>>>>> ryu
         <v-card v-for="(data, index) in datas" :key="index">
           <v-card-title class="headline">{{data.name_with_namespace}}</v-card-title>
-
           <v-card-text>{{data.created_at}}</v-card-text>
 
           <v-card-actions>

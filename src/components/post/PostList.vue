@@ -2,7 +2,7 @@
   <v-data-table  :headers="headers" :items="desserts">
     <template class="row" slot="items" slot-scope="props">
       <tr @click="viewpost(props.item)">
-      <td style="background-color:#ff6f61; color:#fff" class="text-xs-left">{{ props.item.author }}</td>
+      <td style="background-color:#ff6f61; color:#fff" class="text-xs-left">{{ props.item.author.name }}</td>
       <td class="text-xs-right post-title">{{ props.item.title }}</td>
       <td class="text-xs-right">{{ props.item.date }}</td>
       </tr>

@@ -33,10 +33,9 @@
     </v-container>
 
     <v-layout justify-center>
-      <v-dialog v-model="dialog" max-width="500">
+      <v-dialog v-model="dialog" max-width="800">
         <v-card v-for="(data, index) in datas" :key="index">
           <v-card-title class="headline">{{data.name_with_namespace}}</v-card-title>
-
           <v-card-text>{{data.created_at}}</v-card-text>
 
           <v-card-actions>

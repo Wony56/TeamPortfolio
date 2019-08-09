@@ -17,10 +17,10 @@ const messaging = firebase.messaging();
 
 messaging.setBackgroundMessageHandler(function(payload) {
   console.log('[firebase-messaging-sw.js] Received background message ', payload);
-  var notificationTitle = 'Background Message Title';
+  var notificationTitle = payload.notificaton.title;
   var notificationOptions = {
-    body: 'Background Message body.',
-    // icon: './img/logo/122.svg'
+    body: payload.notificaton.title,
+    icon: 'https://img-s-msn-com.akamaized.net/tenant/amp/entityid/BBWe9Or.img?h=368&w=500&m=6&q=60&o=f&l=f&x=223&y=122'
   };
 
   return self.registration.showNotification(notificationTitle,

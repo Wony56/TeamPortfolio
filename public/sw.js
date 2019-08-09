@@ -13,6 +13,7 @@
 //     caches.open(name).then(cache => {
 //         cache.keys().then(keys => {
 //             if(keys.lenth > size){
+<<<<<<< HEAD
     
 //                 cache.delete(keys[0]).then(ret => {
 
@@ -45,6 +46,36 @@
 //     )
 // });
 
+=======
+//                 cache.delete(keys[0]).then(limitCacheSize(name, size));
+//             }
+//         })
+//     })
+// }
+
+// // install service worker
+// self.addEventListener('install', evt => {
+//     // console.log('service worker has been installed');
+//     evt.waitUntil(
+//         caches.open(staticCacheName).then(caches => {
+//             console.log('caching shell assets');
+//             caches.addAll(assets);
+//         })
+//     ); 
+// });
+
+// // activate event
+// self.addEventListener('activate', evt => {
+//     // console.log('service worker has been activated!!');
+//     evt.waitUntil(
+//         caches.keys().then(keys => {
+//             return Promise.all(keys
+//                 .filter(key => key !== staticCacheName && key !== dynamicCacheName))
+//         })
+//     )
+// });
+
+>>>>>>> cho
 // // fetch event
 // self.addEventListener('fetch', evt => {
 //     // console.log('fetch event', evt);
@@ -53,7 +84,11 @@
 //             return cacheRes || fetch(evt.request).then(fetchRes => {
 //                 return caches.open(dynamicCacheName).then(cache => {
 //                     cache.put(evt.request.url, fetchRes.clone());
+<<<<<<< HEAD
 //                     limitCacheSize(dynamicCacheName, 15);
+=======
+//                     limitCacheSize(dynamicCacheName, 100);
+>>>>>>> cho
 //                     return fetchRes;
 //                 })
 //             });
@@ -61,6 +96,12 @@
 //             if(evt.request.url.indexOf('.html') > -1){
 //                 return caches.match('/fallback.html');
 //             }
+<<<<<<< HEAD
 //         })
 //     );
 // });
+=======
+//         })    
+//     );
+// });
+>>>>>>> cho

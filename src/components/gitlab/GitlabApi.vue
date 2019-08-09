@@ -1,5 +1,5 @@
 <template>
-  <div class="hidden-md-and-down">
+  <div>
     <v-card flat>
       <div class="page center">
         <a v-on:click="initiateUserRepo('Taylous', 'zAw5-XwKyMhRkQJuQ4fQ')" class="link mx-3">김창윤</a>
@@ -16,32 +16,13 @@
       </v-tabs-items>
     </v-card>
 
-    <v-layout justify row wrap>
-      <v-flex xs12>
-        <h2 class="headline my-5 text-xs-center font-weight-bold subtitles">Repository</h2>
-      </v-flex>
-    </v-layout>
-
-    <v-flex align-center>
-      <v-card flat>
-      <div id="scroll-area">
-        <smooth-scrollbar>
-          <div id="example-content">
-            <GitCommitLine></GitCommitLine>
-          </div>
-        </smooth-scrollbar>
-      </div>
-      </v-card>
-    </v-flex>
-
   </div>
 </template>
 
 <script>
-import GitCommitLine from "./GitCommitLine.vue";
-
 const converter = require("../../services/CurlToNodeJS");
 const BASE_URL = "https://lab.ssafy.com/api/v4";
+
 google.charts.load("current", { packages: ["calendar"] });
 google.charts.setOnLoadCallback(drawChart);
 
@@ -50,7 +31,10 @@ function drawChart(name, username, data) {
   dataTable.addColumn({ type: "date", id: "Date" });
   dataTable.addColumn({ type: "number", id: "Won/Loss" });
 
-  dataTable.addRows(data);
+  if(data == undefined)
+    dataTable.addRows([]);
+  else
+    dataTable.addRows(data);
 
   var chart = new google.visualization.Calendar(
     document.getElementById("calendar_basic")
@@ -67,7 +51,7 @@ function drawChart(name, username, data) {
 export default {
   data() {
     return {
-      userReposInfo: [],
+      userReposInfo: {type:Array},
       username: "",
       name: "",
       loaded: false,
@@ -77,7 +61,8 @@ export default {
       tab: null
     };
   },
-  created() {
+  mounted() {
+
     let user = "Taylous";
     let token = "zAw5-XwKyMhRkQJuQ4fQ";
 
@@ -96,6 +81,7 @@ export default {
       this.getRepos(user, tokens, true);
     },
     getRepos(id, token, isEnd) {
+
       this.userReposInfo = new Array();
       this.flag = false;
 
@@ -106,6 +92,7 @@ export default {
       });
     },
     getData(id, token, totalPage, isEnd) {
+
       var dateObj = new Map();
 
       let currentDate = new Date();
@@ -153,9 +140,6 @@ export default {
           });
       }
     }
-  },
-  components: {
-    GitCommitLine
   }
 };
 </script>
@@ -167,17 +151,6 @@ export default {
   justify-content: center;
   position: absolute;
   width: 100%;
-}
-
-#scroll-area {
-  margin: 70px;
-  width: 100%;
-  height: 700px;
-}
-
-#example-content {
-  width: 90%;
-  height: 2000px;
 }
 
 .calendarContainer div {

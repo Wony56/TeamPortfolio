@@ -61,12 +61,12 @@ Vue.use(lineClamp,{
 })
 
 firebase.auth().onAuthStateChanged(async user => {
+	
 	if(user){
 		store.state.user.loggedIn = true;
 	}else{
 		store.state.user.loggedIn = false;
 	}
-
 
 	new Vue({
 		router,

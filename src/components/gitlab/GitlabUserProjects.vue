@@ -22,6 +22,7 @@
                   {{element.position}},
                   {{element.birth}}
                 </font>
+                
               </span>
               <figure class="highlight__figure">
                 <v-img :src="getImgUrl(element.imgUrl)" aspect-ratio="1" width="200" height="280"></v-img>

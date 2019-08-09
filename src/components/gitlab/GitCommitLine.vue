@@ -1,5 +1,6 @@
 <template>
   <v-timeline class="notranslate">
+    
     <v-timeline-item v-for="(element, index) in datas" :color="userColor(element.author_name)" :key="index" medium>
       <template v-slot:opposite>
         <span :class="`headline font-weight ${userColor(element.author_name)}--text`" v-text="element.created_at"></span>

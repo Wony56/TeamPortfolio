@@ -57,6 +57,7 @@ import LockingSnackbar from "./components/snackbar/LockingSnakbar";
 import SignupSnackbar from "./components/snackbar/SignupSnackbar";
 
 import Firebase from "./services/FirebaseService";
+import { mapState } from "vuex";
 
 var key = "AIzaSyDCo_1aj9Q1FYra6QCPzkV6Fya6nHqSZr4";
 var to = "";
@@ -101,6 +102,9 @@ export default {
       token: ""
     };
   },
+  computed: mapState({
+    loadingShow: state => state.loading.loadingShow
+  }),
   created() {
     window.addEventListener("scroll", this.handleScroll);
   },

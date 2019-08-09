@@ -9,6 +9,7 @@ import admin from './store/modules/admin';
 import article from './store/articles/article';
 import message from './store/pwa/pushMessage';
 import document from './store/modules/document';
+import loading from './store/modules/loading';
 
 Vue.use(Vuex)
 
@@ -80,6 +81,7 @@ export default new Vuex.Store({
     admin,
     article,
     message,
-    document
+    document,
+    loading
   }
 });

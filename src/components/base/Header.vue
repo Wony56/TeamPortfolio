@@ -19,9 +19,7 @@
           <v-btn class="menu-item" flat to="/portfolio">포트폴리오</v-btn>
           <template v-if="!loggedIn">
             <!--로그인-->
-            <v-btn class="menu-item" flat @click="openLoginModal">로그인</v-btn>
-            <!--회원가입-->
-            <v-btn class="menu-item" flat @click="openSignupModal">회원가입</v-btn>
+            <v-btn class="menu-item" flat @click="openSignModal">로그인/회원가입</v-btn>
           </template>
           <template v-else>
             <v-btn
@@ -40,12 +38,8 @@
       </mq-layout>
 
       <!--로그인 모달-->
-      <v-dialog v-model="$store.state.modal.loginDialog" persistent max-width="350">
-        <LoginModal />
-      </v-dialog>
-      <!--회원가입 모달-->
-      <v-dialog v-model="$store.state.modal.signupDialog" persistent max-width="400">
-        <signup-modal />
+      <v-dialog v-model="$store.state.modal.signDialog" persistent max-width="800">
+        <SignModal />
       </v-dialog>
     </v-toolbar>
   </nav>
@@ -54,8 +48,7 @@
 <script>
 import firebaseService from "../../services/FirebaseService";
 import MenuDrawer from "./MenuDrawer";
-import LoginModal from "./LoginModal";
-import SignupModal from "./SignupModal";
+import SignModal from "./SignModal";
 import { mapState, mapMutations } from "vuex";
 
 var el;
@@ -64,8 +57,7 @@ export default {
   name: "Header",
   components: {
     MenuDrawer,
-    LoginModal,
-    SignupModal
+    SignModal
   },
   created() {
     window.addEventListener("resize", this.handleDrawer);
@@ -80,8 +72,7 @@ export default {
   },
   computed: mapState({
     loggedIn: state => state.user.loggedIn,
-    loginDialog: state => state.modal.loginDialog,
-    signupDialog: state => state.modal.signupDialog
+    signDialog: state => state.modal.signDialog
   }),
   methods: {
     handleDrawer() {
@@ -108,7 +99,7 @@ export default {
         this.showLogoutBar();
       });
     },
-    ...mapMutations(["openLoginModal", "openSignupModal", "showLogoutBar"])
+    ...mapMutations(["openSignModal", "showLogoutBar"])
   }
 };
 </script>

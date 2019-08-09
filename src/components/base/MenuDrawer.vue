@@ -20,20 +20,12 @@
         </v-list-tile>
       </template>
       <template v-if="!loggedIn">
-        <v-list-tile @click="openLoginModal">
+        <v-list-tile @click="openSignModal">
           <v-list-tile-action>
             <v-icon light>input</v-icon>
           </v-list-tile-action>
           <v-list-tile-content>
-            <v-list-tile-title>로그인</v-list-tile-title>
-          </v-list-tile-content>
-        </v-list-tile>
-        <v-list-tile @click="openSignupModal">
-          <v-list-tile-action>
-            <v-icon light>person_add</v-icon>
-          </v-list-tile-action>
-          <v-list-tile-content>
-            <v-list-tile-title>회원가입</v-list-tile-title>
+            <v-list-tile-title>로그인/회원가입</v-list-tile-title>
           </v-list-tile-content>
         </v-list-tile>
       </template>
@@ -84,7 +76,7 @@ export default {
       alert("로그아웃되었습니다.");
       firebaseService.logout();
     },
-    ...mapMutations(["openLoginModal", "openSignupModal"])
+    ...mapMutations(["openSignModal"])
   }
 };
 </script>

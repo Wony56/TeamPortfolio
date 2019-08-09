@@ -1,21 +1,14 @@
 const state = {
-    loginDialog: false,
-    signupDialog: false,
+    signDialog: false,
     deleteDialog: false
 }
 
 const mutations = {
-    openLoginModal: function(state) {
-        state.loginDialog = true;
+    openSignModal: function(state) {
+        state.signDialog = true;
     },
-    closeLoginModal: function(state) {
-        state.loginDialog = false;
-    },
-    openSignupModal: function(state) {
-        state.signupDialog = true;
-    },
-    closeSignupModal: function(state){
-        state.signupDialog = false;
+    closeSignModal: function(state) {
+        state.signDialog = false;
     },
     openDeleteDialog: function(state){
         state.deleteDialog = true;

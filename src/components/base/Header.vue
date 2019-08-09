@@ -36,7 +36,7 @@
       </mq-layout>
 
       <mq-layout mq="mobile">
-        <v-icon @click.stop="$store.state.drawer = !$store.state.drawer" class="notranslate">dehaze</v-icon>
+        <v-icon color="#ff6f61" @click.stop="$store.state.drawer = !$store.state.drawer" class="notranslate">dehaze</v-icon>
       </mq-layout>
 
       <!--로그인 모달-->

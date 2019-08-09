@@ -1,7 +1,7 @@
 <template>
   <div style="font-size:1.5vw">
     <ImgBanner>
-     
+
     </ImgBanner>
 
     <!-- About Team -->

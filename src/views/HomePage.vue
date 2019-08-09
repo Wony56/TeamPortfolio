@@ -1,18 +1,38 @@
 <template>
   <div style="font-size:1.5vw">
-    <ImgBanner>
-     
-    </ImgBanner>
+    <ImgBanner></ImgBanner>
 
+    <v-btn @click="test()">CLICK</v-btn>
+
+    {{result}}
     <!-- About Team -->
     <GitlabUserProject></GitlabUserProject>
 
     <!-- Gitlab API -->
     <v-layout>
-      <v-flex xs12>
+      <v-flex class="hidden-xs-only" xs12>
         <GitlabAPI></GitlabAPI>
       </v-flex>
     </v-layout>
+
+    <!-- Git Commit Line -->
+    <v-layout class="hidden-xs-only" justify row wrap>
+      <v-flex xs12>
+        <h2 class="headline my-5 text-xs-center font-weight-bold">Repository</h2>
+      </v-flex>
+    </v-layout>
+
+    <v-flex class="hidden-xs-only" align-center>
+      <v-card flat>
+        <div id="scroll-area">
+          <smooth-scrollbar>
+            <div id="example-content">
+              <GitCommitLine></GitCommitLine>
+            </div>
+          </smooth-scrollbar>
+        </div>
+      </v-card>
+    </v-flex>
 
     <!-- Portfolio -->
     <v-layout justify row wrap>
@@ -39,6 +59,7 @@
 <script>
 import ImgBanner from "../components/base/ImgBanner";
 import GridImage from "../components/base/GridImages";
+import GitCommitLine from "../components/gitlab/GitCommitLine.vue";
 import PostList from "../components/post/PostList";
 
 //Gitlab API
@@ -47,13 +68,58 @@ import GitlabUserProject from "../components/gitlab/GitlabUserProjects";
 
 export default {
   name: "HomePage",
+  data() {
+    return {
+      result: null
+    };
+  },
   components: {
     ImgBanner,
     PostList,
 
     GridImage,
     GitlabAPI,
-    GitlabUserProject
+    GitlabUserProject,
+    GitCommitLine
+  },
+  methods: {
+    test() {
+      
+      var request = require("request");
+
+      var headers = {
+        "X-Naver-Client-Id": "g6QamGJQjl_AbO9jwcpL",
+        "X-Naver-Client-Secret": "sjo5yYUSkx"
+      };
+
+      var options = {
+        url:
+          "https://openapi.naver.com/v1/captcha/ncaptcha.bin?key=KHoNyPuG4r0FRhb4",
+        headers: headers
+      };
+
+      function callback(error, response, body) {
+        if (!error && response.statusCode == 200) {
+          console.log(body);
+        }
+      }
+
+      request(options, callback);
+      this.result = request(options);
+    }
   }
 };
 </script>
+
+<style>
+#scroll-area {
+  margin: 70px;
+  width: 100%;
+  height: 700px;
+}
+
+#example-content {
+  width: 90%;
+  height: 2000px;
+}
+</style>

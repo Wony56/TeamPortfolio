@@ -11,8 +11,6 @@
   </v-footer>
 </template>
 
-<<<<<<< HEAD
-=======
 <script>
 import { close } from "fs";
 export default {
@@ -25,7 +23,6 @@ export default {
 };
 </script>
 
->>>>>>> ec0cf3d4a4612d2657172ef5ffd5fe3a6003698f
 <style>
 * {
   font-family: "Nanum Gothic", sans-serif;

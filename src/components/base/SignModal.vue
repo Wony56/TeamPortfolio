@@ -3,7 +3,7 @@
     <div class="form-contain sign-up-contain">
       <v-form id="form" ref="formSignup" v-model="valid" lazy-validation>
         <h1 id="h1">Create Account</h1>
-        <div class="social-contain">
+        <div class="social-contain" style="margin: 10px 10px">
           <a id="a" class="social facebook-icon" @click="loginWithFacebook()">
             <i class="fab fa-facebook-f"></i>
           </a>
@@ -13,38 +13,48 @@
         </div>
         <span id="span">or use your email for registration</span>
         <div class="field">
-          <v-text-field label="Name" v-model="name" :rules="[v => !!v || 'Name is required']" required></v-text-field>
-        </div>
-        <div class="field">
-        <v-text-field label="E-mail" v-model="email" :rules="[
-        v => !!v || 'E-mail is required',
-        v =>
-          /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/.test(v) ||
-          'E-mail must be valid'
-      ]" required></v-text-field>
-        </div>
-        <div class="field">
           <v-text-field
-                label="Password"
-                type="password"
-                v-model="password"
-                :rules="[
-        v => !!v || 'password is required',
-        v => v.length >= 8 || '8자 이상이어야 합니다.'
-      ]"
-                required
+            label="Name"
+            v-model="name"
+            :rules="[v => !!v || 'Name is required']"
+            required
           ></v-text-field>
         </div>
         <div class="field">
           <v-text-field
-                label="Confirm Password"
-                type="password"
-                v-model="passwordConfirm"
-                :rules="[
+            label="E-mail"
+            v-model="email"
+            :rules="[
+        v => !!v || 'E-mail is required',
+        v =>
+          /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/.test(v) ||
+          'E-mail must be valid'
+      ]"
+            required
+          ></v-text-field>
+        </div>
+        <div class="field">
+          <v-text-field
+            label="Password"
+            type="password"
+            v-model="password"
+            :rules="[
+        v => !!v || 'password is required',
+        v => v.length >= 8 || '8자 이상이어야 합니다.'
+      ]"
+            required
+          ></v-text-field>
+        </div>
+        <div class="field">
+          <v-text-field
+            label="Confirm Password"
+            type="password"
+            v-model="passwordConfirm"
+            :rules="[
         v => !!v || 'Confirm Password is required',
         v => v === this.password || '비밀번호가 일치하지 않습니다.'
       ]"
-                required
+            required
           ></v-text-field>
         </div>
         <div class="btn-set">
@@ -56,26 +66,47 @@
     <div class="form-contain sign-in-contain">
       <v-form id="form" ref="formSignin" v-model="valid" lazy-validation>
         <h1 id="h1">Sign in</h1>
-        <div class="social-contain">
-          <a id="a" class="social facebook-icon" @click="loginWithFacebook()">
+        <div class="social-contain" style="margin: 10px 10px">
+          <a id="a" class="social facebook-icon" @click="loginUser(3)">
             <i class="fab fa-facebook-f"></i>
           </a>
-          <a id="a" class="social google-icon" @click="loginWithGoogle()">
+          <a id="a" class="social google-icon" @click="loginUser(2)">
             <i class="fab fa-google-plus-g"></i>
           </a>
         </div>
         <span id="span">or use your account</span>
         <div class="field">
-          <v-text-field label="E-mail" v-model="loginEmail" :rules="[
+          <v-text-field
+            label="E-mail"
+            v-model="loginEmail"
+            :rules="[
         v => !!v || 'E-mail is required',
         v => /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/.test(v) || 'E-mail must be valid',
-      ]" required></v-text-field>
+      ]"
+            required
+          ></v-text-field>
         </div>
         <div class="field">
           <v-text-field label="Password" type="password" v-model="loginPassword" required></v-text-field>
         </div>
+
+        <div v-if="failCount >= 5">
+          <v-layout wrap>
+            <v-flex xs10>
+              <img src="../../../backend/captcha.jpg" />
+            </v-flex>
+            <v-flex xs2>
+              <v-btn text icon color="white" @click="getCaptcha()">
+                <v-icon>cached</v-icon>
+              </v-btn>
+            </v-flex>
+          </v-layout>
+
+          <v-text-field style="padding: 0pt" v-model="captchaCode"></v-text-field>
+        </div>
+
         <div class="btn-set">
-          <v-btn flat @click="loginWithEmail()">Sign In</v-btn>
+          <v-btn flat @click="loginUser(1)">Sign In</v-btn>
           <v-btn flat @click="closeModal()">Cancel</v-btn>
         </div>
       </v-form>
@@ -99,7 +130,7 @@
 
 <script>
 import firebaseService from "../../services/FirebaseService";
-import { mapMutations } from "vuex";
+import { mapState, mapMutations } from "vuex";
 
 export default {
   name: "LoginModal",
@@ -112,6 +143,10 @@ export default {
       name: "",
       password: "",
       passwordConfirm: "",
+
+      captchaCode: "",
+      captchaKey: "",
+      flag: false
     };
   },
   mounted() {
@@ -126,27 +161,79 @@ export default {
     signInButton.addEventListener("click", () => {
       container.classList.remove("right-panel-active");
     });
+
+    this.getCaptcha();
+    this.failCount = 0;
   },
+  computed: mapState({
+    failCount: state => state.notification.failCount
+  }),
   methods: {
-    ...mapMutations([
-      "closeSignModal",
-      "showLoginBar",
-      "showLoginErrorBar"
-    ]),
+    ...mapMutations(["closeSignModal", "showLoginBar", "showLoginErrorBar"]),
     closeModal() {
       this.closeSignModal();
       this.$refs.formSignin.reset();
       this.$refs.formSignup.reset();
     },
+
+    async loginUser(select) {
+      if (this.failCount >= 5) {
+
+        await this.$axios
+          .get("api/captcha/result", {
+            params: { key: this.captchaKey, value: this.captchaCode }
+          })
+          .then(ret => {
+
+            if (ret.data.result) {
+              if (select == 1) {
+                this.loginWithEmail();
+              } else if (select == 2) {
+                this.loginWithGoogle();
+              } else {
+                this.loginWithFacebook();
+              }
+            } else {
+              this.$store.commit("showLoginErrorBar", {
+                message: "CAPTCHA가 틀렸습니다."
+              });
+            }
+            this.getCaptcha();
+          })
+          .catch(err => {
+            this.$store.commit("showLoginErrorBar", {
+              message: "Failed to load CAPTCHA."
+            });
+            this.getCaptcha();
+          });
+      } else {
+        if (select == 1) {
+          this.loginWithEmail();
+        } else if (select == 2) {
+          this.loginWithGoogle();
+        } else {
+          this.loginWithFacebook();
+        }
+      }
+    },
+
     loginWithEmail() {
       if (this.$refs.formSignin.validate()) {
-        firebaseService.loginWithEmail(this.loginEmail.trim(), this.loginPassword.trim()).then(res => {
-          if (res) {
-            this.closeModal();
-            this.showLoginBar();
-            this.$router.replace("/");
-          }
-        });
+        firebaseService
+          .loginWithEmail(
+            this.loginEmail.trim(),
+            this.loginPassword.trim(),
+            this.captchaKey,
+            this.captchaCode,
+            this.failCount >= 5
+          )
+          .then(res => {
+            if (res) {
+              this.closeModal();
+              this.showLoginBar();
+              this.$router.replace("/");
+            }
+          });
       }
     },
     loginWithGoogle() {
@@ -180,6 +267,18 @@ export default {
           this.showSignupBar();
         }
       }
+    },
+
+    async getCaptcha() {
+      await this.$axios.get("api/captcha/nkey").then(ret => {
+
+        this.captchaKey = ret.data.key;
+      });
+      this.flag = true;
+
+      await this.$axios.get("api/captcha/image", {
+        params: { key: this.captchaKey }
+      });
     }
   }
 };
@@ -231,13 +330,13 @@ export default {
   margin: 15px 0;
 }
 
-#a.google-icon:hover{
+#a.google-icon:hover {
   color: red;
   border-color: red;
 }
 
-#a.facebook-icon:hover{
-  color:blue;
+#a.facebook-icon:hover {
+  color: blue;
   border-color: blue;
 }
 

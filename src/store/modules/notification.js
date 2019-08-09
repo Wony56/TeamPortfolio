@@ -5,7 +5,9 @@ const state = {
     signupBar: false,
     tierBar: false,
     lockBar: false,
-    errorMessage: ''
+    errorMessage: '',
+
+    failCount: 0
 }
 
 const mutations = {

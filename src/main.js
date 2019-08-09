@@ -25,6 +25,11 @@ import {VueMasonryPlugin} from 'vue-masonry';
 // VueSmoothScrollbar
 import SmoothScrollbar from 'vue-smooth-scrollbar'
 
+// Use Axios
+import axios from 'axios'
+Vue.prototype.$axios = axios
+
+
 Vue.use(Router);
 Vue.use(VueMasonryPlugin)
 Vue.use(VueScrollProgress);

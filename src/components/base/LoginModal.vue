@@ -24,6 +24,12 @@
               <v-btn block color="primary" @click="loginWithFacebook">
                 <i class="fab fa-facebook-square"></i>&nbsp; Sign in with Facebook
               </v-btn>
+
+              <img src="../../../backend/captcha.jpg" />
+
+              <v-text-field v-model="captchaCode"></v-text-field>
+              <v-btn @click="compareCaptchaCode()">COMPARE</v-btn>
+
             </v-flex>
           </v-layout>
         </v-form>
@@ -53,8 +59,15 @@ export default {
           /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/.test(v) ||
           "E-mail must be valid"
       ],
-      password: ""
+      password: "",
+
+      captchaKey: null,
+      captchaCode: ""
     };
+  },
+  created() {
+
+    this.getCaptcha();
   },
   methods: {
     ...mapMutations([
@@ -101,6 +114,32 @@ export default {
           this.$router.replace("/");
         }
       });
+    },
+    async getCaptcha() {
+
+      await this.$axios.get('api/captcha/nkey').then(ret => {
+
+        console.log(ret);
+        this.captchaKey = ret.data.key;
+      });
+      console.log("CAPTCHA KEY ", this.captchaKey);
+      this.flag = true;
+
+      await this.$axios.get('api/captcha/image', { params: { key: this.captchaKey } });
+    },
+    async compareCaptchaCode() {
+
+      let value = this.captchaCode;
+      let key = this.captchaKey;
+
+      await this.$axios.get('api/captcha/result', { params: { key: key, value: value } }).then(ret => {
+
+        console.log(ret);
+      }).catch(err => {
+
+        console.log(err);
+      });
+      this.captchaCode = "";
     }
   }
 };

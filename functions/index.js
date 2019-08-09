@@ -35,7 +35,7 @@ exports.createPortfolio = functions.firestore
         notification:{
             title: 'Portfolio가 등록되었습니다.',
             body: `@${data.author.name} 님께서 포트폴리오를 작성하셨습니다.`,
-            icon:'https://i.imgur.com/P0BSbsJ.png'
+            icon: `${data.img[0]}`
         }
     }
     db.collection('tokens').get().then((snapshot)=>{

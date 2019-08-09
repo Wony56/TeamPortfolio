@@ -62,9 +62,12 @@ import GridImage from "../components/base/GridImages";
 import GitCommitLine from "../components/gitlab/GitCommitLine.vue";
 import PostList from "../components/post/PostList";
 
-//Gitlab API
+// Gitlab API
 import GitlabAPI from "../components/gitlab/GitlabApi.vue";
 import GitlabUserProject from "../components/gitlab/GitlabUserProjects";
+
+// Captcha API
+import Captcha from "../services/Captcha";
 
 export default {
   name: "HomePage",
@@ -83,29 +86,10 @@ export default {
     GitCommitLine
   },
   methods: {
+
     test() {
-      
-      var request = require("request");
 
-      var headers = {
-        "X-Naver-Client-Id": "g6QamGJQjl_AbO9jwcpL",
-        "X-Naver-Client-Secret": "sjo5yYUSkx"
-      };
-
-      var options = {
-        url:
-          "https://openapi.naver.com/v1/captcha/ncaptcha.bin?key=KHoNyPuG4r0FRhb4",
-        headers: headers
-      };
-
-      function callback(error, response, body) {
-        if (!error && response.statusCode == 200) {
-          console.log(body);
-        }
-      }
-
-      request(options, callback);
-      this.result = request(options);
+       console.log(Captcha.getCaptchaKey());
     }
   }
 };

@@ -1,130 +1,89 @@
 <template>
-  <div class="contain" id="contain">
-    <div class="form-contain sign-up-contain">
-      <v-form id="form" ref="formSignup" v-model="valid" lazy-validation>
-        <h1 id="h1">Create Account</h1>
-        <div class="social-contain" style="margin: 10px 10px">
-          <a id="a" class="social facebook-icon" @click="loginWithFacebook()">
-            <i class="fab fa-facebook-f"></i>
-          </a>
-          <a id="a" class="social google-icon" @click="loginWithGoogle()">
-            <i class="fab fa-google-plus-g"></i>
-          </a>
+  <div>
+    <v-dialog v-model="$store.state.modal.signDialog" persistent max-width="800">
+      <div class="contain" id="contain">
+        <div class="form-contain sign-up-contain">
+          <v-form id="form" ref="formSignup" v-model="valid" lazy-validation>
+            <h1 id="h1">Create Account</h1>
+            <div class="social-contain">
+              <a id="a" class="social facebook-icon" @click="loginWithFacebook()">
+                <i class="fab fa-facebook-f"></i>
+              </a>
+              <a id="a" class="social google-icon" @click="loginWithGoogle()">
+                <i class="fab fa-google-plus-g"></i>
+              </a>
+            </div>
+            <span id="span">or use your email for registration</span>
+            <div class="field">
+              <v-text-field label="Name" v-model="name" :rules="nameRule" required></v-text-field>
+            </div>
+            <div class="field">
+              <v-text-field label="E-mail" v-model="email" :rules="emailRule" required></v-text-field>
+            </div>
+            <div class="field">
+              <v-text-field
+                label="Password"
+                type="password"
+                v-model="password"
+                :rules="passwordRule"
+                required
+              ></v-text-field>
+            </div>
+            <div class="field">
+              <v-text-field
+                label="Confirm Password"
+                type="password"
+                v-model="passwordConfirm"
+                :rules="passwordConfirmRule"
+                required
+              ></v-text-field>
+            </div>
+            <div class="btn-set">
+              <v-btn flat @click="signupWithEmail()">Sign Up</v-btn>
+              <v-btn flat @click="closeModal()">Cancel</v-btn>
+            </div>
+          </v-form>
         </div>
-        <span id="span">or use your email for registration</span>
-        <div class="field">
-          <v-text-field
-            label="Name"
-            v-model="name"
-            :rules="[v => !!v || 'Name is required']"
-            required
-          ></v-text-field>
+        <div class="form-contain sign-in-contain">
+          <v-form id="form" ref="formSignin" v-model="valid" lazy-validation>
+            <h1 id="h1">Sign in</h1>
+            <div class="social-contain">
+              <a id="a" class="social facebook-icon" @click="loginWithFacebook()">
+                <i class="fab fa-facebook-f"></i>
+              </a>
+              <a id="a" class="social google-icon" @click="loginWithGoogle()">
+                <i class="fab fa-google-plus-g"></i>
+              </a>
+            </div>
+            <span id="span">or use your account</span>
+            <div class="field">
+              <v-text-field label="E-mail" v-model="loginEmail" :rules="emailRule" required></v-text-field>
+            </div>
+            <div class="field">
+              <v-text-field label="Password" type="password" v-model="loginPassword" required></v-text-field>
+            </div>
+            <div class="btn-set">
+              <v-btn flat @click="loginWithEmail()">Sign In</v-btn>
+              <v-btn flat @click="closeModal()">Cancel</v-btn>
+            </div>
+          </v-form>
         </div>
-        <div class="field">
-          <v-text-field
-            label="E-mail"
-            v-model="email"
-            :rules="[
-        v => !!v || 'E-mail is required',
-        v =>
-          /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/.test(v) ||
-          'E-mail must be valid'
-      ]"
-            required
-          ></v-text-field>
-        </div>
-        <div class="field">
-          <v-text-field
-            label="Password"
-            type="password"
-            v-model="password"
-            :rules="[
-        v => !!v || 'password is required',
-        v => v.length >= 8 || '8자 이상이어야 합니다.'
-      ]"
-            required
-          ></v-text-field>
-        </div>
-        <div class="field">
-          <v-text-field
-            label="Confirm Password"
-            type="password"
-            v-model="passwordConfirm"
-            :rules="[
-        v => !!v || 'Confirm Password is required',
-        v => v === this.password || '비밀번호가 일치하지 않습니다.'
-      ]"
-            required
-          ></v-text-field>
-        </div>
-        <div class="btn-set">
-          <v-btn flat @click="signupWithEmail()">Sign Up</v-btn>
-          <v-btn flat @click="closeModal()">Cancel</v-btn>
-        </div>
-      </v-form>
-    </div>
-    <div class="form-contain sign-in-contain">
-      <v-form id="form" ref="formSignin" v-model="valid" lazy-validation>
-        <h1 id="h1">Sign in</h1>
-        <div class="social-contain" style="margin: 10px 10px">
-          <a id="a" class="social facebook-icon" @click="loginUser(3)">
-            <i class="fab fa-facebook-f"></i>
-          </a>
-          <a id="a" class="social google-icon" @click="loginUser(2)">
-            <i class="fab fa-google-plus-g"></i>
-          </a>
-        </div>
-        <span id="span">or use your account</span>
-        <div class="field">
-          <v-text-field
-            label="E-mail"
-            v-model="loginEmail"
-            :rules="[
-        v => !!v || 'E-mail is required',
-        v => /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/.test(v) || 'E-mail must be valid',
-      ]"
-            required
-          ></v-text-field>
-        </div>
-        <div class="field">
-          <v-text-field label="Password" type="password" v-model="loginPassword" required></v-text-field>
-        </div>
-
-        <div v-if="failCount >= 5">
-          <v-layout wrap>
-            <v-flex xs10>
-              <img src="../../../backend/captcha.jpg" />
-            </v-flex>
-            <v-flex xs2>
-              <v-btn text icon color="white" @click="getCaptcha()">
-                <v-icon>cached</v-icon>
-              </v-btn>
-            </v-flex>
-          </v-layout>
-
-          <v-text-field style="padding: 0pt" v-model="captchaCode"></v-text-field>
-        </div>
-
-        <div class="btn-set">
-          <v-btn flat @click="loginUser(1)">Sign In</v-btn>
-          <v-btn flat @click="closeModal()">Cancel</v-btn>
-        </div>
-      </v-form>
-    </div>
-    <div class="overlay-contain">
-      <div class="overlay">
-        <div class="overlay-panel overlay-left">
-          <h1 id="h1">Welcome Back!</h1>
-          <p id="p">To keep connected with us please login with your personal info</p>
-          <button class="ghost" id="signIn" @click="$refs.formSignup.reset()">Sign In</button>
-        </div>
-        <div class="overlay-panel overlay-right">
-          <h1 id="h1">Hello, Friend!</h1>
-          <p id="p">Enter your personal details and start journey with us</p>
-          <button class="ghost" id="signUp" @click="$refs.formSignin.reset()">Sign Up</button>
+        <div class="overlay-contain">
+          <div class="overlay">
+            <div class="overlay-panel overlay-left">
+              <h1 id="h1">Welcome Back!</h1>
+              <p id="p">To keep connected with us please login with your personal info</p>
+              <button class="ghost" id="signIn" @click="$refs.formSignup.reset()">Sign In</button>
+            </div>
+            <div class="overlay-panel overlay-right">
+              <h1 id="h1">Hello, Friend!</h1>
+              <p id="p">Enter your personal details and start journey with us</p>
+              <button class="ghost" id="signUp" @click="$refs.formSignin.reset()">Sign Up</button>
+            </div>
+          </div>
         </div>
       </div>
-    </div>
+    </v-dialog>
   </div>
 </template>
 
@@ -133,17 +92,31 @@ import firebaseService from "../../services/FirebaseService";
 import { mapState, mapMutations } from "vuex";
 
 export default {
-  name: "LoginModal",
-  date() {
+  name: "SignModal",
+  data() {
     return {
-      valid: true,
+      valid: false,
       loginEmail: "",
       loginPassword: "",
       email: "",
+      emailRule: [
+        v => !!v || "E-mail is required",
+        v =>
+          /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/.test(v) ||
+          "E-mail must be valid"
+      ],
       name: "",
+      nameRule: [v => !!v || "Name is required"],
       password: "",
+      passwordRule: [
+        v => !!v || "password is required",
+        v => v.length >= 8 || "8자 이상이어야 합니다."
+      ],
       passwordConfirm: "",
-
+      passwordConfirmRule: [
+        v => !!v || "Confirm Password is required",
+        v => v === this.password || "비밀번호가 일치하지 않습니다."
+      ],
       captchaCode: "",
       captchaKey: "",
       flag: false
@@ -169,22 +142,28 @@ export default {
     failCount: state => state.notification.failCount
   }),
   methods: {
-    ...mapMutations(["closeSignModal", "showLoginBar", "showLoginErrorBar"]),
+    ...mapMutations([
+      "closeSignModal",
+      "showLoginBar",
+      "showLoginErrorBar",
+      "showSignupBar"
+    ]),
     closeModal() {
+      const container = document.getElementById("contain");
+
       this.closeSignModal();
       this.$refs.formSignin.reset();
       this.$refs.formSignup.reset();
+      container.classList.remove("right-panel-active");
     },
 
     async loginUser(select) {
       if (this.failCount >= 5) {
-
         await this.$axios
           .get("api/captcha/result", {
             params: { key: this.captchaKey, value: this.captchaCode }
           })
           .then(ret => {
-
             if (ret.data.result) {
               if (select == 1) {
                 this.loginWithEmail();
@@ -271,7 +250,6 @@ export default {
 
     async getCaptcha() {
       await this.$axios.get("api/captcha/nkey").then(ret => {
-
         this.captchaKey = ret.data.key;
       });
       this.flag = true;

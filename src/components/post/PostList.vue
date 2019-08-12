@@ -1,19 +1,21 @@
 <template>
-  <v-data-table  :headers="headers" :items="desserts">
+  <v-data-table :headers="headers" :items="desserts">
     <template class="row" slot="items" slot-scope="props">
       <tr @click="viewpost(props.item)">
-      <td style="background-color:#ff6f61; color:#fff" class="text-xs-left">{{ props.item.author.name }}</td>
-      <td class="text-xs-right post-title">{{ props.item.title }}</td>
-      <td class="text-xs-right">{{ props.item.date }}</td>
+        <td
+          style="background-color:#ff6f61; color:#fff"
+          class="text-xs-left"
+        >{{ props.item.author.name }}</td>
+        <td class="text-xs-right post-title">{{ props.item.title }}</td>
+        <td class="text-xs-right">{{ props.item.date }}</td>
       </tr>
     </template>
-    <template text-xs-left
+    <template
+      text-xs-left
       slot="pageText"
       slot-scope="{ pageStart, pageStop }"
     >From {{ pageStart }} to {{ pageStop }}</template>
-        
   </v-data-table>
-
 </template>
 
 <script>
@@ -33,7 +35,7 @@ export default {
         sortable: false
       },
       { text: "글제목", align: "right", value: "title", sortable: false },
-      { text: "작성일", align:"right", value: "date", sortable: false }
+      { text: "작성일", align: "right", value: "date", sortable: false }
     ],
     desserts: []
   }),
@@ -41,8 +43,8 @@ export default {
     this.initialize();
   },
   methods: {
-    viewpost(a){
-      this.$router.push(`/postview/${a.id}`)
+    viewpost(post) {
+      this.$router.push(`/postview/${post.id}`);
     },
     async initialize() {
       let posts = await FirebaseService.getPosts();
@@ -52,7 +54,7 @@ export default {
           author: post.author,
           title: post.title,
           date: post.created_at,
-          id:post.id
+          id: post.id
         };
 
         this.desserts.push(row);

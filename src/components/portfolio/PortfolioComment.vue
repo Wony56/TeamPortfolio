@@ -1,72 +1,33 @@
 <template>
   <div>
-    <!--댓글 부분-->
-    <v-layout justify-center text-xs-center>
-      <v-flex row wrap>
-        <v-card max-height="50">
-          <v-card-text style="background-color:#ff6f61; color:#fff">Comments</v-card-text>
-        </v-card>
-      </v-flex>
-    </v-layout>
-    <v-layout justify-end text-xs-right>
-      <v-flex row wrap>
-        <v-card min-height="50" max-height="170">
-          <v-card-text>
-            <v-textarea
-              id="replyInput"
-              v-model="content"
-              label="댓글입력"
-              auto-grow
-              rows="1"
-              row-height="15"
-              flat 
-              color="#ff6f61"
-            ></v-textarea>
-          </v-card-text>
-          <v-card-text>
-            <v-btn flat color="#ff6f61" @click="addComment()">댓글 추가</v-btn>
-          </v-card-text>
-        </v-card>
-      </v-flex>
-    </v-layout>
-    <!--하나씩 카드로 나눠서 보여주는걸로 할 예정-->
-    <v-layout v-for="(reply, index) in replies[focusPage - 1]" :key="index">
-      <v-flex row wrap>
-        <br />
-        <v-card min-height="100">
-          <v-text-field :id="index" v-model="reply.replyContent" :readonly="selectedIndex != index"></v-text-field>
-          <v-layout justify-end text-xs-right>
-            <v-card-text style="color:gray">
-              작성자 : {{reply.author}} |
-              작성일 : {{reply.created_at}}
-              <v-btn
-                v-if="selectedIndex != index"
-                text
-                flat
-                color="#ff6f61"
-                @click="authorizationCheck(index)"
-              >수정</v-btn>
-              <v-btn
-                v-if="selectedIndex == index"
-                text
-                flat
-                color="black"
-                @click="modifyComment(index)"
-              >수정완료</v-btn>
-              <v-btn
-                v-if="selectedIndex == index"
-                text
-                flat
-                color="red"
-                @click="selectedIndex = -1"
-              >취소</v-btn>
-              <v-btn text flat color="blue" @click="removeComment(index)">삭제</v-btn>
-            </v-card-text>
-          </v-layout>
-        </v-card>
-      </v-flex>
-    </v-layout>
-    <v-layout justify-center>
+    <v-card flat min-height="600">
+      <v-card-text
+        class="headline"
+        style="background-color:#ff6f61; color:#fff; text-align:center;"
+      >Comments</v-card-text>
+
+      <div v-for="(reply, index) in replies[focusPage - 1]" :key="index">
+        <v-card-title :id="index">
+          {{reply.replyContent}}
+        </v-card-title>
+        
+        <v-btn class="mx-2" fab dark large color="cyan" @click="authorizationCheck(index)">
+        <v-icon dark>edit</v-icon>
+        </v-btn>
+        <v-btn class="mx-2" fab dark large color="cyan"  @click="removeComment(index)">
+        <v-icon dark>remove</v-icon>
+        </v-btn>
+
+        <v-divider></v-divider>
+      </div>
+
+      <v-card-title>
+        <v-text-field id="replyInput" v-model="content" label="댓글을 입력하세요" single-line color="#ff6f61"></v-text-field>
+        <v-btn outline color="#ff6f61" @click="addComment()">댓글 쓰기</v-btn>
+      </v-card-title>
+    </v-card>
+
+        <v-layout justify-center>
       <v-pagination
         v-if="loadMore"
         v-model="focusPage"
@@ -83,7 +44,7 @@ import FirebaseService from "@/services/FirebaseService";
 import { mapState } from "vuex";
 
 export default {
-  name: "Comment",
+  name: "PortfolioComment",
   props: {
     articleId: { type: String }
   },
@@ -117,8 +78,12 @@ export default {
   },
   methods: {
     async loadComments() {
+      
+      console.log("ID?? ", this.articleId);
+
       let comments = await FirebaseService.getComments(this.articleId);
       this.loadMore = true;
+      this.replies = [];
 
       if (comments.length > 0) {
         let index = 0;
@@ -142,11 +107,13 @@ export default {
       } else {
         this.totalPage = 1;
       }
+
+      console.log("LOAD ", this.replies);
     },
 
     authorizationCheck(index) {
       if (this.user === undefined) {
-        this.$parent.setModalContent("알림", "로그인을 해주시길 바랍니다.");
+        this.$parent.$options.parent.setModalContent("알림", "로그인을 해주시길 바랍니다.");
         return;
       }
 
@@ -159,8 +126,7 @@ export default {
 
         this.replyFlag = true;
       } else {
-        console.dir(this.$parent);
-        this.$parent.setModalContent("오류", "권한이 없습니다.");
+        this.$parent.$options.parent.setModalContent("오류", "권한이 없습니다.");
       }
     },
 
@@ -174,15 +140,19 @@ export default {
       };
     },
     addComment() {
-      if (this.user.uid == undefined) {
-        this.$parent.setModalContent("알림", "로그인을 해주시길 바랍니다.");
+      if (this.user.loggedIn == false || this.user.uid == undefined) {
+
+        console.dir(this.$parent);
+        this.$parent.$options.parent.setModalContent("알림", "로그인을 해주시길 바랍니다.");
         return;
       }
       let comment = this.getInputComment();
       this.paginations(comment);
 
       FirebaseService.addComment(comment);
+      this.loadComments();
 
+      console.log("AFTER ADD :", this.replies);
       this.content = "";
     },
     async removeComment(index) {
@@ -224,7 +194,7 @@ export default {
           this.totalPage = this.replies.length;
         }
       } else {
-        this.$parent.setModalContent("오류", "권한이 없습니다.");
+        this.$parent.$options.parent.setModalContent("오류", "권한이 없습니다.");
       }
     },
     modifyComment(index) {
@@ -239,7 +209,7 @@ export default {
         this.selectedIndex = -1;
         this.replyFlag = false;
       } else {
-        this.$parent.setModalContent("오류", "권한이 없습니다.");
+        this.$parent.$options.parent.setModalContent("오류", "권한이 없습니다.");
       }
     },
 

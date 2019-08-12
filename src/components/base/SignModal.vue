@@ -92,18 +92,25 @@
 
         <div v-if="failCount >= 5">
           <v-layout wrap>
-            <v-flex xs10>
-              <img src="../../../backend/captcha.jpg" />
-            </v-flex>
-            <v-flex xs2>
-              <v-btn text icon color="white" @click="getCaptcha()">
-                <v-icon>cached</v-icon>
-              </v-btn>
-            </v-flex>
+          
+              <v-flex xs10>
+                <img src="../../../backend/captcha.jpg" />
+              </v-flex>
+              <v-flex xs2>
+                <v-btn text icon color="white" @click="getCaptcha()">
+                  <v-icon>cached</v-icon>
+                </v-btn>
+              </v-flex>
           </v-layout>
 
-          <v-text-field style="padding: 0pt" v-model="captchaCode"></v-text-field>
-        </div>
+            <v-text-field style="padding: 0pt" v-model="captchaCode"></v-text-field>
+          </div>
+
+              <v-progress-circular v-if="!progress"
+                indeterminate
+                color="primary"
+              >
+              </v-progress-circular>
 
         <div class="btn-set">
           <v-btn flat @click="loginUser(1)">Sign In</v-btn>
@@ -146,7 +153,8 @@ export default {
 
       captchaCode: "",
       captchaKey: "",
-      flag: false
+
+      progress: true
     };
   },
   mounted() {
@@ -194,11 +202,14 @@ export default {
                 this.loginWithFacebook();
               }
             } else {
+              this.progress = false;
+              console.log("PROGRESS> ", progress);
+              this.getCaptcha();
+
               this.$store.commit("showLoginErrorBar", {
                 message: "CAPTCHA가 틀렸습니다."
               });
             }
-            this.getCaptcha();
           })
           .catch(err => {
             this.$store.commit("showLoginErrorBar", {
@@ -270,14 +281,17 @@ export default {
     },
 
     async getCaptcha() {
+      
       await this.$axios.get("api/captcha/nkey").then(ret => {
-
         this.captchaKey = ret.data.key;
       });
-      this.flag = true;
 
       await this.$axios.get("api/captcha/image", {
         params: { key: this.captchaKey }
+      }).then((ret) => {
+
+        this.progress = false;
+        console.log("AFTER ", this.progress);
       });
     }
   }

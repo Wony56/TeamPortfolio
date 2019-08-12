@@ -93,20 +93,12 @@ export default {
       if (comments.length > 0) {
         let index = 0;
         let flag = false;
-<<<<<<< HEAD
-        this.totalPage = parseInt(comments.length / 5);
-=======
         this.totalPage = parseInt(comments.length / 9);
->>>>>>> 074502e3d3973b78bc2416f2ce19fccc185331cc
 
         for (let page = 0; page <= this.totalPage; page++) {
           let temp = [];
 
-<<<<<<< HEAD
-          for (let count = 0; count < 5; count++) {
-=======
           for (let count = 0; count < 9; count++) {
->>>>>>> 074502e3d3973b78bc2416f2ce19fccc185331cc
             if (comments[index] === undefined) {
               flag = true;
               break;
@@ -189,20 +181,12 @@ export default {
         if (origin.length > 0) {
           let index = 0;
           let flag = false;
-<<<<<<< HEAD
-          this.totalPage = parseInt(origin.length / 5);
-=======
           this.totalPage = parseInt(origin.length / 9);
->>>>>>> 074502e3d3973b78bc2416f2ce19fccc185331cc
 
           for (let page = 0; page <= this.totalPage; page++) {
             let temp = [];
 
-<<<<<<< HEAD
-            for (let count = 0; count < 5; count++) {
-=======
             for (let count = 0; count < 9; count++) {
->>>>>>> 074502e3d3973b78bc2416f2ce19fccc185331cc
               if (origin[index] === undefined) {
                 flag = true;
                 break;
@@ -240,11 +224,7 @@ export default {
         return;
       }
 
-<<<<<<< HEAD
-      if (this.replies[this.totalPage - 1].length == 5) {
-=======
       if (this.replies[this.totalPage - 1].length == 9) {
->>>>>>> 074502e3d3973b78bc2416f2ce19fccc185331cc
         this.totalPage += 1;
         this.replies.push([reply]);
       } else {
@@ -254,7 +234,3 @@ export default {
   }
 };
 </script>
-<<<<<<< HEAD
-
-=======
->>>>>>> 074502e3d3973b78bc2416f2ce19fccc185331cc

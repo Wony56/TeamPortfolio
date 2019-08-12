@@ -58,7 +58,7 @@
             </v-flex>
             <v-flex d-flex xs6 sm6 md3>
               <v-card color="black">
-                <v-card-text style="color:#ffff">팔레트</v-card-text>
+                <v-card-text style="color:#ffff">관리자명</v-card-text>
                 <v-divider></v-divider>
                 <v-card-text style="color:#ffff">여기에</v-card-text>
               </v-card>

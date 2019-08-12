@@ -1,7 +1,6 @@
 <template>
   <nav>
     <MenuDrawer />
-
     <v-toolbar id="bar" flat fixed clipped-left v-on:scroll="onScroll" height="64px">
       <v-toolbar-title>
         <router-link to="home">
@@ -43,6 +42,8 @@
       </v-dialog>
     </v-toolbar>
   </nav>
+  
+
 </template>
 
 <script>
@@ -162,7 +163,7 @@ a:visited {
 
 .menu-item:hover {
   background-color: #ff6f61;
-  color: #ffff;
+  color: #fff;
 }
 
 .sidetitle::before {

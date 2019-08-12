@@ -6,28 +6,32 @@
         style="background-color:#ff6f61; color:#fff; text-align:center;"
       >Comments</v-card-text>
 
-      <div v-for="(reply, index) in replies[focusPage - 1]" :key="index">
-        <v-card-title :id="index">
-          {{reply.replyContent}}
-        </v-card-title>
-        
-        <v-btn class="mx-2" fab dark large color="cyan" @click="authorizationCheck(index)">
-        <v-icon dark>edit</v-icon>
-        </v-btn>
-        <v-btn class="mx-2" fab dark large color="cyan"  @click="removeComment(index)">
-        <v-icon dark>remove</v-icon>
-        </v-btn>
-
+        <div v-for="(reply, index) in replies[focusPage - 1]" :key="index">
+        <v-layout row wrap>
+            <v-flex>
+            <v-card-title :id="index">
+            {{reply.replyContent}}
+            </v-card-title>
+            </v-flex>
+            <v-flex style="text-align:right">
+            <v-btn class="mx-2" fab small flat color="blue" @click="authorizationCheck(index)">
+            <v-icon fab small dark>edit</v-icon>
+            </v-btn>
+            <v-btn class="mx-2" fab small flat color="red" @click="removeComment(index)">
+            <v-icon fab small dark>delete</v-icon>
+            </v-btn>
+            </v-flex>
+          </v-layout>
         <v-divider></v-divider>
-      </div>
-
-      <v-card-title>
-        <v-text-field id="replyInput" v-model="content" label="댓글을 입력하세요" single-line color="#ff6f61"></v-text-field>
-        <v-btn outline color="#ff6f61" @click="addComment()">댓글 쓰기</v-btn>
-      </v-card-title>
+        </div>
+        
     </v-card>
-
-        <v-layout justify-center>
+    <v-card flat>
+        <v-card-title style="height:80px; " >
+            <v-text-field id="replyInput" v-model="content" label="댓글을 입력하세요" single-line color="#ff6f61"></v-text-field>
+            <v-btn outline color="#ff6f61" @click="addComment()">댓글 쓰기</v-btn>
+        </v-card-title>
+      <v-layout justify-center>
       <v-pagination
         v-if="loadMore"
         v-model="focusPage"
@@ -36,6 +40,7 @@
         color="#ff6616"
       ></v-pagination>
     </v-layout>
+    </v-card>
   </div>
 </template>
 
@@ -88,12 +93,20 @@ export default {
       if (comments.length > 0) {
         let index = 0;
         let flag = false;
+<<<<<<< HEAD
         this.totalPage = parseInt(comments.length / 5);
+=======
+        this.totalPage = parseInt(comments.length / 9);
+>>>>>>> 074502e3d3973b78bc2416f2ce19fccc185331cc
 
         for (let page = 0; page <= this.totalPage; page++) {
           let temp = [];
 
+<<<<<<< HEAD
           for (let count = 0; count < 5; count++) {
+=======
+          for (let count = 0; count < 9; count++) {
+>>>>>>> 074502e3d3973b78bc2416f2ce19fccc185331cc
             if (comments[index] === undefined) {
               flag = true;
               break;
@@ -176,12 +189,20 @@ export default {
         if (origin.length > 0) {
           let index = 0;
           let flag = false;
+<<<<<<< HEAD
           this.totalPage = parseInt(origin.length / 5);
+=======
+          this.totalPage = parseInt(origin.length / 9);
+>>>>>>> 074502e3d3973b78bc2416f2ce19fccc185331cc
 
           for (let page = 0; page <= this.totalPage; page++) {
             let temp = [];
 
+<<<<<<< HEAD
             for (let count = 0; count < 5; count++) {
+=======
+            for (let count = 0; count < 9; count++) {
+>>>>>>> 074502e3d3973b78bc2416f2ce19fccc185331cc
               if (origin[index] === undefined) {
                 flag = true;
                 break;
@@ -219,7 +240,11 @@ export default {
         return;
       }
 
+<<<<<<< HEAD
       if (this.replies[this.totalPage - 1].length == 5) {
+=======
+      if (this.replies[this.totalPage - 1].length == 9) {
+>>>>>>> 074502e3d3973b78bc2416f2ce19fccc185331cc
         this.totalPage += 1;
         this.replies.push([reply]);
       } else {
@@ -229,4 +254,7 @@ export default {
   }
 };
 </script>
+<<<<<<< HEAD
 
+=======
+>>>>>>> 074502e3d3973b78bc2416f2ce19fccc185331cc

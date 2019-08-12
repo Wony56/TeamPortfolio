@@ -3,17 +3,21 @@
     <ImgBanner>
       <div style="line-height:1.2em;font-size:1.2em; color:black;" slot="text">Portfolio</div>
     </ImgBanner>
-    <v-container grid-list-md wrap style="margin-top:-50px;" justify-center>
+
+    <v-container grid-list-md wrap style="margin-top:-200px;" justify-center>
       <v-card>
         <v-layout row wrap>
           <v-flex xs12 sm8 md8 px-0 py-0>
             <v-card flat>
-              <v-carousel cycle show-arrows-on-hover hide-delimiter-background delimiter-icon="mdi-minus">
+              <v-carousel continuous hide-delimiter-background
+                show-arrows-on-hover  delimiter-icon="mdi-minus">
                 <v-carousel-item
                   v-for="(img,index) in portfolioInfo.img"
                   :key="index"
                   :src="img"
-                ></v-carousel-item>
+                >
+                <img :src="img" style="width:100%; height:100%;"/>
+                </v-carousel-item>
               </v-carousel>
             <v-card-text style="background-color:#bababa; color:#fff; text-align:right;">
               작성자 : {{portfolioInfo.author.name}} 작성일 : {{portfolioInfo.created_at}}
@@ -22,9 +26,9 @@
               {{portfolioInfo.title}}
             </v-card-text>
             <v-divider></v-divider>
-            <v-card-title>
+            <v-card-text style="height:80px; overflow-y:auto;">
               {{portfolioInfo.content}}
-            </v-card-title>
+            </v-card-text>
             <v-card-title>
               <v-layout justify-end>
               <v-btn v-if="!modifyFlag" outline color="#ff6f61" @click="checkAuthentication()">수정</v-btn>
@@ -36,11 +40,11 @@
             </v-card-title>
             </v-card>
           </v-flex>
-
+          <v-flex xs12 sm4 md4 style="padding-top:0; padding-left:0;">
           <PortfolioComment
-
             :articleId="id"
           ></PortfolioComment>
+          </v-flex>
         </v-layout>
       </v-card>
     </v-container>

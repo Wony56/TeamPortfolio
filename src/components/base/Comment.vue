@@ -159,7 +159,6 @@ export default {
 
         this.replyFlag = true;
       } else {
-        console.dir(this.$parent);
         this.$parent.setModalContent("오류", "권한이 없습니다.");
       }
     },

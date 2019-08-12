@@ -37,7 +37,6 @@
         v-model="focusPage"
         :length="totalPage"
         :total-visible="5"
-        circle
         color="#ff6616"
       ></v-pagination>
     </v-layout>

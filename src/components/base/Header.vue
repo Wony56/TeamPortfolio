@@ -1,9 +1,10 @@
 <template>
   <nav>
     <MenuDrawer />
+
     <v-toolbar id="bar" flat fixed clipped-left v-on:scroll="onScroll" height="64px">
       <v-toolbar-title>
-        <router-link to="home">
+        <router-link to="/">
           <span class="header_logo logo mt-5">
             <img src="../../../public/img/logo/122.svg" class />
             <img src="../../../public/img/logo/wtd.svg" class="logo_text_bottom logo_text" />
@@ -33,21 +34,21 @@
       </mq-layout>
 
       <mq-layout mq="mobile">
-        <v-icon
-          color="#ff6f61"
-          @click.stop="$store.state.drawer = !$store.state.drawer"
-          class="notranslate"
-        >dehaze</v-icon>
+        <v-icon color="#ff6f61" @click.stop="$store.state.drawer = !$store.state.drawer" class="notranslate">dehaze</v-icon>
       </mq-layout>
+
+      <!--로그인 모달-->
+      <v-dialog v-model="$store.state.modal.signDialog" persistent max-width="800">
+        <SignModal />
+      </v-dialog>
     </v-toolbar>
   </nav>
-  
-
 </template>
 
 <script>
 import firebaseService from "../../services/FirebaseService";
 import MenuDrawer from "./MenuDrawer";
+import SignModal from "./SignModal";
 import { mapState, mapMutations } from "vuex";
 
 var el;
@@ -55,7 +56,8 @@ var el;
 export default {
   name: "Header",
   components: {
-    MenuDrawer
+    MenuDrawer,
+    SignModal
   },
   created() {
     window.addEventListener("resize", this.handleDrawer);
@@ -160,7 +162,7 @@ a:visited {
 
 .menu-item:hover {
   background-color: #ff6f61;
-  color: #fff;
+  color: #ffff;
 }
 
 .sidetitle::before {

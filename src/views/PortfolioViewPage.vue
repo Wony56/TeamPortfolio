@@ -3,14 +3,12 @@
     <ImgBanner>
       <div style="line-height:1.2em;font-size:1.2em; color:black;" slot="text">Portfolio</div>
     </ImgBanner>
-
     <v-container grid-list-md wrap style="margin-top:-200px;" justify-center>
       <v-card>
         <v-layout row wrap>
           <v-flex xs12 sm8 md8 px-0 py-0>
             <v-card flat>
-              <v-carousel continuous hide-delimiter-background
-                show-arrows-on-hover  delimiter-icon="mdi-minus">
+              <v-carousel continuous cycle show-arrows-on-hover hide-delimiter-background delimiter-icon="mdi-minus">
                 <v-carousel-item
                   v-for="(img,index) in portfolioInfo.img"
                   :key="index"
@@ -233,7 +231,7 @@ export default {
 };
 </script>
 
-<style scoped>
+<style>
 #upload {
    font-family: "Nanum Gothic", sans-serif;
   -webkit-font-smoothing: antialiased;

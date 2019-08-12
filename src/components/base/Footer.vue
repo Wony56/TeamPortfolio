@@ -23,7 +23,7 @@ export default {
 };
 </script>
 
-<style scoped>
+<style>
 * {
   font-family: "Nanum Gothic", sans-serif;
 }

@@ -9,6 +9,8 @@
   <title>122</title>
   <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css"
     integrity="sha384-oS3vJWv+0UjzBfQzYUhtDYW+Pj2yciDJxpsK1OYPAYjqT085Qq/1cq5FLXAZQ7Ay" crossorigin="anonymous">
+  <!-- <link rel="stylesheet" href="style/mainfooter.css"> footer.css -->
+  <!-- <link rel="stylesheet" href="style/Weathericon.css"> weathericon.css -->
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900">
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Material+Icons">
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900">
@@ -19,6 +21,12 @@
   <link href="https://fonts.googleapis.com/css?family=Do+Hyeon&display=swap" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css?family=Titillium+Web&display=swap" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css?family=Nanum+Gothic&display=swap" rel="stylesheet"> 
+
+  <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+  <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/baffle@0.3.6/dist/baffle.min.js"></script>
+  
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
   <link
     href='https://fonts.googleapis.com/css?family=Open+Sans:400,300italic,300,800italic,800,700,700italic,600italic,600,400italic'
     rel='stylesheet' type='text/css'>
@@ -26,11 +34,91 @@
   <link href="https://cdnjs.cloudflare.com/ajax/libs/weather-icons/2.0.9/css/weather-icons.min.css" rel="stylesheet"
     type="text/css" /> <!-- 날씨 아이콘 -->
 
+<style>
+      ::-webkit-scrollbar-track
+      {
+        border-radius: 10px;
+        -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+        background-color: #F5F5F5;
+      }
+      
+      ::-webkit-scrollbar
+      {
+        width: 3px;
+        background-color: #F5F5F5;
+      }
+      
+      ::-webkit-scrollbar-thumb
+      {
+        border-radius: 10px;
+        background-color: #ff6f61;
+      }
+      /* Handle on hover */
+    ::-webkit-scrollbar-thumb:hover {
+     background: #555; 
+      }
+  </style>
+      
+  <!-- Google Charts -->
+  <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
   <!-- Google Fonts -->
   <link href="https://fonts.googleapis.com/css?family=Jua&display=swap" rel="stylesheet">
+
+  <!-- Smooth Scroll -->
+  <script src="https://unpkg.com/vue2-smooth-scroll"></script>
+
+  <!-- PUSH -->
+  <script src="/__/firebase/5.11.1/firebase-app.js"></script>
+  <script src="/__/firebase/5.11.1/firebase-messaging.js"></script>
+  <script src="/__/firebase/init.js"></script>
+
   <!-- Import Reply Function -->
   <!-- <script src="../src/js/reply.js"></script> -->
-  <link href="style/style.css" rel="stylesheet" />
+
+  <style type="text/css">
+    iframe.goog-te-banner-frame {
+      display: none !important;
+    }
+
+    body {
+      position: static !important;
+      top: 0px !important;
+    }
+  </style>
+
+
+  <script type="text/javascript">
+    function googleTranslateElementInit() {
+      new google.translate.TranslateElement({ layout: google.translate.TranslateElement.FloatPosition.TOP_LEFT }, 'google_translate_element');
+    }
+
+    function triggerHtmlEvent(element, eventName) {
+      var event;
+      if (document.createEvent) {
+        event = document.createEvent('HTMLEvents');
+        event.initEvent(eventName, true, true);
+        element.dispatchEvent(event);
+      } else {
+        event = document.createEventObject();
+        event.eventType = eventName;
+        element.fireEvent('on' + event.eventType, event);
+      }
+    }
+
+    jQuery('.lang-select').click(function () {
+      var theLang = jQuery(this).attr('data-lang');
+      jQuery('.goog-te-combo').val(theLang);
+
+      //alert(jQuery(this).attr('href'));
+      window.location = jQuery(this).attr('href');
+      location.reload();
+
+    });
+  </script>
+  <script type="text/javascript"
+    src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
 </head>
 
 <body>
@@ -54,52 +142,7 @@
         js.src = "https:\/\/danbee.ai/js/plugins/frogue-embed/frogue-embed.min.js";
         fjs.parentNode.insertBefore(js, fjs);
     }(document, 'script', 'frdogue-embed'));
-</script>
-<script type="text/javascript">
-  function googleTranslateElementInit() {
-    new google.translate.TranslateElement({ layout: google.translate.TranslateElement.FloatPosition.TOP_LEFT }, 'google_translate_element');
-  }
-
-  // function triggerHtmlEvent(element, eventName) {
-  //   var event;
-  //   if (document.createEvent) {
-  //     event = document.createEvent('HTMLEvents');
-  //     event.initEvent(eventName, true, true);
-  //     element.dispatchEvent(event);
-  //   } else {
-  //     event = document.createEventObject();
-  //     event.eventType = eventName;
-  //     element.fireEvent('on' + event.eventType, event);
-  //   }
-  // }
-
-  // jQuery('.lang-select').click(function () {
-  //   var theLang = jQuery(this).attr('data-lang');
-  //   jQuery('.goog-te-combo').val(theLang);
-
-  //   //alert(jQuery(this).attr('href'));
-  //   window.location = jQuery(this).attr('href');
-  //   location.reload();
-
-  // });
-</script>
-<script type="text/javascript"
-  src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
-   <!-- Smooth Scroll -->
-   <script src="https://unpkg.com/vue2-smooth-scroll"></script>
-
-   <!-- PUSH -->
-   <script src="/__/firebase/5.11.1/firebase-app.js"></script>
-   <script src="/__/firebase/5.11.1/firebase-messaging.js"></script>
-   <script src="/__/firebase/init.js"></script>
-   <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
-  <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/baffle@0.3.6/dist/baffle.min.js"></script>
-  
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-    <!-- Google Charts -->
-    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    </script>
 
 </body>
 </html>
@@ -108,5 +151,5 @@
   *{
     font-family: 'Nanum Gothic', sans-serif;
   }
-</style>
+  </style>
   

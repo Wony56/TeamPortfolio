@@ -23,7 +23,6 @@
       </v-content>
       <Footer />
 
-      <SignModal />
       <LoginSnackbar />
       <LogoutSnackbar />
       <TierChangeSnackbar />
@@ -57,8 +56,6 @@ import LoginErrorSnackbar from "./components/snackbar/LoginErrorSnackbar";
 import LockingSnackbar from "./components/snackbar/LockingSnakbar";
 import SignupSnackbar from "./components/snackbar/SignupSnackbar";
 
-import SignModal from "./components/base/SignModal";
-
 import Firebase from "./services/FirebaseService";
 import { mapState } from "vuex";
 
@@ -82,8 +79,7 @@ export default {
     TierChangeSnackbar,
     LoginErrorSnackbar,
     LockingSnackbar,
-    SignupSnackbar,
-    SignModal
+    SignupSnackbar
   },
   data() {
     return {
@@ -250,12 +246,4 @@ export default {
 #progress-el {
   background-color: #ff6f61 !important;
 }
-</style>
-
-<style>
- .vue-notification{
-   color: #ffffff;
-  background-color: #ff6f61;
-  border-left: 5px solid #afafaf;
- }
 </style>

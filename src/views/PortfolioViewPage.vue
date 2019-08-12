@@ -8,7 +8,8 @@
         <v-layout row wrap>
           <v-flex xs12 sm8 md8 px-0 py-0>
             <v-card flat>
-              <v-carousel continuous cycle show-arrows-on-hover hide-delimiter-background delimiter-icon="mdi-minus">
+              <v-carousel continuous hide-delimiter-background
+                show-arrows-on-hover  delimiter-icon="mdi-minus">
                 <v-carousel-item
                   v-for="(img,index) in portfolioInfo.img"
                   :key="index"

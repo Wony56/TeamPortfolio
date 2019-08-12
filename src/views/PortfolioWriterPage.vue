@@ -99,7 +99,7 @@ export default {
 };
 </script>
 
-<style scoped>
+<style>
 #upload {
   font-family: "Nanum Gothic", sans-serif;
   -webkit-font-smoothing: antialiased;

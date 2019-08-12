@@ -2,6 +2,9 @@
   <div style="font-size:1.5vw">
     <ImgBanner></ImgBanner>
 
+    <v-btn @click="test()">CLICK</v-btn>
+
+    {{result}}
     <!-- About Team -->
     <GitlabUserProject></GitlabUserProject>
 
@@ -63,6 +66,9 @@ import PostList from "../components/post/PostList";
 import GitlabAPI from "../components/gitlab/GitlabApi.vue";
 import GitlabUserProject from "../components/gitlab/GitlabUserProjects";
 
+// Captcha API
+import Captcha from "../services/Captcha";
+
 export default {
   name: "HomePage",
   data() {
@@ -78,11 +84,18 @@ export default {
     GitlabAPI,
     GitlabUserProject,
     GitCommitLine
+  },
+  methods: {
+
+    test() {
+
+       console.log(Captcha.getCaptchaKey());
+    }
   }
 };
 </script>
 
-<style scoped>
+<style>
 #scroll-area {
   margin: 70px;
   width: 100%;

@@ -262,7 +262,7 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
 @import url("https://fonts.googleapis.com/css?family=Montserrat:400,800");
 
 * {

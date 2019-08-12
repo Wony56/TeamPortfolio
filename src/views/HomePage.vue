@@ -82,7 +82,7 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
 #scroll-area {
   margin: 70px;
   width: 100%;

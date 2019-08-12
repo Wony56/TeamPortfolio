@@ -3,7 +3,7 @@
     <ImgBanner>
       <div style="line-height:1.2em;font-size:1.2em; color:black;" slot="text">Portfolio</div>
     </ImgBanner>
-    <v-container grid-list-md wrap style="margin-top:-200px;" justify-center>
+    <v-container grid-list-md wrap style="margin-top:-200px; " justify-center>
       <v-card>
         <v-layout row wrap>
           <v-flex xs12 sm8 md8 px-0 py-0>
@@ -232,7 +232,7 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
 #upload {
    font-family: "Nanum Gothic", sans-serif;
   -webkit-font-smoothing: antialiased;

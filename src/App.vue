@@ -240,3 +240,11 @@ export default {
   background-color: #ff6f61 !important;
 }
 </style>
+
+<style>
+ .vue-notification{
+   color: #ffffff;
+  background-color: #ff6f61;
+  border-left: 5px solid #afafaf;
+ }
+</style>

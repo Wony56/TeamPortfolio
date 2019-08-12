@@ -21,7 +21,7 @@ import ToggleButton from 'vue-js-toggle-button'
 import Autocomplete from 'v-autocomplete'
 import { Laue } from 'laue';
 import {VueMasonryPlugin} from 'vue-masonry';
-
+import '@mdi/font/css/materialdesignicons.css';
 // VueSmoothScrollbar
 import SmoothScrollbar from 'vue-smooth-scrollbar'
 
@@ -34,7 +34,7 @@ Vue.config.productionTip = false
 Vue.use(FlagIcon);
 Vue.use(Vuetify, 
 {
-	iconfont: 'fa',
+	iconfont: 'mdi',
 	theme: {
 		primary: '#3f51b5',
 		secondary: '#b0bec5',

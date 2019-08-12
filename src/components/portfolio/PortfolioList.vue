@@ -3,14 +3,17 @@
     <section>
       <div class="con">
         <div class="box" v-for="(portfolio, i) in portfolios" :key="i">
-          <router-link class="hover_img" :to="{ name: 'portfolioview', params: { articleId: portfolio.id }}">
-            <img :src="portfolio.img[0]" alt="">
+          <router-link
+            class="hover_img"
+            :to="{ name: 'portfolioview', params: { portfolioIndex: portfolio.id }}"
+          >
+            <img :src="portfolio.img[0]" alt />
             <!-- <v-btn :to="{ name: 'portfolioview', params: { articleId: portfolio.id }}">CLICK</v-btn> -->
             <!-- <v-carousel class="notranslate" hide-delimiters>
               <v-carousel-item v-for="(imgItem,i) in imgItems" :key="i" :src="imgItem"></v-carousel-item>
-            </v-carousel> -->
-              <h1>{{portfolio.title}}</h1>
-              <p>{{portfolio.content}}</p>
+            </v-carousel>-->
+            <h1>{{portfolio.title}}</h1>
+            <p>{{portfolio.content}}</p>
           </router-link>
         </div>
       </div>
@@ -26,12 +29,16 @@
           :id="portfolios[i - 1].id"
         ></Portfolio>
       </span>
-    </section> -->
+    </section>-->
     <v-flex xs12 text-xs-center round my-5>
       <v-btn v-if="flag" style="background-color:#ff6f61; color:#ffff;" to="/portfoliowriter">
         <v-icon size="25" class="mr-2 notranslate">fa-pencil</v-icon>글쓰기
       </v-btn>
-      <v-btn style="background-color:#ff6f61; color:#ffff;" v-if="load" @click="loadMorePortfolios()">
+      <v-btn
+        style="background-color:#ff6f61; color:#ffff;"
+        v-if="load"
+        @click="loadMorePortfolios()"
+      >
         <v-icon size="25" class="mr-2 notranslate">fa-plus</v-icon>더 보기
       </v-btn>
     </v-flex>
@@ -75,7 +82,6 @@ export default {
       console.log(this.portfolios[1].img);
     },
     loadMorePortfolios() {
-
       this.limit += 5;
     }
   }
@@ -83,9 +89,9 @@ export default {
 </script>
 
 <style>
-*{
-  font-family: 'Nanum Gothic', sans-serif;
-};
+* {
+  font-family: "Nanum Gothic", sans-serif;
+}
 section {
   margin: 0;
   padding: 0;
@@ -112,12 +118,12 @@ section {
 .con .box h1 {
   margin: 10px 0 0;
   padding: 0;
-  font-size:  25px;
+  font-size: 25px;
 }
 .con .box p {
   margin: 0;
   padding: 0 0 10px;
-  font-size:  16px;
+  font-size: 16px;
   /* 여러 줄 자르기 추가 스타일 */
   white-space: normal;
   line-height: 1.2;
@@ -148,29 +154,29 @@ section {
   }
 }
 .hover_img {
-	width: inherit;
-	height: inherit;
-	margin: 0;
-	padding: 0;
-	background: #fff;
-	overflow: hidden;
+  width: inherit;
+  height: inherit;
+  margin: 0;
+  padding: 0;
+  background: #fff;
+  overflow: hidden;
 }
 .hover_img:hover {
-	bottom: -36px;
-	opacity: 1;
+  bottom: -36px;
+  opacity: 1;
   overflow: hidden;
 }
 /* Zoom In */
 .hover_img img {
-	-webkit-transform: scale(1);
-	transform: scale(1);
-	-webkit-transition: .6s ease-in-out;
-	transition: .6s ease-in-out;
+  -webkit-transform: scale(1);
+  transform: scale(1);
+  -webkit-transition: 0.6s ease-in-out;
+  transition: 0.6s ease-in-out;
   overflow: hidden;
 }
 .hover_img:hover img {
-	-webkit-transform: scale(1.05);
-	transform: scale(1.05);
+  -webkit-transform: scale(1.05);
+  transform: scale(1.05);
   overflow: hidden;
 }
 </style>

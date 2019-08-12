@@ -23,6 +23,7 @@
       </v-content>
       <Footer />
 
+      <SignModal />
       <LoginSnackbar />
       <LogoutSnackbar />
       <TierChangeSnackbar />
@@ -56,6 +57,8 @@ import LoginErrorSnackbar from "./components/snackbar/LoginErrorSnackbar";
 import LockingSnackbar from "./components/snackbar/LockingSnakbar";
 import SignupSnackbar from "./components/snackbar/SignupSnackbar";
 
+import SignModal from "./components/base/SignModal";
+
 import Firebase from "./services/FirebaseService";
 import { mapState } from "vuex";
 
@@ -79,7 +82,8 @@ export default {
     TierChangeSnackbar,
     LoginErrorSnackbar,
     LockingSnackbar,
-    SignupSnackbar
+    SignupSnackbar,
+    SignModal
   },
   data() {
     return {

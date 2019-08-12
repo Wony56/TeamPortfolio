@@ -34,13 +34,12 @@
       </mq-layout>
 
       <mq-layout mq="mobile">
-        <v-icon color="#ff6f61" @click.stop="$store.state.drawer = !$store.state.drawer" class="notranslate">dehaze</v-icon>
+        <v-icon
+          color="#ff6f61"
+          @click.stop="$store.state.drawer = !$store.state.drawer"
+          class="notranslate"
+        >dehaze</v-icon>
       </mq-layout>
-
-      <!--로그인 모달-->
-      <v-dialog v-model="$store.state.modal.signDialog" persistent max-width="800">
-        <SignModal />
-      </v-dialog>
     </v-toolbar>
   </nav>
 </template>
@@ -48,7 +47,6 @@
 <script>
 import firebaseService from "../../services/FirebaseService";
 import MenuDrawer from "./MenuDrawer";
-import SignModal from "./SignModal";
 import { mapState, mapMutations } from "vuex";
 
 var el;
@@ -56,8 +54,7 @@ var el;
 export default {
   name: "Header",
   components: {
-    MenuDrawer,
-    SignModal
+    MenuDrawer
   },
   created() {
     window.addEventListener("resize", this.handleDrawer);

@@ -1,6 +1,8 @@
 const state = {
     signDialog: false,
-    deleteDialog: false
+    deleteDialog: false,
+    gitDialog: false,
+    skillDialog: false
 }
 
 const mutations = {
@@ -15,6 +17,18 @@ const mutations = {
     },
     closeDeleteDialog: function(state){
         state.deleteDialog = false;
+    },
+    openGitDialog: function(state){
+        state.gitDialog = true;
+    },
+    closeGitDialog: function(state){
+        state.gitDialog = false;
+    },
+    openSkillDialog: function(state){
+        state.skillDialog = true;
+    },
+    closeSkillDialog: function(state){
+        state.skillDialog = false;
     }
 }
 

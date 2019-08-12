@@ -39,8 +39,7 @@
 
 <!-- ============================================================================================================= -->
     <v-layout justify-center>
-      <v-dialog v-model="gitDialog" max-width="800">
-        
+      <v-dialog v-model="dialog1" max-width="500">
           <v-card-title style="background-color:#ff6f61; color:#fff">GIT</v-card-title>
         <v-card v-for="(data, index) in datas" :key="index">
           <v-card-title class="headline">{{data.name_with_namespace}}</v-card-title>
@@ -287,7 +286,7 @@ figure {
 }
 
 </style>
-<style>
+<style lang="scss">
 .skillrow{
   width: 50%;
   min-height: 1px;

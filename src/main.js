@@ -61,7 +61,7 @@ Vue.use(lineClamp,{
 })
 
 firebase.auth().onAuthStateChanged(async user => {
-	
+
 	if(user){
 		store.state.user.loggedIn = true;
 	}else{
@@ -79,8 +79,4 @@ firebase.auth().onAuthStateChanged(async user => {
 //     navigator.serviceWorker.register('/sw.js')
 //         .then((reg) => console.log('service worker registerd', reg))
 //         .catch((err) => console.log('service worker registerd', err));
-<<<<<<< HEAD
 // }
-=======
-// }
->>>>>>> cho

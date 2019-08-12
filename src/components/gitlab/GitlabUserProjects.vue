@@ -10,7 +10,7 @@
 
     <v-container grid-list-md fluid wrap class="py-0 px-0">
       <v-layout justify-center="center" row wrap>
-        <v-flex v-for="(element, index) in this.$store.state.memberData" :key="index">
+        <v-flex v-for="(element, index) in memberData" :key="index">
           <a class="highlight highlight--image-center change">
             <h2 class="roof-line highlight__roof-line notranslate">Member of Team 122</h2>
             <div class="highlight__item">
@@ -39,7 +39,7 @@
 
 <!-- ============================================================================================================= -->
     <v-layout justify-center>
-      <v-dialog v-model="dialog1" max-width="800">
+      <v-dialog v-model="gitDialog" max-width="800">
         
           <v-card-title style="background-color:#ff6f61; color:#fff">GIT</v-card-title>
         <v-card v-for="(data, index) in datas" :key="index">
@@ -56,7 +56,7 @@
     </v-layout>
 <!-- ============================================================================================================= -->
     <v-layout justify-center>
-      <v-dialog v-model="dialog2" max-width="500">
+      <v-dialog v-model="skillDialog" max-width="500">
         <v-card>
           <v-card-title style="background-color:#ff6f61; color:#fff" class="headline">SKILL</v-card-title>
 
@@ -66,25 +66,25 @@
                 <li class="html">
                   <em>HTML/HTML5</em>
                   <div>
-                    <span class="animated fadeInLeft"></span>
+                    <span class="animated fadeInLeft" :style="[memberData[member].skill.html]"></span>
                   </div>
                 </li>
                 <li class="css">
                   <em>CSS/CSS3</em>
                   <div>
-                    <span class="animated fadeInLeft"></span>
+                    <span class="animated fadeInLeft" :style="[memberData[member].skill.css]"></span>
                   </div>
                 </li>
                 <li class="php">
-                  <em>PHP/OOP</em>
+                  <em>JAVA</em>
                   <div>
-                    <span class="animated fadeInLeft"></span>
+                    <span class="animated fadeInLeft" :style="[memberData[member].skill.java]"></span>
                   </div>
                 </li>
                 <li class="mysql">
-                  <em>MYSQL</em>
+                  <em>PYTHON</em>
                   <div>
-                    <span class="animated fadeInLeft"></span>
+                    <span class="animated fadeInLeft" :style="[memberData[member].skill.python]"></span>
                   </div>
                 </li>
               </ul>
@@ -92,27 +92,27 @@
             <article class="skillrow">
               <ul>
                 <li class="jquery">
-                  <em>JQUERY</em>
+                  <em>SERVER</em>
                   <div>
-                    <span class="animated fadeInLeft"></span>
+                    <span class="animated fadeInLeft" :style="[memberData[member].skill.server]"></span>
                   </div>
                 </li>
                 <li class="javascript">
-                  <em>JAVASCRIPT</em>
+                  <em>DB</em>
                   <div>
-                    <span class="animated fadeInLeft"></span>
+                    <span class="animated fadeInLeft" :style="[memberData[member].skill.db]"></span>
                   </div>
                 </li>
                 <li class="seo">
-                  <em>SEO</em>
+                  <em>VUE</em>
                   <div>
-                    <span class="animated fadeInLeft"></span>
+                    <span class="animated fadeInLeft" :style="[memberData[member].skill.vue]"></span>
                   </div>
                 </li>
                 <li class="unix">
-                  <em>UNIX</em>
+                  <em>GIT</em>
                   <div>
-                    <span class="animated fadeInLeft"></span>
+                    <span class="animated fadeInLeft" :style="[memberData[member].skill.git]"></span>
                   </div>
                 </li>
               </ul>
@@ -122,7 +122,7 @@
           <v-card-actions>
             <v-spacer></v-spacer>
 
-            <v-btn flat style="background-color:#ff6f61; color:#fff" @click="dialog2 = false">CLOSE</v-btn>
+            <v-btn flat style="background-color:#ff6f61; color:#fff" @click="skillDialog = false">CLOSE</v-btn>
           </v-card-actions>
         </v-card>
       </v-dialog>
@@ -131,18 +131,24 @@
 </template>
 
 <script>
+import {mapState} from 'vuex';
+
 const BASE_URL = "https://lab.ssafy.com/api/v4";
 
 export default {
   name: "GitlabUserProjects",
   data() {
     return {
+      member: 0,
       datas: [],
       focus: 0,
-      dialog1: false,
-      dialog2: false
+      skillDialog: false,
+      gitDialog: false
     };
   },
+  computed: mapState({
+    memberData: state => state.member.memberData
+  }),
   methods: {
     getImgUrl(img) {
       return require("../../assets/" + img);
@@ -159,18 +165,18 @@ export default {
     },
     showGit(index) {
       this.getRepositories(
-        this.$store.state.memberData[index].id,
-        this.$store.state.memberData[index].token,
-        this.$store.state.memberData[index].color
+        this.memberData[index].id,
+        this.memberData[index].token,
+        this.memberData[index].color
       ).then(data => {
         console.log(data);
         this.datas = data;
       });
-      this.dialog1 = true;
+      this.gitDialog = true;
     },
-    showSkill() {
-
-      this.dialog2 = true;
+    showSkill(member) {
+      this.member = member;
+      this.skillDialog = true;
     }
   }
 };
@@ -311,14 +317,14 @@ figure {
   border-radius: 3px 3px 3px 3px;
   -webkit-border-radius: 3px 3px 3px 3px;
 }
-.skillrow ul li.html div span { background: #E13C4C; width: 90%; }
-.skillrow ul li.css div span { background: #ffdb43; width: 90%; }
-.skillrow ul li.php div span { background: #9D2027; width: 80%; }
-.skillrow ul li.mysql div span { background: #3498db; width: 75%; }
-.skillrow ul li.jquery div span { background: #2ecc71; width: 60%; }
+.skillrow ul li.html div span { background: #E13C4C;}
+.skillrow ul li.css div span { background: #ffdb43;}
+.skillrow ul li.php div span { background: #9D2027;}
+.skillrow ul li.mysql div span { background: #3498db;}
+.skillrow ul li.jquery div span { background: #2ecc71;}
 .skillrow ul li.javascript div span { background: #A94034 }
-.skillrow ul li.seo div span { background: #FF8137; width: 60%; }
-.skillrow ul li.unix div span { width: 65%; background: #0CBFB3; }
+.skillrow ul li.seo div span { background: #FF8137;}
+.skillrow ul li.unix div span {background: #0CBFB3; }
 
 .animated {
   -webkit-animation-duration: 1s;

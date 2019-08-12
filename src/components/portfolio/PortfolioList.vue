@@ -3,14 +3,14 @@
     <section>
       <div class="con">
         <div class="box" v-for="(portfolio, i) in portfolios" :key="i">
-          <router-link :to="{ name: 'portfolioview', params: { articleId: portfolio.id }}">
+          <router-link class="hover_img" :to="{ name: 'portfolioview', params: { articleId: portfolio.id }}">
             <img :src="portfolio.img[0]" alt="">
             <!-- <v-btn :to="{ name: 'portfolioview', params: { articleId: portfolio.id }}">CLICK</v-btn> -->
             <!-- <v-carousel class="notranslate" hide-delimiters>
               <v-carousel-item v-for="(imgItem,i) in imgItems" :key="i" :src="imgItem"></v-carousel-item>
             </v-carousel> -->
-            <h1>{{portfolio.title}}</h1>
-            <p>{{portfolio.content}}</p>
+              <h1>{{portfolio.title}}</h1>
+              <p>{{portfolio.content}}</p>
           </router-link>
         </div>
       </div>
@@ -146,5 +146,31 @@ section {
   .con {
     columns: 1;
   }
+}
+.hover_img {
+	width: inherit;
+	height: inherit;
+	margin: 0;
+	padding: 0;
+	background: #fff;
+	overflow: hidden;
+}
+.hover_img:hover {
+	bottom: -36px;
+	opacity: 1;
+  overflow: hidden;
+}
+/* Zoom In */
+.hover_img img {
+	-webkit-transform: scale(1);
+	transform: scale(1);
+	-webkit-transition: .6s ease-in-out;
+	transition: .6s ease-in-out;
+  overflow: hidden;
+}
+.hover_img:hover img {
+	-webkit-transform: scale(1.05);
+	transform: scale(1.05);
+  overflow: hidden;
 }
 </style>

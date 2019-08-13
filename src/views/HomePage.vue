@@ -1,10 +1,6 @@
 <template>
   <div style="font-size:1.5vw">
     <ImgBanner></ImgBanner>
-
-    <v-btn @click="test()">CLICK</v-btn>
-
-    {{result}}
     <!-- About Team -->
     <GitlabUserProject></GitlabUserProject>
 

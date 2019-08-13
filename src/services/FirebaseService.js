@@ -33,27 +33,18 @@ const messaging = firebase.messaging()
 firebase.firestore().enablePersistence()
   .catch(function(err) {
       if (err.code == 'failed-precondition') {
-          // Multiple tabs open, persistence can only be enabled
-          // in one tab at a a time.
-          // ...
       } else if (err.code == 'unimplemented') {
-          // The current browser does not support all of the
-          // features required to enable persistence
-          // ...
       }
   });
 
 
 messaging.requestPermission()
 	.then(function () {
-		console.log("Have permission");
 		return messaging.getToken();
 	})
 	.then(function (token) {
-		console.log(token);
 	})
 	.catch(function (arr) {
-		console.log("Error Occured");
 	});
 
 
@@ -63,7 +54,6 @@ messaging.onMessage(function(payload) {
 		title: payload.notification.title,
 		text: payload.notification.body
 	})
-	console.log('onMessage: ', payload);
 })
 
 export default {
@@ -73,7 +63,6 @@ export default {
 				return token;
 			})
 			.catch(err => {
-				console.log("Error Occured");
 			});
 	},
 	async postToken(user) {
@@ -86,7 +75,6 @@ export default {
 		});
 	},
 	deleteToken(user) {
-		console.log('삭제완료')
 		return firestore.collection(TOKENS).doc(user.uid).delete()
 	},
 	//=============================================================================================================
@@ -208,7 +196,6 @@ export default {
 		})
 	},
 	postLogData(user, type) {
-		console.log(JSON.stringify(user));
 		return firestore.collection(WEBLOGS).add({
 			type: type,
 			uid: user.uid,

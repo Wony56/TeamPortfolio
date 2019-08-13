@@ -9,8 +9,6 @@
   <title>122</title>
   <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css"
     integrity="sha384-oS3vJWv+0UjzBfQzYUhtDYW+Pj2yciDJxpsK1OYPAYjqT085Qq/1cq5FLXAZQ7Ay" crossorigin="anonymous">
-  <!-- <link rel="stylesheet" href="style/mainfooter.css"> footer.css -->
-  <!-- <link rel="stylesheet" href="style/Weathericon.css"> weathericon.css -->
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900">
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Material+Icons">
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900">
@@ -30,9 +28,6 @@
   <link
     href='https://fonts.googleapis.com/css?family=Open+Sans:400,300italic,300,800italic,800,700,700italic,600italic,600,400italic'
     rel='stylesheet' type='text/css'>
-
-  <link href="https://cdnjs.cloudflare.com/ajax/libs/weather-icons/2.0.9/css/weather-icons.min.css" rel="stylesheet"
-    type="text/css" /> <!-- 날씨 아이콘 -->
 
 <style>
       ::-webkit-scrollbar-track
@@ -127,26 +122,24 @@
       continue.</strong>
   </noscript>
   <div id="app"></div>
-  <!-- built files will be auto injected -->
- <div id="frogue-container" class="position-right-bottom"
-      data-chatbot="f2653702-4c1d-4def-b64c-62ae0d1023db"
-      data-user="사용자ID"
-      data-init-key="value"
-      ></div> 
-  <!-- data-init-식별키=값 으로 셋팅하면 챗플로우에 파라미터와 연동가능. 식별키는 소문자만 가능 -->
-<script>
-    (function(d, s, id){
-        var js, fjs = d.getElementsByTagName(s)[0];
-        if (d.getElementById(id)) {return;}
-        js = d.createElement(s); js.id = id;
-        js.src = "https:\/\/danbee.ai/js/plugins/frogue-embed/frogue-embed.min.js";
-        fjs.parentNode.insertBefore(js, fjs);
-    }(document, 'script', 'frdogue-embed'));
-    </script>
-
+  
+  <!-- Chatbot -->
+  <div id="frogue-container" class="position-right-bottom"
+    data-chatbot="f2653702-4c1d-4def-b64c-62ae0d1023db"
+    data-user="사용자ID"
+    data-init-key="value"
+    ></div> 
+  <script>
+      (function(d, s, id){
+          var js, fjs = d.getElementsByTagName(s)[0];
+          if (d.getElementById(id)) {return;}
+          js = d.createElement(s); js.id = id;
+          js.src = "https:\/\/danbee.ai/js/plugins/frogue-embed/frogue-embed.min.js";
+          fjs.parentNode.insertBefore(js, fjs);
+      }(document, 'script', 'frdogue-embed'));
+  </script>
 </body>
 </html>
-
 <style>
   *{
     font-family: 'Nanum Gothic', sans-serif;

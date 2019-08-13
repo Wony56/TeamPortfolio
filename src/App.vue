@@ -22,7 +22,7 @@
         </v-dialog>
       </v-content>
       <Footer />
-
+      
       <LoginSnackbar />
       <LogoutSnackbar />
       <TierChangeSnackbar />
@@ -32,19 +32,6 @@
     </v-app>
   </div>
 </template>
- <script>
-(function(d, s, id) {
-  var js,
-    fjs = d.getElementsByTagName(s)[0];
-  if (d.getElementById(id)) {
-    return;
-  }
-  js = d.createElement(s);
-  js.id = id;
-  js.src = "https://danbee.ai/js/plugins/frogue-embed/frogue-embed.min.js";
-  fjs.parentNode.insertBefore(js, fjs);
-})(document, "script", "frdogue-embed");
-</script>
 <script>
 import store from "./store";
 import Header from "./components/base/Header.vue";
@@ -58,16 +45,6 @@ import SignupSnackbar from "./components/snackbar/SignupSnackbar";
 
 import Firebase from "./services/FirebaseService";
 import { mapState } from "vuex";
-
-var key = "AIzaSyDCo_1aj9Q1FYra6QCPzkV6Fya6nHqSZr4";
-var to = "";
-var notification = {
-  title: "새글!",
-  body: "이건새글",
-  icon: "firebase-logo.png",
-  click_action: "http://localhost:8080"
-};
-
 export default {
   name: "App",
   store,
@@ -79,7 +56,7 @@ export default {
     TierChangeSnackbar,
     LoginErrorSnackbar,
     LockingSnackbar,
-    SignupSnackbar
+    SignupSnackbar,
   },
   data() {
     return {
@@ -98,8 +75,6 @@ export default {
       bottom: true,
       left: false,
       transition: "slide-y-reverse-transition",
-
-      token: ""
     };
   },
   computed: mapState({
@@ -160,34 +135,6 @@ export default {
 
       return triggerDefault;
     },
-    postPush() {
-      fetch("https://fcm.googleapis.com/fcm/send", {
-        method: "POST",
-        headers: {
-          Authorization: "key=" + key,
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-          notification: notification,
-          to: to
-        })
-      })
-        .then(function(response) {
-          console.log(response);
-        })
-        .catch(function(error) {
-          console.error(error);
-        });
-    },
-    async loadToken() {
-      await Firebase.getToken().then(ret => {
-        // this.to = ret;
-        to = ret;
-      });
-    }
-  },
-  mounted() {
-    this.loadToken();
   },
   computed: {
     activeFab() {

@@ -109,10 +109,8 @@
 import DailyPortfolioGraph from "../components/admin/DailyPortfolioGraph";
 import DailyPostGraph from "../components/admin/DailyPostGraph";
 import DailyMemberGraph from "../components/admin/DailyMemberGraph";
-import TotalMember from "../components/admin/TotalMember";
 import PostTable from "../components/admin/PostTable";
 import MemberTable from "../components/admin/MemberTable";
-import NowLogin from "../components/admin/NowLogin";
 import PortfolioTable from "../components/admin/PortfolioTable";
 import DeleteDialog from "../components/modal/DeleteDialog";
 import { mapMutations, mapState } from "vuex";
@@ -123,7 +121,6 @@ export default {
     DailyPortfolioGraph,
     DailyPostGraph,
     DailyMemberGraph,
-    TotalMember,
     PostTable,
     PortfolioTable,
     MemberTable,

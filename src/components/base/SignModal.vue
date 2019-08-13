@@ -48,8 +48,8 @@
           ></v-text-field>
         </div>
         <div class="btn-set">
-          <v-btn flat @click="signupWithEmail()">Sign Up</v-btn>
-          <v-btn flat @click="closeModal()">Cancel</v-btn>
+          <button flat @click="signupWithEmail()">Sign Up</button>
+          <button flat @click="closeModal()">Cancel</button>
         </div>
       </v-form>
     </div>
@@ -75,8 +75,8 @@
           <v-text-field label="Password" type="password" v-model="loginPassword" required></v-text-field>
         </div>
         <div class="btn-set">
-          <v-btn flat @click="loginWithEmail()">Sign In</v-btn>
-          <v-btn flat @click="closeModal()">Cancel</v-btn>
+          <button flat @click="loginWithEmail()">Sign In</button>
+          <button flat @click="closeModal()">Cancel</button>
         </div>
       </v-form>
     </div>
@@ -185,7 +185,7 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
 @import url("https://fonts.googleapis.com/css?family=Montserrat:400,800");
 
 * {
@@ -242,13 +242,14 @@ export default {
 }
 
 button {
+  margin: 10px;
   border-radius: 20px;
   border: 1px solid #ff6f61;
   background-color: #ff6f61;
   color: #ffffff;
   font-size: 12px;
   font-weight: bold;
-  padding: 12px 45px;
+  padding: 5px 30px;
   letter-spacing: 1px;
   text-transform: uppercase;
   transition: transform 80ms ease-in;

@@ -57,7 +57,7 @@
           </v-card-actions>
         </v-layout>
 
-        <Comment :articleId="id"></Comment>
+        <PostComment :articleId="id"></PostComment>
       </v-flex>
     </v-layout>
 
@@ -88,7 +88,7 @@ import { mapState } from "vuex";
 import VueMarkdown from "vue-markdown";
 
 // Comments
-import Comment from "../components/base/Comment";
+import PostComment from "../components/base/PostComment";
 
 export default {
   name: "PostViewPage",
@@ -121,7 +121,7 @@ export default {
     ImgBanner,
     MarkdownEditor,
     VueMarkdown,
-    Comment
+    PostComment
   },
   computed: {
     ...mapState({

@@ -9,9 +9,14 @@
         <div v-for="(reply, index) in replies[focusPage - 1]" :key="index">
         <v-layout row wrap>
             <v-flex>
-            <v-card-title :id="index">
+
+            <v-card-title>
             {{reply.replyContent}}
             </v-card-title>
+            <v-card-text>
+              {{reply.created_at | formatDate}}
+            </v-card-text>
+
             </v-flex>
             <v-flex style="text-align:right">
             <v-btn class="mx-2" fab small flat color="blue" @click="authorizationCheck(index)">
@@ -41,6 +46,30 @@
       ></v-pagination>
     </v-layout>
     </v-card>
+<!--===================================================================================================================-->
+    <v-dialog v-model="dialog" persistent max-width="600px">
+
+      <v-card>
+        <v-card-text>
+          <v-container grid-list-md>
+            <v-layout wrap>
+
+              <v-flex xs12>
+                <v-text-field label="댓글 수정" v-model="modifyContent" required></v-text-field>
+              </v-flex>
+
+            </v-layout>
+          </v-container>
+          <small>* 댓글 수정 시 최신 댓글로 수정되어 제일 뒤로 갑니다.</small>
+        </v-card-text>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn color="blue darken-1" text @click="modifyComment(selectedIndex)" flat>수정완료</v-btn>
+          <v-btn color="red darken-1" text @click="cancel()" flat>취소</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+<!--===================================================================================================================-->
   </div>
 </template>
 
@@ -59,17 +88,19 @@ export default {
       selectedIndex: -1,
 
       id: "",
-
       loadMore: false,
 
       focusPage: 1,
       totalPage: 10,
 
       content: "",
+      modifyContent: "",
       originContent: "",
 
       modalTitle: "",
-      modalContent: ""
+      modalContent: "",
+
+      dialog: false
     };
   },
   computed: {
@@ -77,6 +108,16 @@ export default {
       user: state => state.user.user,
       loggedIn: state => state.user.loggedIn
     })
+  },
+  filters: {
+
+    formatDate(data) {
+
+      let date = new Date(data);
+
+      return date.getFullYear() + "년 " + date.getMonth() + "월 " + date.getDay() + "일 " + 
+      date.getHours() + "시 " + date.getMinutes() + "분 " + date.getSeconds() + "초";
+    }
   },
   mounted() {
     this.loadComments();
@@ -130,6 +171,8 @@ export default {
         else this.selectedIndex = -1;
 
         this.replyFlag = true;
+        this.dialog = true;
+         this.modifyContent = this.originContent = this.replies[this.focusPage - 1][index].replyContent;
       } else {
         this.$parent.$options.parent.setModalContent("오류", "권한이 없습니다.");
       }
@@ -203,19 +246,36 @@ export default {
       }
     },
     modifyComment(index) {
+
+      console.log(index);
+
       if (
         this.replies[this.focusPage - 1][index].uid == this.user.uid ||
         this.user.tier == "diamond"
       ) {
+
+        console.log(this.replies[this.focusPage - 1][index].commentId);
+        console.log(this.modifyContent);
+
         FirebaseService.modifyComment(
           this.replies[this.focusPage - 1][index].commentId,
-          document.getElementById(index).value
+          this.modifyContent
         );
+
         this.selectedIndex = -1;
         this.replyFlag = false;
+        this.dialog = false;
+
+        this.loadComments();
       } else {
         this.$parent.$options.parent.setModalContent("오류", "권한이 없습니다.");
       }
+    },
+    cancel() {
+
+      this.dialog = false;
+      this.replies[this.focusPage - 1][this.selectedIndex].replyContent = this.originContent;
+      this.selectedIndex = -1;
     },
 
     paginations(reply) {

@@ -5,10 +5,6 @@
         <div class="box" v-for="(portfolio, i) in portfolios" :key="i">
           <router-link class="hover_img" :to="{ name: 'portfolioview', params: { articleId: portfolio.id }}">
             <img :src="portfolio.img[0]" alt="">
-            <!-- <v-btn :to="{ name: 'portfolioview', params: { articleId: portfolio.id }}">CLICK</v-btn> -->
-            <!-- <v-carousel class="notranslate" hide-delimiters>
-              <v-carousel-item v-for="(imgItem,i) in imgItems" :key="i" :src="imgItem"></v-carousel-item>
-            </v-carousel> -->
               <h1>{{portfolio.title}}</h1>
               <p>{{portfolio.content}}</p>
           </router-link>
@@ -16,17 +12,6 @@
       </div>
     </section>
 
-    <!-- <section>
-      <span class="con" v-for="i in portfolios.length > limit ? limit : portfolios.length" :key="i">
-        <Portfolio
-          :date="portfolios[i - 1].created_at.toString()"
-          :title="portfolios[i - 1].title"
-          :body="portfolios[i - 1].body"
-          :imgItems="portfolios[i - 1].img"
-          :id="portfolios[i - 1].id"
-        ></Portfolio>
-      </span>
-    </section> -->
     <v-flex xs12 text-xs-center round my-5>
       <v-btn v-if="flag" style="background-color:#ff6f61; color:#ffff;" to="/portfoliowriter">
         <v-icon size="25" class="mr-2 notranslate">fa-pencil</v-icon>글쓰기
@@ -39,7 +24,6 @@
 </template>
 
 <script>
-// import Portfolio from "@/components/portfolio/Portfolio";
 import FirebaseService from "@/services/FirebaseService";
 import { mapState } from "vuex";
 
@@ -57,13 +41,8 @@ export default {
       flag: true
     };
   },
-  // components: {
-  //   Portfolio
-  // },
   mounted() {
     this.getPortfolios();
-    console.log(this.loggedIn);
-    // console.log(this.portfolios);
   },
   computed: mapState({
     loggedIn: state => state.user.loggedIn

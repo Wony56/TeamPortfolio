@@ -63,8 +63,8 @@ export default {
   },
   mounted() {
 
-    let user = "Taylous";
-    let token = "zAw5-XwKyMhRkQJuQ4fQ";
+    // let user = "Taylous";
+    // let token = "zAw5-XwKyMhRkQJuQ4fQ";
 
     // this.getRepos(user, token, true);
   },

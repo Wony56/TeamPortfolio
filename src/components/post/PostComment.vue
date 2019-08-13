@@ -34,18 +34,19 @@
       <v-flex row wrap>
         <br />
         <v-card min-height="100">
-          <v-text-field :id="index" v-model="reply.replyContent" :readonly="selectedIndex != index"></v-text-field>
+          <v-text-field color="#ff6f61" :id="index" v-model="reply.replyContent" :readonly="selectedIndex != index"></v-text-field>
           <v-layout justify-end text-xs-right>
             <v-card-text style="color:gray">
               작성자 : {{reply.author}} |
               작성일 : {{reply.created_at}}
               <v-btn
                 v-if="selectedIndex != index"
-                text
+                fab
+                small
                 flat
-                color="#ff6f61"
+                color="blue"
                 @click="authorizationCheck(index)"
-              >수정</v-btn>
+              ><v-icon fab small dark>edit</v-icon></v-btn>
               <v-btn
                 v-if="selectedIndex == index"
                 text
@@ -57,10 +58,10 @@
                 v-if="selectedIndex == index"
                 text
                 flat
-                color="red"
+                color="black"
                 @click="selectedIndex = -1"
               >취소</v-btn>
-              <v-btn text flat color="blue" @click="removeComment(index)">삭제</v-btn>
+              <v-btn fab small flat color="red" @click="removeComment(index)"><v-icon fab small dark>delete</v-icon></v-btn>
             </v-card-text>
           </v-layout>
         </v-card>

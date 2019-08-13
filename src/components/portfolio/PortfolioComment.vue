@@ -11,14 +11,15 @@
             <v-flex>
 
             <v-card-title>
+            <span style="color:	#ff6f61">{{reply.author}}&nbsp;</span>
             {{reply.replyContent}}
             </v-card-title>
-            <v-card-text>
-              {{reply.created_at | formatDate}}
-            </v-card-text>
+            
 
             </v-flex>
             <v-flex style="text-align:right">
+              <span style="color:#bcbcbc;">
+                {{reply.created_at | formatDate}}</span>
             <v-btn class="mx-2" fab small flat color="blue" @click="authorizationCheck(index)">
             <v-icon fab small dark>edit</v-icon>
             </v-btn>
@@ -115,8 +116,8 @@ export default {
 
       let date = new Date(data);
 
-      return date.getFullYear() + "년 " + date.getMonth() + "월 " + date.getDay() + "일 " + 
-      date.getHours() + "시 " + date.getMinutes() + "분 " + date.getSeconds() + "초";
+      return date.getMonth() + "." + date.getDay() + " "+
+      date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds();
     }
   },
   mounted() {

@@ -66,7 +66,7 @@ export default {
     let user = "Taylous";
     let token = "zAw5-XwKyMhRkQJuQ4fQ";
 
-    this.getRepos(user, token, true);
+    // this.getRepos(user, token, true);
   },
   watch: {
     loaded: function(newVal, oldVal) {

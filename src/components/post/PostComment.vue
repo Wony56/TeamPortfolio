@@ -42,6 +42,7 @@
               작성자 : {{reply.author}} |
               작성일 : {{reply.created_at}}
               <v-btn
+                v-show="user.uid == reply.uid || user.tier == 'diamond'"
                 v-if="selectedIndex != index"
                 fab
                 small
@@ -53,17 +54,19 @@
                 v-if="selectedIndex == index"
                 text
                 flat
-                color="black"
+                color="blue"
                 @click="modifyComment(index)"
               >수정완료</v-btn>
               <v-btn
                 v-if="selectedIndex == index"
                 text
                 flat
-                color="black"
+                color="red"
                 @click="selectedIndex = -1"
               >취소</v-btn>
-              <v-btn fab small flat color="red" @click="removeComment(index)"><v-icon fab small dark>delete</v-icon></v-btn>
+              <v-btn 
+              v-show="user.uid == reply.uid || user.tier == 'diamond'"
+              fab small flat color="red" @click="removeComment(index)"><v-icon fab small dark>delete</v-icon></v-btn>
             </v-card-text>
           </v-layout>
         </v-card>

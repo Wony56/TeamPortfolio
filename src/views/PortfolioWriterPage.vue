@@ -4,17 +4,6 @@
       <div style="line-height:1.2em;font-size:1.2em; color:black;" slot="text">Portfolio</div>
     </ImgBanner>
 
-    <v-dialog v-model="dialog" persistent max-width="290">
-      <v-card>
-        <v-card-title class="headline">글쓰기 성공</v-card-title>
-        <v-card-text>정상적으로 등록 되었습니다.</v-card-text>
-        <v-card-actions>
-          <v-spacer></v-spacer>
-          <v-btn color="green darken-1" flat to="/portfolio">Close</v-btn>
-        </v-card-actions>
-      </v-card>
-    </v-dialog>
-
     <v-container>
       <form>
         <v-text-field v-model="title" color="#ff6f61" placeholder="제목을 입력해주세요." required></v-text-field>
@@ -27,6 +16,21 @@
         </v-layout>
       </form>
     </v-container>
+
+    <!--=======================================================================================================-->
+    <v-dialog v-model="dialog" persistent max-width="290">
+      <v-card>
+        <v-card-title class="headline">{{modalTitle}}</v-card-title>
+        <v-card-text>{{modalContent}}</v-card-text>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn v-if="!modifyFlag" color="green darken-1" flat to="/portfolio">Close</v-btn>
+          <v-btn v-else color="green darken-1" flat @click="dialog = false">Close</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+    <!--=======================================================================================================-->
+
   </div>
 </template>
 
@@ -44,7 +48,8 @@ export default {
 
     modalTitle: "",
     modalContent: "",
-    dialog: false
+    dialog: false,
+    modifyFlag: false
   }),
   components: {
     ImgBanner,
@@ -60,14 +65,21 @@ export default {
 
       this.image = this.$store.state.images.imgurLinks;
 
-      console.log("IMAGE?? ", this.image);
+      console.log("IMAGE?? ", this.image.length);
+      console.log(this.image.imgurLinks);
 
       if (this.title === "") {
+
+        this.modifyFlag = true;
         this.setModalContent("알림", "제목을 입력해주세요.");
       } else if (this.content === "") {
+
+        this.modifyFlag = true;
         this.setModalContent("알림", "내용을 입력해주세요.");
-      } else if (this.image === "") {
-        this.setModalContent("알림", "이미지를 하나라도 업로드 해주세요.");
+      } else if (this.image.length < 2) {
+        
+        this.modifyFlag = true;
+        this.setModalContent("알림", "이미지를 두 개 이상 업로드 해주세요.");
       } else {
         try {
           await FirebaseService.postPortfolio(
@@ -79,8 +91,9 @@ export default {
             this.content,
             this.image
           );
-          this.setModalContent("성공", "포트폴리오 작성 성공하였습니다.");
           this.dialog = true;
+          this.modifyFlag = false;
+          this.setModalContent("성공", "포트폴리오 작성 성공하였습니다.");
 
         } catch (error) {
           console.log(error);
@@ -92,6 +105,7 @@ export default {
     },
     setModalContent(title, content) {
 
+      this.dialog = true;
       this.modalTitle = title;
       this.modalContent = content;
     }

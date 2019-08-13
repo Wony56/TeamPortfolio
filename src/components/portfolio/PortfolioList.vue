@@ -18,7 +18,7 @@
       <v-btn v-if="flag" color="#ff6f61" flat outline to="/portfoliowriter">
         <v-icon size="25" class="mr-2 notranslate">fa-pencil</v-icon>글쓰기
       </v-btn>
-      <v-btn color="#ff6f61" flat outline v-if="load" @click="loadMorePortfolios()">
+      <v-btn color="#ff6f61" flat outline v-if="loadMore" @click="loadMorePortfolios()">
         <v-icon size="25" class="mr-2 notranslate">fa-plus</v-icon>더 보기
       </v-btn>
     </v-flex>
@@ -32,14 +32,13 @@ import { mapState } from "vuex";
 export default {
   name: "PortfoliosList",
   props: {
-    limits: { type: Number, default: 7 },
+    limits: { type: Number, default: 9 },
     loadMore: { type: Boolean, default: false }
   },
   data() {
     return {
       portfolios: [],
       limit: this.limits,
-      load: this.loadMore,
       flag: true
     };
   },
@@ -53,14 +52,12 @@ export default {
     async getPortfolios() {
       this.portfolios = await FirebaseService.getPortfolios();
 
-      console.log(this.portfolios);
-
-      for(let i = 0; i < this.portfolios.length; i++)
-        console.log(this.portfolios[i].img);
+      if(this.portfolios.length > 9)
+        this.loadMore = true;
     },
     loadMorePortfolios() {
 
-      this.limit += 7;
+      this.limit += 9;
     }
   }
 };
@@ -156,5 +153,13 @@ section {
 	-webkit-transform: scale(1.05);
 	transform: scale(1.05);
   overflow: hidden;
+}
+a:link {
+
+  color: black;
+}
+a:visited {
+
+  color: black;
 }
 </style>

@@ -11,7 +11,7 @@
         <v-layout row wrap>
           <v-flex xs12 sm8 md8 px-0 py-0>
             <v-card flat>
-              <v-carousel continuous cycle show-arrows-on-hover hide-delimiter-background delimiter-icon="mdi-minus">
+              <v-carousel continuous cycle show-arrows-on-hover hide-delimiters>
                 <v-carousel-item
                   v-for="(img,index) in portfolioInfo.img"
                   :key="index"
@@ -20,8 +20,6 @@
                 <img :src="img" style="width:100%; height:100%;"/>
                 </v-carousel-item>
               </v-carousel>
-
-              
 
             <v-card-text style="background-color:#bababa; color:#fff; text-align:right;">
               작성자 : {{portfolioInfo.author.name}} 작성일 : {{portfolioInfo.created_at}}
@@ -36,7 +34,7 @@
               <v-layout justify-end>
               <v-btn v-if="!modifyFlag" outline color="#ff6f61" @click="checkAuthentication()">수정</v-btn>
               <v-btn v-if="modifyFlag" outline color="#ff6f61" @click="modifyPortfolio()">수정완료</v-btn>
-              <!-- <v-btn v-if="!modifyFlag" outline color="#ff6f61" @click="$router.go(0)">취소</v-btn> -->
+
               <v-btn v-if="modifyFlag" outline color="#ff6f61" @click="modifyFlag = false">취소</v-btn>
               <v-btn outline color="#ff6f61" @click="deletePortfoilo()">삭제</v-btn>
               </v-layout>
@@ -82,7 +80,8 @@
             </v-toolbar-items>
           </v-toolbar>
           <v-list three-line subheader>
-
+            
+            <v-text-field v-model="modifyTitle"></v-text-field>
             <MarkdownEditor v-model="modifyContent"></MarkdownEditor>
 
         <v-layout row style="margin: 30px;">
@@ -141,6 +140,8 @@ export default {
     dialog: false,
     flag: true,
     modifyFlag: false,
+
+    modifyTitle: "",
     modifyContent: "",
 
     movePage: 0,
@@ -174,7 +175,6 @@ export default {
 
     async getPortfolio() {
 
-      console.log(this.id);
       let ret = await FirebaseService.getPortfolioById(this.id);
 
       this.portfolioInfo.img = new Array();
@@ -182,11 +182,8 @@ export default {
 
       for(let idx = 0; idx < ret.img.length; idx++) {
 
-        console.log(ret.img[idx]);
         this.portfolioInfo.img.push(ret.img[idx]);
       }
-
-      console.log(this.portfolioInfo.img);
 
       this.portfolioInfo.author = ret.author;
       this.portfolioInfo.content = ret.content;
@@ -206,6 +203,7 @@ export default {
       if (this.loggedIn == true && (this.authorUid == this.user.uid || this.user.tier == "diamond")) {
 
         this.modifyFlag = true;
+        this.modifyTitle = this.portfolioInfo.title;
         this.modifyContent = this.portfolioInfo.content;
 
       } else {
@@ -222,9 +220,9 @@ export default {
         
         this.portfolioInfo.img.push(this.imgurLink[i]);
       }
+      this.portfolioInfo.title = this.modifyTitle;
       this.portfolioInfo.content = this.modifyContent;
 
-      console.log(this.portfolioInfo);
 
       FirebaseService.modifyPortfoilo(this.id, this.portfolioInfo);
 
@@ -250,21 +248,19 @@ export default {
     },
     async deletePicture(index, src) {
 
+      if(this.portfolioInfo.img.length <= 2) {
+
+        this.setModalContent("알림", "Portfolio는 적어도 2개 이상의 이미지가 있어야합니다.");
+        return;
+      }
       let start = src.lastIndexOf("/");
       let end = src.lastIndexOf(".");
       let imageDeleteHash = src.substring(start + 1, end);
 
-      console.log(imageDeleteHash);
-      
-      console.log("BEFORE DELETE ", this.portfolioInfo.img);
-
       let flag = await this.deleteImage(imageDeleteHash);
       this.portfolioInfo.img.splice(index, 1);
 
-      console.log(this.portfolioInfo.img);
       FirebaseService.modifyPortfolioImage(this.articleId, this.portfolioInfo.img);
-
-      console.log("flag> ", flag);
     },
     ...mapActions(["deleteImage"])
   }

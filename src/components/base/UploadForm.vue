@@ -46,11 +46,10 @@ export default {
        myServer: {
          process: (fieldName, file, metadata, load) => {
            
-           console.log("INIT ",file);
            this.uploadImages(file); // images.js 에 있는 upLoadImages method
            setTimeout(() => {
              load(Date.now())
-           }, 1500);
+           }, 2000);
          }
        }
      };

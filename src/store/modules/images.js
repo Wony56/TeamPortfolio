@@ -3,7 +3,6 @@ import api from "../../api/imgur";
 const state = {
   images: [],
   imgurLinks: [],
-  // imageList: [],
   loading: false
 };
 const getters = {
@@ -20,13 +19,8 @@ const actions = {
 
   async uploadImages({ commit, rootState }, images) {
 
-    console.log("COMMIT> ", commit);
-    console.log("ROOTSTATE> ", rootState);
-    console.log("IMAGES ", images);
-
     let array = []
     array[0] = images;
-    // console.log(array);
     const { token } = rootState.auth;
 
     commit("setLoading", true);

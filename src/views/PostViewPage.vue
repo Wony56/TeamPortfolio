@@ -12,9 +12,12 @@
         <!-- 본문 부분 -->
         <v-card min-height="400" flat>
           <v-layout text-xs-center>
-            <v-card-text class="headline" style="background-color:#ff6f61; color:#fff">
+            <v-card-text v-if="!postFlag" class="headline" style="background-color:#ff6f61; color:#fff">
               {{postInfo.title}}
             </v-card-text>
+
+            <v-text-field v-else v-model="editTitle">
+            </v-text-field>
           </v-layout>
 
           <v-divider></v-divider>
@@ -31,7 +34,7 @@
 
           <!-- 수정버튼 누른 후 -->
           <div v-else>
-            <MarkdownEditor class="title mx-3 my-3" v-model="postInfo.content"></MarkdownEditor>
+            <MarkdownEditor class="title mx-3 my-3" v-model="editContent"></MarkdownEditor>
           </div>
           
         </v-card>
@@ -41,7 +44,7 @@
             <v-btn
               v-if="!postFlag"
               style="background-color:#ff6f61; color:#fff"
-              @click="authorizationCheck(0)"
+              @click="authorizationCheck()"
             >수정</v-btn>
             <v-btn v-else style="background-color:#ff6f61; color:#fff" @click="modifyPost()">수정완료</v-btn>
             <v-btn
@@ -115,6 +118,10 @@ export default {
         created_at: { type: Date },
         title: { type: String }
       },
+      editTitle: "",
+      editContent: "",
+
+      originTitle: "",
       originContent: ""
     };
   },
@@ -147,7 +154,7 @@ export default {
       this.postInfo.created_at = ret.created_at;
     },
 
-    authorizationCheck(index) {
+    authorizationCheck() {
       if (this.user === undefined) {
         this.setModalContent("알림", "로그인을 해주시길 바랍니다.");
         return;
@@ -158,7 +165,12 @@ export default {
         (this.authorUid == this.user.uid || this.user.tier == "diamond")
       ) {
         this.postFlag = true;
+
+        this.originTitle = this.postInfo.title;
         this.originContent = this.postInfo.content;
+
+        this.editTitle = this.originTitle;
+        this.editContent = this.originContent;
       } else {
         this.setModalContent("오류", "권한이 없습니다.");
       }
@@ -169,6 +181,10 @@ export default {
       this.dialog = !this.dialog;
     },
     modifyPost() {
+
+      this.postInfo.title = this.editTitle;
+      this.postInfo.content = this.editContent;
+      
       FirebaseService.modifyPost(this.id, this.postInfo);
       this.setModalContent("성공", "글을 성공적으로 수정하였습니다.");
       this.movePage = 1;
@@ -189,6 +205,8 @@ export default {
     },
     cancelPostModify() {
       this.postFlag = !this.postFlag;
+
+      this.postInfo.title = this.originTitle;
       this.postInfo.content = this.originContent;
     }
   }

@@ -7,7 +7,7 @@
     <!-- Gitlab API -->
     <v-layout>
       <v-flex class="hidden-xs-only" xs12>
-        <GitlabAPI></GitlabAPI>
+        <!-- <GitlabAPI></GitlabAPI> -->
       </v-flex>
     </v-layout>
 
@@ -62,9 +62,6 @@ import PostList from "../components/post/PostList";
 import GitlabAPI from "../components/gitlab/GitlabApi.vue";
 import GitlabUserProject from "../components/gitlab/GitlabUserProjects";
 
-// Captcha API
-import Captcha from "../services/Captcha";
-
 export default {
   name: "HomePage",
   data() {
@@ -80,13 +77,6 @@ export default {
     GitlabAPI,
     GitlabUserProject,
     GitCommitLine
-  },
-  methods: {
-
-    test() {
-
-       console.log(Captcha.getCaptchaKey());
-    }
   }
 };
 </script>

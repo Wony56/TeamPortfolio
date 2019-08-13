@@ -21,6 +21,8 @@
               row-height="15"
               flat 
               color="#ff6f61"
+              :rules="rules"
+
             ></v-textarea>
           </v-card-text>
           <v-card-text>
@@ -40,6 +42,7 @@
               작성자 : {{reply.author}} |
               작성일 : {{reply.created_at}}
               <v-btn
+                v-show="user.uid == reply.uid || user.tier == 'diamond'"
                 v-if="selectedIndex != index"
                 fab
                 small
@@ -51,17 +54,19 @@
                 v-if="selectedIndex == index"
                 text
                 flat
-                color="black"
+                color="blue"
                 @click="modifyComment(index)"
               >수정완료</v-btn>
               <v-btn
                 v-if="selectedIndex == index"
                 text
                 flat
-                color="black"
+                color="red"
                 @click="selectedIndex = -1"
               >취소</v-btn>
-              <v-btn fab small flat color="red" @click="removeComment(index)"><v-icon fab small dark>delete</v-icon></v-btn>
+              <v-btn 
+              v-show="user.uid == reply.uid || user.tier == 'diamond'"
+              fab small flat color="red" @click="removeComment(index)"><v-icon fab small dark>delete</v-icon></v-btn>
             </v-card-text>
           </v-layout>
         </v-card>
@@ -91,6 +96,7 @@ export default {
   data() {
     return {
       replies: [],
+      rules: [v => v.length <= 100 || '글자수 초과(최대 100자까지 입력가능)'],
       selectedIndex: -1,
 
       id: "",
@@ -120,6 +126,7 @@ export default {
     async loadComments() {
       let comments = await FirebaseService.getComments(this.articleId);
       this.loadMore = true;
+      this.replies = [];
 
       if (comments.length > 0) {
         let index = 0;
@@ -178,11 +185,17 @@ export default {
         this.$parent.setModalContent("알림", "로그인을 해주시길 바랍니다.");
         return;
       }
+
+      if(this.content == "") {
+
+        this.$parent.setModalContent("알림", "댓글 내용을 입력해주시길 바랍니다.");
+        return;
+      }
       let comment = this.getInputComment();
       this.paginations(comment);
 
       FirebaseService.addComment(comment);
-
+      this.loadComments();
       this.content = "";
     },
     async removeComment(index) {

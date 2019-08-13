@@ -58,8 +58,8 @@
           ></v-text-field>
         </div>
         <div class="btn-set">
-          <button flat @click="signupWithEmail()">Sign Up</button>
-          <button flat @click="closeModal()">Cancel</button>
+          <v-btn flat @click="signupWithEmail()">Sign Up</v-btn>
+          <v-btn flat @click="closeModal()">Cancel</v-btn>
         </div>
       </v-form>
     </div>
@@ -89,9 +89,26 @@
         <div class="field">
           <v-text-field label="Password" type="password" v-model="loginPassword" required></v-text-field>
         </div>
+
+<!--=================================================================================================================-->
+          {{failCount}}
+          <v-layout v-if="flag" wrap>
+              <v-flex xs10>
+                <img src="../../../backend/captcha.jpg" />
+              </v-flex>
+              <v-flex xs2>
+                <v-btn text icon color="white" @click="getCaptcha()">
+                  <v-icon>cached</v-icon>
+                </v-btn>
+              </v-flex>
+              
+            <v-text-field style="padding: 0pt" v-model="captchaCode"></v-text-field>
+          </v-layout>
+<!--=================================================================================================================-->
+
         <div class="btn-set">
-          <button flat @click="loginWithEmail()">Sign In</button>
-          <button flat @click="closeModal()">Cancel</button>
+          <v-btn flat @click="loginWithEmail()">Sign In</v-btn>
+          <v-btn flat @click="closeModal()">Cancel</v-btn>
         </div>
       </v-form>
     </div>
@@ -126,7 +143,13 @@ export default {
       email: "",
       name: "",
       password: "",
-      passwordConfirm: ""
+      passwordConfirm: "",
+
+      captchaCode: "",
+      captchaKey: "",
+      failCount: 0,
+      captchaFlag: false,
+      flag: false
     };
   },
   mounted() {
@@ -141,6 +164,17 @@ export default {
     signInButton.addEventListener("click", () => {
       container.classList.remove("right-panel-active");
     });
+
+    this.failCount = 0;
+    this.getCaptcha();
+  },
+  watch: {
+
+    failCount: function() {
+
+      if(this.failCount >= 5)
+        this.flag = true;
+    }
   },
   methods: {
     ...mapMutations([
@@ -154,12 +188,24 @@ export default {
       this.$refs.formSignin.reset();
       this.$refs.formSignup.reset();
     },
-    loginWithEmail() {
+    async loginWithEmail() {
       if (this.$refs.formSignin.validate()) {
         firebaseService
           .loginWithEmail(this.loginEmail.trim(), this.loginPassword.trim())
           .then(res => {
-            if (res) {
+
+            if(this.failCount >= 5) {
+
+              this.compareKey();
+            }
+            console.log(this.captchaFlag);
+
+            if(res === undefined) {
+
+              this.failCount += 1;
+              console.log("NO ", this.failCount);
+            }
+            else {
               this.closeModal();
               this.showLoginBar();
               this.$router.replace("/");
@@ -198,6 +244,26 @@ export default {
           this.showSignupBar();
         }
       }
+    },
+    async getCaptcha() {
+      
+      await this.$axios.get("api/captcha/nkey").then(ret => {
+        this.captchaKey = ret.data.key;
+      });
+
+      await this.$axios.get("api/captcha/image", {
+        params: { key: this.captchaKey }
+      });
+    },
+
+    async compareKey() {
+
+      await this.$axios.get("api/captcha/result", {
+        params: { key: this.captchaKey, value: this.captchaCode }
+      }).then((ret) => {
+
+        this.captchaFlag = ret.data.result;
+      });
     }
   }
 };

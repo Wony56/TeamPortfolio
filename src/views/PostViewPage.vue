@@ -88,7 +88,7 @@ import { mapState } from "vuex";
 import VueMarkdown from "vue-markdown";
 
 // Comments
-import PostComment from "../components/base/PostComment";
+import PostComment from "../components/post/PostComment";
 
 export default {
   name: "PostViewPage",

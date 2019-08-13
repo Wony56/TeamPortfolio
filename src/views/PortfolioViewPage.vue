@@ -8,7 +8,7 @@
         <v-layout row wrap>
           <v-flex xs12 sm8 md8 px-0 py-0>
             <v-card flat>
-              <v-carousel v-if="portfolioInfo.img.length > 1">
+              <v-carousel continuous cycle show-arrows-on-hover hide-delimiter-background delimiter-icon="mdi-minus">
                 <v-carousel-item
                   v-for="(img,index) in portfolioInfo.img"
                   :key="index"
@@ -16,8 +16,7 @@
                 >
                 </v-carousel-item>
               </v-carousel>
-              <v-img height="350" v-else :src="portfolioInfo.img[0]">
-              </v-img>
+              
 
             <v-card-text style="background-color:#bababa; color:#fff; text-align:right;">
               작성자 : {{portfolioInfo.author.name}} 작성일 : {{portfolioInfo.created_at}}

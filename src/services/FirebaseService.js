@@ -42,9 +42,8 @@ messaging.requestPermission()
 	.then(function () {
 		return messaging.getToken();
 	})
-	.then(function (token) {
-	})
-	.catch(function (arr) {
+	.catch(function (error) {
+		console.log(error)
 	});
 
 
@@ -62,7 +61,8 @@ export default {
 			.then(token => {
 				return token;
 			})
-			.catch(err => {
+			.catch(error => {
+				console.log(error)
 			});
 	},
 	async postToken(user) {

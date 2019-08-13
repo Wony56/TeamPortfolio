@@ -13,35 +13,17 @@
         </div>
         <span id="span">or use your email for registration</span>
         <div class="field">
-          <v-text-field
-            label="Name"
-            v-model="name"
-            :rules="[v => !!v || 'Name is required']"
-            required
-          ></v-text-field>
+          <v-text-field label="Name" v-model="name" :rules="nameRule" required></v-text-field>
         </div>
         <div class="field">
-          <v-text-field
-            label="E-mail"
-            v-model="email"
-            :rules="[
-        v => !!v || 'E-mail is required',
-        v =>
-          /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/.test(v) ||
-          'E-mail must be valid'
-      ]"
-            required
-          ></v-text-field>
+          <v-text-field label="E-mail" v-model="email" :rules="emailRule" required></v-text-field>
         </div>
         <div class="field">
           <v-text-field
             label="Password"
             type="password"
             v-model="password"
-            :rules="[
-        v => !!v || 'password is required',
-        v => v.length >= 8 || '8자 이상이어야 합니다.'
-      ]"
+            :rules="passwordRule"
             required
           ></v-text-field>
         </div>
@@ -50,16 +32,13 @@
             label="Confirm Password"
             type="password"
             v-model="passwordConfirm"
-            :rules="[
-        v => !!v || 'Confirm Password is required',
-        v => v === this.password || '비밀번호가 일치하지 않습니다.'
-      ]"
+            :rules="passwordConfirmRule"
             required
           ></v-text-field>
         </div>
         <div class="btn-set">
-          <button flat @click="signupWithEmail()">Sign Up</button>
-          <button flat @click="closeModal()">Cancel</button>
+          <v-btn flat @click="signupWithEmail()">Sign Up</v-btn>
+          <v-btn flat @click="closeModal()">Cancel</v-btn>
         </div>
       </v-form>
     </div>
@@ -76,22 +55,14 @@
         </div>
         <span id="span">or use your account</span>
         <div class="field">
-          <v-text-field
-            label="E-mail"
-            v-model="loginEmail"
-            :rules="[
-        v => !!v || 'E-mail is required',
-        v => /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/.test(v) || 'E-mail must be valid',
-      ]"
-            required
-          ></v-text-field>
+          <v-text-field label="E-mail" v-model="loginEmail" :rules="emailRule" required></v-text-field>
         </div>
         <div class="field">
           <v-text-field label="Password" type="password" v-model="loginPassword" required></v-text-field>
         </div>
         <div class="btn-set">
-          <button flat @click="loginWithEmail()">Sign In</button>
-          <button flat @click="closeModal()">Cancel</button>
+          <v-btn flat @click="loginWithEmail()">Sign In</v-btn>
+          <v-btn flat @click="closeModal()">Cancel</v-btn>
         </div>
       </v-form>
     </div>
@@ -118,15 +89,30 @@ import { mapMutations } from "vuex";
 
 export default {
   name: "LoginModal",
-  date() {
+  data() {
     return {
       valid: true,
       loginEmail: "",
       loginPassword: "",
       email: "",
+      emailRule: [
+        v => !!v || "E-mail is required",
+        v =>
+          /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/.test(v) ||
+          "E-mail must be valid"
+      ],
       name: "",
+      nameRule: [v => !!v || "Name is required"],
       password: "",
-      passwordConfirm: ""
+      passwordRule: [
+        v => !!v || "password is required",
+        v => v.length >= 8 || "8자 이상이어야 합니다."
+      ],
+      passwordConfirm: "",
+      passwordConfirmRule: [
+        v => !!v || "Confirm Password is required",
+        v => v === this.password || "비밀번호가 일치하지 않습니다."
+      ]
     };
   },
   mounted() {

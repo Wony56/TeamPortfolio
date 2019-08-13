@@ -12,14 +12,11 @@
 </template>
 
 <script>
-import { close } from "fs";
 export default {
   name: "main-footer",
   data() {
     return {};
-  },
-
-  methods: {}
+  }
 };
 </script>
 

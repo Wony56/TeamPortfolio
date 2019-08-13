@@ -355,7 +355,6 @@ export default {
 				await this.postUser(result.user);
 			}
 			store.state.user.user = await this.getUser(result.user);
-			store.state.notification.failCount = 0;
 
 			this.postLogData(result.user, 'Log in');
 			return result;
@@ -371,7 +370,6 @@ export default {
 				await this.postUser(result.user);
 			}
 			store.state.user.user = await this.getUser(result.user);
-			store.state.notification.failCount = 0;
 
 			this.postLogData(result.user, 'Log in');
 			return result;
@@ -380,13 +378,12 @@ export default {
 		});
 	},
 	loginWithEmail(email, password) {
-
 		return firebase.auth().signInWithEmailAndPassword(email, password).then(async result => {
 			if (!await this.getUser(result.user)) {
 				await this.postUser(result.user);
 			}
+
 			store.state.user.user = await this.getUser(result.user);
-			store.state.notification.failCount = 0;
 
 			this.postLogData(result.user, 'Log in');
 			return result;
@@ -398,7 +395,6 @@ export default {
 			} else if (errorCode === 'auth/user-not-found' || errorCode === 'auth/wrong-password') {
 				store.commit("showLoginErrorBar", {message: "아이디 또는 패스워드가 틀렸습니다."});
 			}
-			store.state.notification.failCount++;
 		})
 	},
 	signUpEmail(email, name, password) {

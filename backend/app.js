@@ -6,9 +6,7 @@ var logger = require('morgan');
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
-
-// Naver Captcar API
-var Captcha = require('./routes/Captcha');
+var captchaRouter = require('./routes/captcha');
 
 var app = express();
 
@@ -24,9 +22,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
-
-// USE Naver Captcar API
-app.use('/api', Captcha);
+app.use('/api', captchaRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

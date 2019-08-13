@@ -37,7 +37,7 @@ const FilePond = vueFilePond(
 )
 
 export default {
-  name: "app",
+  name: "UploadForm",
   data () {
     return {
 

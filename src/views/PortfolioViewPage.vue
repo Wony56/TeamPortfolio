@@ -1,28 +1,89 @@
 <template>
   <div>
     <ImgBanner>
-      <div style="line-height:1.2em;font-size:1.2em; color:black;" slot="text">Portfolio</div>
+     <span slot="text" style="color:#ff6f61">Detail</span>
     </ImgBanner>
-  <v-container>
-      <form>
-        <v-text-field v-model="portfolioInfo.title" color="#ff6f61" readonly placeholder="제목을 입력해주세요." :required="!modifyFlag"></v-text-field>
-        <v-text-field
-          v-model="portfolioInfo.author.name"
-          color="#ff6f61"
-          readonly
-          placeholder="제목을 입력해주세요."
-          required
-        ></v-text-field>
-        <v-text-field v-model="portfolioInfo.created_at" color="#ff6f61" readonly required></v-text-field>
+    <v-container grid-list-md wrap id="magi2" justify-center>
+      <v-layout justify-end>
+      <v-btn color="#ff6f61" flat @click="$router.go(-1)"><i class="material-icons">undo</i></v-btn>
+      </v-layout>
+      <v-card>
+        <v-layout row wrap>
+          <v-flex xs12 sm8 md8 px-0 py-0>
+            <v-card flat>
+              <v-carousel continuous cycle show-arrows-on-hover hide-delimiter-background delimiter-icon="mdi-minus">
+                <v-carousel-item
+                  v-for="(img,index) in portfolioInfo.img"
+                  :key="index"
+                  :src="img"
+                >
+                <img :src="img" style="width:100%; height:100%;"/>
+                </v-carousel-item>
+              </v-carousel>
 
-        <div v-if="!modifyFlag">
-          <VueMarkdown :source="portfolioInfo.content"></VueMarkdown>
-        </div>
-        <div v-else>
-          <markdown-editor v-model="portfolioInfo.content" ref="MarkdownEditor"></markdown-editor>
-        </div>
+              
 
-        <v-spacer></v-spacer>
+            <v-card-text style="background-color:#bababa; color:#fff; text-align:right;">
+              작성자 : {{portfolioInfo.author.name}} 작성일 : {{portfolioInfo.created_at}}
+            </v-card-text>
+            <v-card-text style="text-align:center;" class="headline">
+              {{portfolioInfo.title}}
+            </v-card-text>
+            <v-divider></v-divider>
+
+            <VueMarkdown :source="portfolioInfo.content" style="height:80px; overflow-y:auto;"></VueMarkdown>
+            <v-card-title>
+              <v-layout justify-end>
+              <v-btn v-if="!modifyFlag" outline color="#ff6f61" @click="checkAuthentication()">수정</v-btn>
+              <v-btn v-if="modifyFlag" outline color="#ff6f61" @click="modifyPortfolio()">수정완료</v-btn>
+              <!-- <v-btn v-if="!modifyFlag" outline color="#ff6f61" @click="$router.go(0)">취소</v-btn> -->
+              <v-btn v-if="modifyFlag" outline color="#ff6f61" @click="modifyFlag = false">취소</v-btn>
+              <v-btn outline color="#ff6f61" @click="deletePortfoilo()">삭제</v-btn>
+              </v-layout>
+            </v-card-title>
+            </v-card>
+          </v-flex>
+          <v-flex xs12 sm4 md4 style="padding-top:0; padding-left:0;">
+          <PortfolioComment
+            :articleId="id"
+          ></PortfolioComment>
+          </v-flex>
+        </v-layout>
+      </v-card>
+    </v-container>
+
+    <!--=========================================MODAL====================================================-->
+    <v-dialog v-model="dialog" persistent max-width="290">
+      <v-card>
+        <v-card-title class="headline">{{modalTitle}}</v-card-title>
+        <v-card-text>{{modalContent}}</v-card-text>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn v-if="movePage == 1" color="green darken-1" flat @click="$router.go(0)">Close</v-btn>
+          <v-btn v-else-if="movePage == 2" color="green darken-1" flat to="/portfolio">Close</v-btn>
+          <v-btn v-else color="blue darken-1" flat @click="dialog = false">Close</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+    <!--=================================================================================================-->
+    <v-layout justify-center>
+      <v-dialog v-model="modifyFlag" fullscreen hide-overlay transition="dialog-bottom-transition">
+
+        <v-card>
+          <v-toolbar flat dark color="#ff6f61">
+            <v-btn icon dark @click="modifyFlag = false">
+              <v-icon>close</v-icon>
+            </v-btn>
+
+            <v-toolbar-title>글 수정 하기</v-toolbar-title>
+            <v-spacer></v-spacer>
+            <v-toolbar-items>
+              <v-btn flat @click="modifyPortfolio()">Save</v-btn>
+            </v-toolbar-items>
+          </v-toolbar>
+          <v-list three-line subheader>
+
+            <MarkdownEditor v-model="modifyContent"></MarkdownEditor>
 
         <v-layout row style="margin: 30px;">
           <v-flex v-for="(img, index) in portfolioInfo.img" :key="index">
@@ -34,42 +95,12 @@
           </v-flex>
         </v-layout>
 
-        <div v-if="modifyFlag">
-          <v-spacer></v-spacer>
-
-          <UploadForm></UploadForm>
-        </div>
-
-        <v-spacer></v-spacer>
-
-        <Comment
-          :articleId="id"
-        >
-        </Comment>
-
-        <v-layout justify-center>
-          <v-btn v-if="!modifyFlag" style="background-color:#ff6f61; color:#ffff" @click="checkAuthentication()">수정</v-btn>
-          <v-btn v-if="modifyFlag" style="background-color:black; color:#ffff" @click="modifyPortfolio()">수정완료</v-btn>
-          <v-btn v-if="!modifyFlag" style="background-color:#ff6f61; color:#ffff" @click="$router.go(0)">취소</v-btn>
-          <v-btn v-if="modifyFlag" style="background-color:#ff6f61; color:#ffff" @click="modifyFlag = false">취소</v-btn>
-          <v-btn  style="background-color:#ff6f61; color:#ffff" @click="deletePortfoilo()">삭제</v-btn>
-        </v-layout>
-      </form>
-    </v-container>
-
-    <!--=========================================MODAL====================================================-->
-    <v-dialog v-model="dialog" persistent max-width="290">
-      <v-card>
-        <v-card-title class="headline">{{modalTitle}}</v-card-title>
-        <v-card-text>{{modalContent}}</v-card-text>
-        <v-card-actions>
-          <v-spacer></v-spacer>
-          <v-btn v-if="flag" color="green darken-1" flat to="/portfolio">Close</v-btn>
-          <v-btn v-else color="blue darken-1" flat @click="dialog = false">Close</v-btn>
-        </v-card-actions>
-      </v-card>
-    </v-dialog>
-    <!--=================================================================================================-->
+            <UploadForm></UploadForm>
+          </v-list>
+        </v-card>
+      </v-dialog>
+    </v-layout>
+  <!--===================================================================================================================--> 
   </div>
 </template>
 
@@ -79,25 +110,20 @@ import MarkdownEditor from "vue-simplemde/src/markdown-editor";
 import UploadForm from "../components/base/UploadForm";
 import FirebaseService from "@/services/FirebaseService";
 
+// Comment Component
+import PortfolioComment from "../components/portfolio/PortfolioComment";
+
 // Get Logined User Info
 import { mapState } from "vuex";
 
 // Imgur API
 import { mapActions } from "vuex";
 
-// Comment Component
-import Comment from "../components/base/Comment";
-
 // Markdown Viewer
 import VueMarkdown from 'vue-markdown'
 
 export default {
   data: () => ({
-    // replies: [],
-    // totalPage: 10,
-    // focusPage: 1,
-    // selectedIndex: -1,
-    // replyContent: "",
 
     id: "",
     portfolioInfo: {
@@ -112,24 +138,22 @@ export default {
       created_at: { type: Date },
       img: { type: Array }
     },
-
     dialog: false,
     flag: true,
     modifyFlag: false,
+    modifyContent: "",
 
-    // replyFlag: false,
-    // loadMore: false,
-    movePage: false,
+    movePage: 0,
 
     modalTitle: "",
     modalContent: ""
   }),
   components: {
     ImgBanner,
+    PortfolioComment,
     MarkdownEditor,
     UploadForm,
-    VueMarkdown,
-    Comment
+    VueMarkdown
   },  
   computed: {
     ...mapState({
@@ -141,8 +165,6 @@ export default {
   created() {
 
     this.id = this.$route.params.articleId;
-  },
-  mounted() {
     this.$store.state.images.imgurLinks = [];
     this.$store.state.images.images = [];
 
@@ -169,54 +191,27 @@ export default {
       this.portfolioInfo.author = ret.author;
       this.portfolioInfo.content = ret.content;
       this.portfolioInfo.created_at = ret.created_at;
-      this.portfolioInfo.img = ret.img;
       this.portfolioInfo.title = ret.title;
 
       this.loadMore = true;
-    },
+    },    
+    setModalContent(title, content) {
 
-    authorizationCheck(select, index) {
-
-      if (this.user === undefined || this.user.loggedIn == false) {
-
-        this.setModalContent("알림", "로그인을 해주시길 바랍니다.");
-        return;
-      }
-
-      if(select === "PORTFOLIO") {
-
-        if ((this.loggedIn === true) && (this.authorUid == this.user.uid || this.user.tier == "diamond")) {
-          
-          this.postFlag = true;
-          this.originContent = this.postInfo.content;
-
-        } else {
-          this.setModalContent("오류", "권한이 없습니다.");
-        }
-      }
-      else {
-
-        if (this.portfolioInfo.reply[this.focusPage - 1][index].uid == this.user.uid ||
-          this.user.tier == "diamond"
-        ) {
-          if (this.selectedIndex == -1) 
-            this.selectedIndex = index;
-          else 
-            this.selectedIndex = -1;
-
-          this.replyFlag = true;
-        } else {
-          this.setModalContent("오류", "권한이 없습니다.");
-        }
-      }
+        this.modalTitle = title;
+        this.modalContent = content;
+        this.dialog = !this.dialog;
     },
     checkAuthentication() {
 
-      if (this.authorUid == this.user.uid || this.user.tier == "diamond") {
+      if (this.loggedIn == true && (this.authorUid == this.user.uid || this.user.tier == "diamond")) {
+
         this.modifyFlag = true;
+        this.modifyContent = this.portfolioInfo.content;
+
       } else {
-        this.modalTitle = "ERROR";
-        this.modalContent = "권한이 없습니다.";
+
+        this.movePage = 0;
+        this.setModalContent("ERROR", "권한이 없습니다.");
         this.dialog = true;
       }
     },
@@ -227,6 +222,10 @@ export default {
         
         this.portfolioInfo.img.push(this.imgurLink[i]);
       }
+      this.portfolioInfo.content = this.modifyContent;
+
+      console.log(this.portfolioInfo);
+
       FirebaseService.modifyPortfoilo(this.id, this.portfolioInfo);
 
       this.$store.state.images.imgurLinks = [];
@@ -235,6 +234,7 @@ export default {
       this.setModalContent("수정완료", "포트폴리오 수정을 완료하였습니다.");
       this.flag = true;
       this.dialog = true;
+      this.modifyFlag = false;
     },
     deletePortfoilo() {
 
@@ -266,12 +266,6 @@ export default {
 
       console.log("flag> ", flag);
     },
-    setModalContent(title, content) {
-
-        this.modalTitle = title;
-        this.modalContent = content;
-        this.dialog = !this.dialog;
-    },
     ...mapActions(["deleteImage"])
   }
 };
@@ -285,22 +279,22 @@ export default {
   text-align: center;
   color: #0000;
 }
-#magi 
+#magi2
 {
   margin-top: -150px;
 }
 @media (min-width: 768px) 
 {
-  #magi 
+  #magi2 
   {
     margin-top: -250px;
   }
 }
 @media (min-width: 1024px) 
 {
-  #magi 
+  #magi2  
   {
-    margin-top: -650px;
+    margin-top: -855px;
   }
 }
 

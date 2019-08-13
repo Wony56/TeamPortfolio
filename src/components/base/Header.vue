@@ -4,7 +4,7 @@
 
     <v-toolbar id="bar" flat fixed clipped-left v-on:scroll="onScroll" height="64px">
       <v-toolbar-title>
-        <router-link to="home">
+        <router-link to="/">
           <span class="header_logo logo mt-5">
             <img src="../../../public/img/logo/122.svg" class />
             <img src="../../../public/img/logo/wtd.svg" class="logo_text_bottom logo_text" />

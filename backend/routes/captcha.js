@@ -10,7 +10,7 @@ app.get('/captcha/nkey', function (req, res) {
    var request = require('request');
    var options = {
        url: api_url,
-       headers: {'X-Naver-Client-Id':client_id, 'X-Naver-Client-Secret': client_secret, 'Access-Control-Allow-Origin': '*'}
+       headers: {'X-Naver-Client-Id':client_id, 'X-Naver-Client-Secret': client_secret}
     };
    request.get(options, function (error, response, body) {
      if (!error && response.statusCode == 200) {
@@ -22,15 +22,9 @@ app.get('/captcha/nkey', function (req, res) {
      }
    });
  });
-//  app.listen(3000, function () {
-//    console.log('http://127.0.0.1:3000/captcha/nkey app listening on port 3000!');
-//  });
-
+ 
 // 네이버 캡차 API 예제 - 이미지수신
 app.get('/captcha/image', function (req, res) {
-
-    console.log(req);
-
    var api_url = 'https://openapi.naver.com/v1/captcha/ncaptcha.bin?key=' + req.query.key;
    var request = require('request');
    var options = {
@@ -45,9 +39,6 @@ app.get('/captcha/image', function (req, res) {
   _req.pipe(writeStream); // file로 출력
   _req.pipe(res); // 브라우저로 출력
  });
-//  app.listen(3000, function () {
-//    console.log('http://127.0.0.1:3000/captcha/image?key=캡차키 app listening on port 3000!');
-//  });
 
 // 네이버 캡차 Open API 예제 - 키 입력값 비교
 app.get('/captcha/result', function (req, res) {
@@ -67,8 +58,5 @@ app.get('/captcha/result', function (req, res) {
      }
    });
  });
-//  app.listen(3000, function () {
-//    console.log('http://127.0.0.1:3000/captcha/result?key=캡차키&value=캡차밸류 app listening on port 3000!');
-//  })
-
-module.exports = app;
+ 
+ module.exports = app;

@@ -13,6 +13,7 @@
     "axios": "^0.18.1",
     "core-js": "^2.6.9",
     "devicon": "^2.2.0",
+    "express": "^4.17.1",
     "filepond": "^4.4.11",
     "filepond-plugin-file-validate-type": "^1.2.4",
     "filepond-plugin-image-preview": "^4.2.1",

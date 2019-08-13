@@ -60,8 +60,22 @@
         <div class="field">
           <v-text-field label="Password" type="password" v-model="loginPassword" required></v-text-field>
         </div>
+
+          <v-layout v-if="failCount >= 5" wrap>
+              <v-flex xs10>
+                <img src="../../../backend/captcha.jpg" />
+              </v-flex>
+              <v-flex xs2>
+                <v-btn text icon color="white" @click="getCaptcha()">
+                  <v-icon>cached</v-icon>
+                </v-btn>
+              </v-flex>
+              
+            <v-text-field style="padding: 0pt" v-model="captchaCode"></v-text-field>
+          </v-layout>
+
         <div class="btn-set">
-          <v-btn flat @click="loginWithEmail()">Sign In</v-btn>
+          <v-btn flat @click="loginValidityCheck()">Sign In</v-btn>
           <v-btn flat @click="closeModal()">Cancel</v-btn>
         </div>
       </v-form>
@@ -88,8 +102,8 @@ import firebaseService from "../../services/FirebaseService";
 import { mapMutations } from "vuex";
 
 export default {
-  name: "LoginModal",
-  data() {
+  name: "SignModal",
+  date() {
     return {
       valid: true,
       loginEmail: "",
@@ -112,7 +126,13 @@ export default {
       passwordConfirmRule: [
         v => !!v || "Confirm Password is required",
         v => v === this.password || "비밀번호가 일치하지 않습니다."
-      ]
+      ],
+
+      captchaCode: "",
+      captchaKey: "",
+      failCount: 0,
+      captchaFlag: false,
+      flag: false
     };
   },
   mounted() {
@@ -127,6 +147,9 @@ export default {
     signInButton.addEventListener("click", () => {
       container.classList.remove("right-panel-active");
     });
+
+    this.failCount = 0;
+    this.getCaptcha();
   },
   methods: {
     ...mapMutations([
@@ -140,12 +163,41 @@ export default {
       this.$refs.formSignin.reset();
       this.$refs.formSignup.reset();
     },
+    async loginValidityCheck() {
+
+      if(this.failCount >= 5) {
+      
+        await this.compareKey();
+
+        if(this.captchaFlag == true) {
+
+          this.loginWithEmail();
+        }
+        else {
+
+          this.$store.commit("showLoginErrorBar", {message: "CAPTCHA를 다시 입력해주세요."});
+          this.getCaptcha();
+        }
+        this.captchaCode = "";
+      }
+      else {
+
+        this.loginWithEmail();
+      }
+    },
     loginWithEmail() {
       if (this.$refs.formSignin.validate()) {
         firebaseService
           .loginWithEmail(this.loginEmail.trim(), this.loginPassword.trim())
           .then(res => {
-            if (res) {
+
+            if(res === undefined) {
+
+              this.failCount += 1;
+              this.$forceUpdate();
+            }
+            else {
+
               this.closeModal();
               this.showLoginBar();
               this.$router.replace("/");
@@ -184,6 +236,26 @@ export default {
           this.showSignupBar();
         }
       }
+    },
+    async getCaptcha() {
+      
+      await this.$axios.get("api/captcha/nkey").then(ret => {
+        this.captchaKey = ret.data.key;
+      });
+
+      await this.$axios.get("api/captcha/image", {
+        params: { key: this.captchaKey }
+      });
+    },
+
+    async compareKey() {
+
+      await this.$axios.get("api/captcha/result", {
+        params: { key: this.captchaKey, value: this.captchaCode }
+      }).then((ret) => {
+
+        this.captchaFlag = ret.data.result;
+      });
     }
   }
 };

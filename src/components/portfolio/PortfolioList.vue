@@ -2,11 +2,13 @@
   <div>
     <section>
       <div class="con">
-        <div class="box" v-for="(portfolio, i) in portfolios" :key="i">
-          <router-link class="hover_img" :to="{ name: 'portfolioview', params: { articleId: portfolio.id }}">
-            <img :src="portfolio.img[0]" alt="">
-              <h1>{{portfolio.title}}</h1>
-              <p>{{portfolio.content}}</p>
+        <div class="box" v-for="index in portfolios.length > limit ? limit : portfolios.length" :key="index">
+          
+          <router-link class="hover_img" :to="{ name: 'portfolioview', params: { articleId: portfolios[index - 1].id }}">
+            
+            <img :src="portfolios[index - 1].img[0]" alt="">
+              <h1>{{portfolios[index - 1].title}}</h1>
+              <p>{{portfolios[index - 1].content}}</p>
           </router-link>
         </div>
       </div>
@@ -30,7 +32,7 @@ import { mapState } from "vuex";
 export default {
   name: "PortfoliosList",
   props: {
-    limits: { type: Number, default: 5 },
+    limits: { type: Number, default: 7 },
     loadMore: { type: Boolean, default: false }
   },
   data() {
@@ -51,11 +53,14 @@ export default {
     async getPortfolios() {
       this.portfolios = await FirebaseService.getPortfolios();
 
-      console.log(this.portfolios[1].img);
+      console.log(this.portfolios);
+
+      for(let i = 0; i < this.portfolios.length; i++)
+        console.log(this.portfolios[i].img);
     },
     loadMorePortfolios() {
 
-      this.limit += 5;
+      this.limit += 7;
     }
   }
 };

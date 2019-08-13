@@ -16,7 +16,6 @@
 
 <script>
 import { mapState, mapMutations } from "vuex";
-import firebaseService from "../../services/FirebaseService";
 
 export default {
   computed: mapState({

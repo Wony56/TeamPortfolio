@@ -90,9 +90,7 @@
           <v-text-field label="Password" type="password" v-model="loginPassword" required></v-text-field>
         </div>
 
-<!--=================================================================================================================-->
-          {{failCount}}
-          <v-layout v-if="flag" wrap>
+          <v-layout v-if="failCount >= 5" wrap>
               <v-flex xs10>
                 <img src="../../../backend/captcha.jpg" />
               </v-flex>
@@ -104,10 +102,9 @@
               
             <v-text-field style="padding: 0pt" v-model="captchaCode"></v-text-field>
           </v-layout>
-<!--=================================================================================================================-->
 
         <div class="btn-set">
-          <v-btn flat @click="loginWithEmail()">Sign In</v-btn>
+          <v-btn flat @click="loginValidityCheck()">Sign In</v-btn>
           <v-btn flat @click="closeModal()">Cancel</v-btn>
         </div>
       </v-form>
@@ -134,7 +131,7 @@ import firebaseService from "../../services/FirebaseService";
 import { mapMutations } from "vuex";
 
 export default {
-  name: "LoginModal",
+  name: "SignModal",
   date() {
     return {
       valid: true,
@@ -168,14 +165,6 @@ export default {
     this.failCount = 0;
     this.getCaptcha();
   },
-  watch: {
-
-    failCount: function() {
-
-      if(this.failCount >= 5)
-        this.flag = true;
-    }
-  },
   methods: {
     ...mapMutations([
       "closeSignModal",
@@ -188,24 +177,41 @@ export default {
       this.$refs.formSignin.reset();
       this.$refs.formSignup.reset();
     },
-    async loginWithEmail() {
+    async loginValidityCheck() {
+
+      if(this.failCount >= 5) {
+      
+        await this.compareKey();
+
+        if(this.captchaFlag == true) {
+
+          this.loginWithEmail();
+        }
+        else {
+
+          this.$store.commit("showLoginErrorBar", {message: "CAPTCHA를 다시 입력해주세요."});
+          this.getCaptcha();
+        }
+        this.captchaCode = "";
+      }
+      else {
+
+        this.loginWithEmail();
+      }
+    },
+    loginWithEmail() {
       if (this.$refs.formSignin.validate()) {
         firebaseService
           .loginWithEmail(this.loginEmail.trim(), this.loginPassword.trim())
           .then(res => {
 
-            if(this.failCount >= 5) {
-
-              this.compareKey();
-            }
-            console.log(this.captchaFlag);
-
             if(res === undefined) {
 
               this.failCount += 1;
-              console.log("NO ", this.failCount);
+              this.$forceUpdate();
             }
             else {
+
               this.closeModal();
               this.showLoginBar();
               this.$router.replace("/");

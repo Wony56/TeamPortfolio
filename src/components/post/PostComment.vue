@@ -21,6 +21,8 @@
               row-height="15"
               flat 
               color="#ff6f61"
+              :rules="rules"
+
             ></v-textarea>
           </v-card-text>
           <v-card-text>
@@ -91,6 +93,7 @@ export default {
   data() {
     return {
       replies: [],
+      rules: [v => v.length <= 100 || '글자수 초과(최대 100자까지 입력가능)'],
       selectedIndex: -1,
 
       id: "",
@@ -120,6 +123,7 @@ export default {
     async loadComments() {
       let comments = await FirebaseService.getComments(this.articleId);
       this.loadMore = true;
+      this.replies = [];
 
       if (comments.length > 0) {
         let index = 0;
@@ -178,11 +182,17 @@ export default {
         this.$parent.setModalContent("알림", "로그인을 해주시길 바랍니다.");
         return;
       }
+
+      if(this.content == "") {
+
+        this.$parent.setModalContent("알림", "댓글 내용을 입력해주시길 바랍니다.");
+        return;
+      }
       let comment = this.getInputComment();
       this.paginations(comment);
 
       FirebaseService.addComment(comment);
-
+      this.loadComments();
       this.content = "";
     },
     async removeComment(index) {

@@ -281,7 +281,7 @@ export default {
 
 #h1 {
   font-weight: bold;
-  margin: 0;
+  margin: 10px;
 }
 
 #h2 {
@@ -488,7 +488,7 @@ button.ghost {
 }
 
 .social-contain {
-  margin: 20px 0;
+  margin: 5px 0;
 }
 
 .social-contain #a {

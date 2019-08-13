@@ -17,13 +17,13 @@
             
 
             </v-flex>
-            <v-flex style="text-align:right">
-              <span style="color:#bcbcbc;">
+            <v-flex style="text-align:right; vertical-align:center;" align-center>
+              <span style="color:#bcbcbc; ">
                 {{reply.created_at | formatDate}}</span>
-            <v-btn class="mx-2" fab small flat color="blue" @click="authorizationCheck(index)">
+            <v-btn v-if="user.uid == reply.uid || user.tier =='diamond'" class="mx-2" fab small flat color="blue" @click="authorizationCheck(index)">
             <v-icon fab small dark>edit</v-icon>
             </v-btn>
-            <v-btn class="mx-2" fab small flat color="red" @click="removeComment(index)">
+            <v-btn v-if="user.uid == reply.uid || user.tier =='diamond'" class="mx-2" fab small flat color="red" @click="removeComment(index)">
             <v-icon fab small dark>delete</v-icon>
             </v-btn>
             </v-flex>

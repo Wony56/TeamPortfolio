@@ -13,10 +13,10 @@
     </section>
 
     <v-flex xs12 text-xs-center round my-5>
-      <v-btn v-if="flag" style="background-color:#ff6f61; color:#ffff;" to="/portfoliowriter">
+      <v-btn v-if="flag" color="#ff6f61" flat outline to="/portfoliowriter">
         <v-icon size="25" class="mr-2 notranslate">fa-pencil</v-icon>글쓰기
       </v-btn>
-      <v-btn style="background-color:#ff6f61; color:#ffff;" v-if="load" @click="loadMorePortfolios()">
+      <v-btn color="#ff6f61" flat outline v-if="load" @click="loadMorePortfolios()">
         <v-icon size="25" class="mr-2 notranslate">fa-plus</v-icon>더 보기
       </v-btn>
     </v-flex>

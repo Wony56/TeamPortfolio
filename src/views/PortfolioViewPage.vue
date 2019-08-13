@@ -1,23 +1,27 @@
 <template>
   <div>
     <ImgBanner>
-      <div style="line-height:1.2em;font-size:1.2em; color:black;" slot="text">Portfolio</div>
+     <span slot="text" style="color:#ff6f61">Detail</span>
     </ImgBanner>
-    <v-container grid-list-md wrap style="margin-top:-200px;" justify-center>
+    <v-container grid-list-md wrap id="magi2" justify-center>
+      <v-layout justify-end>
+      <v-btn color="#ff6f61" flat @click="$router.go(-1)"><i class="material-icons">undo</i></v-btn>
+      </v-layout>
       <v-card>
         <v-layout row wrap>
           <v-flex xs12 sm8 md8 px-0 py-0>
             <v-card flat>
-              <v-carousel v-if="portfolioInfo.img.length > 1">
+              <v-carousel continuous cycle show-arrows-on-hover hide-delimiter-background delimiter-icon="mdi-minus">
                 <v-carousel-item
                   v-for="(img,index) in portfolioInfo.img"
                   :key="index"
                   :src="img"
                 >
+                <img :src="img" style="width:100%; height:100%;"/>
                 </v-carousel-item>
               </v-carousel>
-              <v-img height="350" v-else :src="portfolioInfo.img[0]">
-              </v-img>
+
+              
 
             <v-card-text style="background-color:#bababa; color:#fff; text-align:right;">
               작성자 : {{portfolioInfo.author.name}} 작성일 : {{portfolioInfo.created_at}}
@@ -66,15 +70,15 @@
       <v-dialog v-model="modifyFlag" fullscreen hide-overlay transition="dialog-bottom-transition">
 
         <v-card>
-          <v-toolbar dark color="primary">
+          <v-toolbar flat dark color="#ff6f61">
             <v-btn icon dark @click="modifyFlag = false">
               <v-icon>close</v-icon>
             </v-btn>
 
-            <v-toolbar-title>Settings</v-toolbar-title>
+            <v-toolbar-title>글 수정 하기</v-toolbar-title>
             <v-spacer></v-spacer>
             <v-toolbar-items>
-              <v-btn dark text @click="modifyPortfolio()">Save</v-btn>
+              <v-btn flat @click="modifyPortfolio()">Save</v-btn>
             </v-toolbar-items>
           </v-toolbar>
           <v-list three-line subheader>
@@ -92,18 +96,6 @@
         </v-layout>
 
             <UploadForm></UploadForm>
-            <v-list-item>
-              <v-list-item-content>
-                <v-list-item-title>Content filtering</v-list-item-title>
-                <v-list-item-subtitle>Set the content filtering level to restrict apps that can be downloaded</v-list-item-subtitle>
-              </v-list-item-content>
-            </v-list-item>
-            <v-list-item>
-              <v-list-item-content>
-                <v-list-item-title>Password</v-list-item-title>
-                <v-list-item-subtitle>Require password for purchase or use password to restrict purchase</v-list-item-subtitle>
-              </v-list-item-content>
-            </v-list-item>
           </v-list>
         </v-card>
       </v-dialog>
@@ -287,22 +279,22 @@ export default {
   text-align: center;
   color: #0000;
 }
-#magi 
+#magi2
 {
   margin-top: -150px;
 }
 @media (min-width: 768px) 
 {
-  #magi 
+  #magi2 
   {
     margin-top: -250px;
   }
 }
 @media (min-width: 1024px) 
 {
-  #magi 
+  #magi2  
   {
-    margin-top: -650px;
+    margin-top: -855px;
   }
 }
 

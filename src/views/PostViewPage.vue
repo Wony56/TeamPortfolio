@@ -1,13 +1,13 @@
 <template>
   <div>
     <ImgBanner>
-      <span color="#fff">Post</span>
+      <span slot="text" style="color:#ff6f61">Detail</span>
     </ImgBanner>
     <v-layout id="magi" justify-center>
-      <v-flex xs12 md10>
+      <v-flex xs11 md9>
         <!-- 뒤로가기 -->
         <v-layout justify-end>
-          <v-btn color="#ff6f61" flat @click="$router.go(-1)">뒤로</v-btn>
+          <v-btn color="#ff6f61" flat @click="$router.go(-1)"><i class="material-icons">undo</i></v-btn>
         </v-layout>
         <!-- 본문 부분 -->
         <v-card min-height="400" flat>
@@ -20,7 +20,7 @@
           <v-divider></v-divider>
 
           <v-layout justify-end>
-            <v-card-title style="color:gray;">작성자  : {{postInfo.author.name}} / 작성일 : {{postInfo.created_at}}</v-card-title>
+            <v-card-title style="color:#bcbcbc;">작성자  : {{postInfo.author.name}} / 작성일 : {{postInfo.created_at}}</v-card-title>
           </v-layout>
           <v-divider></v-divider>
 
@@ -33,6 +33,7 @@
           <div v-else>
             <MarkdownEditor class="title mx-3 my-3" v-model="postInfo.content"></MarkdownEditor>
           </div>
+          
         </v-card>
         <!--버튼 부분-->
         <v-layout justify-end>

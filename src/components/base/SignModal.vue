@@ -328,9 +328,6 @@ export default {
 button {
   margin: 10px;
   border-radius: 20px;
-  border: 1px solid #ff6f61;
-  background-color: #ff6f61;
-  color: #ffffff;
   font-size: 12px;
   font-weight: bold;
   padding: 5px 30px;

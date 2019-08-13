@@ -2,7 +2,7 @@
   <div>
     <v-app>
       <Header />
-      <notifications group="foo" animation-type="velocity" position="bottom left" />
+      <notifications style="background-color:#ff6f61" group="foo" animation-type="velocity" position="bottom left" />
       <v-content id="contents">
         <router-view />
 
@@ -245,5 +245,15 @@ export default {
 
 #progress-el {
   background-color: #ff6f61 !important;
+}
+
+.vue-notification {
+  padding: 10px;
+  margin: 0 5px 5px;
+ 
+  font-size: 12px;
+  color: #ffffff;
+  background: #ff6f61;
+  border-left: 5px solid #ff6f61;
 }
 </style>

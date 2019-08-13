@@ -65,7 +65,7 @@ export const router = new Router({
 			}
 		},
 		{
-			path: '/portfolioview/:portfolioIndex',
+			path: '/portfolioview/:articleId',
 			name: 'portfolioview',
 			component: PortfolioViewPage
 		}

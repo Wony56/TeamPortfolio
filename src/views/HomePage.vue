@@ -7,7 +7,7 @@
     <!-- Gitlab API -->
     <v-layout>
       <v-flex class="hidden-xs-only" xs12>
-        <GitlabAPI></GitlabAPI>
+        <!-- <GitlabAPI></GitlabAPI> -->
       </v-flex>
     </v-layout>
 

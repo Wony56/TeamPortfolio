@@ -32,7 +32,7 @@ import { mapState } from "vuex";
 export default {
   name: "PortfoliosList",
   props: {
-    limits: { type: Number, default: 7 },
+    limits: { type: Number, default: 9 },
     loadMore: { type: Boolean, default: false }
   },
   data() {
@@ -52,12 +52,12 @@ export default {
     async getPortfolios() {
       this.portfolios = await FirebaseService.getPortfolios();
 
-      if(this.portfolios.length > 7)
+      if(this.portfolios.length > 9)
         this.loadMore = true;
     },
     loadMorePortfolios() {
 
-      this.limit += 7;
+      this.limit += 9;
     }
   }
 };
@@ -153,5 +153,13 @@ section {
 	-webkit-transform: scale(1.05);
 	transform: scale(1.05);
   overflow: hidden;
+}
+a:link {
+
+  color: black;
+}
+a:visited {
+
+  color: black;
 }
 </style>

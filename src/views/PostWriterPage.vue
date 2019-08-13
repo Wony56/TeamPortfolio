@@ -71,8 +71,6 @@ export default {
         };
         let msg = FirebaseService.postPost(this.title, this.content, author);
 
-        console.log(msg);
-
         if (msg == "fail") {
 
           this.setModalContent("Server Error", "관리자에게 문의하세요.");

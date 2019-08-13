@@ -16,8 +16,7 @@
               {{postInfo.title}}
             </v-card-text>
 
-            <v-text-field v-else>
-              {{postInfo.title}}
+            <v-text-field v-else v-model="editTitle">
             </v-text-field>
           </v-layout>
 
@@ -35,7 +34,7 @@
 
           <!-- 수정버튼 누른 후 -->
           <div v-else>
-            <MarkdownEditor class="title mx-3 my-3" v-model="postInfo.content"></MarkdownEditor>
+            <MarkdownEditor class="title mx-3 my-3" v-model="editContent"></MarkdownEditor>
           </div>
           
         </v-card>
@@ -119,6 +118,10 @@ export default {
         created_at: { type: Date },
         title: { type: String }
       },
+      editTitle: "",
+      editContent: "",
+
+      originTitle: "",
       originContent: ""
     };
   },
@@ -162,7 +165,12 @@ export default {
         (this.authorUid == this.user.uid || this.user.tier == "diamond")
       ) {
         this.postFlag = true;
+
+        this.originTitle = this.postInfo.title;
         this.originContent = this.postInfo.content;
+
+        this.editTitle = this.originTitle;
+        this.editContent = this.originContent;
       } else {
         this.setModalContent("오류", "권한이 없습니다.");
       }
@@ -173,6 +181,10 @@ export default {
       this.dialog = !this.dialog;
     },
     modifyPost() {
+
+      this.postInfo.title = this.editTitle;
+      this.postInfo.content = this.editContent;
+      
       FirebaseService.modifyPost(this.id, this.postInfo);
       this.setModalContent("성공", "글을 성공적으로 수정하였습니다.");
       this.movePage = 1;
@@ -193,6 +205,8 @@ export default {
     },
     cancelPostModify() {
       this.postFlag = !this.postFlag;
+
+      this.postInfo.title = this.originTitle;
       this.postInfo.content = this.originContent;
     }
   }

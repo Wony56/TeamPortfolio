@@ -1,8 +1,6 @@
 import qs from "qs";
 import axios from "axios";
-// import { DEFAULT_ECDH_CURVE } from "tls";
 
-// const CLIENT_ID = "dc2deb225a6c37f";
 const CLIENT_ID = "ed9e93dd2f41e6b";
 const ROOT_URL = "https://api.imgur.com";
 
@@ -27,9 +25,6 @@ export default {
 
   deleteImage(token, imageDeleteHash) {
 
-    console.log("TTOOKKEENN> ", token);
-    console.log("IIMMAAGGEE> ", imageDeleteHash);
-
     return axios.delete(`${ROOT_URL}/3/image/${imageDeleteHash}`, {
       headers: {
         Authorization: `Bearer ${token}`
@@ -39,8 +34,6 @@ export default {
 
   uploadImages(images, token) {
     
-    console.log("TTOOKKEENN> ", token);
-
     const promises = Array.from(images).map(image => {
       const formData = new FormData();
       formData.append("image", image);

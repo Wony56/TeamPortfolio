@@ -8,15 +8,17 @@
         <v-layout row wrap>
           <v-flex xs12 sm8 md8 px-0 py-0>
             <v-card flat>
-              <v-carousel continuous cycle show-arrows-on-hover hide-delimiter-background delimiter-icon="mdi-minus">
+              <v-carousel v-if="portfolioInfo.img.length > 1">
                 <v-carousel-item
                   v-for="(img,index) in portfolioInfo.img"
                   :key="index"
                   :src="img"
                 >
-                <img :src="img" style="width:100%; height:100%;"/>
                 </v-carousel-item>
               </v-carousel>
+              <v-img height="350" v-else :src="portfolioInfo.img[0]">
+              </v-img>
+
             <v-card-text style="background-color:#bababa; color:#fff; text-align:right;">
               작성자 : {{portfolioInfo.author.name}} 작성일 : {{portfolioInfo.created_at}}
             </v-card-text>
@@ -24,9 +26,8 @@
               {{portfolioInfo.title}}
             </v-card-text>
             <v-divider></v-divider>
-            <v-card-text style="height:80px; overflow-y:auto;">
-              {{portfolioInfo.content}}
-            </v-card-text>
+
+            <VueMarkdown :source="portfolioInfo.content" style="height:80px; overflow-y:auto;"></VueMarkdown>
             <v-card-title>
               <v-layout justify-end>
               <v-btn v-if="!modifyFlag" outline color="#ff6f61" @click="checkAuthentication()">수정</v-btn>
@@ -61,6 +62,53 @@
       </v-card>
     </v-dialog>
     <!--=================================================================================================-->
+    <v-layout justify-center>
+      <v-dialog v-model="modifyFlag" fullscreen hide-overlay transition="dialog-bottom-transition">
+
+        <v-card>
+          <v-toolbar dark color="primary">
+            <v-btn icon dark @click="modifyFlag = false">
+              <v-icon>close</v-icon>
+            </v-btn>
+
+            <v-toolbar-title>Settings</v-toolbar-title>
+            <v-spacer></v-spacer>
+            <v-toolbar-items>
+              <v-btn dark text @click="modifyPortfolio()">Save</v-btn>
+            </v-toolbar-items>
+          </v-toolbar>
+          <v-list three-line subheader>
+
+            <MarkdownEditor v-model="modifyContent"></MarkdownEditor>
+
+        <v-layout row style="margin: 30px;">
+          <v-flex v-for="(img, index) in portfolioInfo.img" :key="index">
+            <v-img class="white--text" width="200px" height="200px" :src="img">
+              <v-btn  v-if="modifyFlag" text icon color="yellow" @click="deletePicture(index, img)">
+                <v-icon>delete</v-icon>
+              </v-btn>
+            </v-img>
+          </v-flex>
+        </v-layout>
+
+            <UploadForm></UploadForm>
+            <v-list-item>
+              <v-list-item-content>
+                <v-list-item-title>Content filtering</v-list-item-title>
+                <v-list-item-subtitle>Set the content filtering level to restrict apps that can be downloaded</v-list-item-subtitle>
+              </v-list-item-content>
+            </v-list-item>
+            <v-list-item>
+              <v-list-item-content>
+                <v-list-item-title>Password</v-list-item-title>
+                <v-list-item-subtitle>Require password for purchase or use password to restrict purchase</v-list-item-subtitle>
+              </v-list-item-content>
+            </v-list-item>
+          </v-list>
+        </v-card>
+      </v-dialog>
+    </v-layout>
+  <!--===================================================================================================================--> 
   </div>
 </template>
 
@@ -78,7 +126,6 @@ import { mapState } from "vuex";
 
 // Imgur API
 import { mapActions } from "vuex";
-
 
 // Markdown Viewer
 import VueMarkdown from 'vue-markdown'
@@ -102,6 +149,7 @@ export default {
     dialog: false,
     flag: true,
     modifyFlag: false,
+    modifyContent: "",
 
     movePage: 0,
 
@@ -125,8 +173,6 @@ export default {
   created() {
 
     this.id = this.$route.params.articleId;
-  },
-  mounted() {
     this.$store.state.images.imgurLinks = [];
     this.$store.state.images.images = [];
 
@@ -153,7 +199,6 @@ export default {
       this.portfolioInfo.author = ret.author;
       this.portfolioInfo.content = ret.content;
       this.portfolioInfo.created_at = ret.created_at;
-      this.portfolioInfo.img = ret.img;
       this.portfolioInfo.title = ret.title;
 
       this.loadMore = true;
@@ -166,17 +211,15 @@ export default {
     },
     checkAuthentication() {
 
-      console.log("CHECK ", this.loggedIn);
-      console.log("AUTHR UID ", this.authorUid);
-      console.log("USER TIER ", this.user.tier);
+      if (this.loggedIn == true && (this.authorUid == this.user.uid || this.user.tier == "diamond")) {
 
-      if (this.user.loggedIn == true && (this.authorUid == this.user.uid || this.user.tier == "diamond")) {
         this.modifyFlag = true;
+        this.modifyContent = this.portfolioInfo.content;
+
       } else {
 
         this.movePage = 0;
-        this.modalTitle = "ERROR";
-        this.modalContent = "권한이 없습니다.";
+        this.setModalContent("ERROR", "권한이 없습니다.");
         this.dialog = true;
       }
     },
@@ -187,6 +230,10 @@ export default {
         
         this.portfolioInfo.img.push(this.imgurLink[i]);
       }
+      this.portfolioInfo.content = this.modifyContent;
+
+      console.log(this.portfolioInfo);
+
       FirebaseService.modifyPortfoilo(this.id, this.portfolioInfo);
 
       this.$store.state.images.imgurLinks = [];
@@ -195,6 +242,7 @@ export default {
       this.setModalContent("수정완료", "포트폴리오 수정을 완료하였습니다.");
       this.flag = true;
       this.dialog = true;
+      this.modifyFlag = false;
     },
     deletePortfoilo() {
 

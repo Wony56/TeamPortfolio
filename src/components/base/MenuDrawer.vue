@@ -10,7 +10,12 @@
       </v-list-tile>
       <v-divider></v-divider>
       <template v-for="(item, index) in items">
-        <v-list-tile :to="{name: item.href}" :key="index" class="sidetitle">
+        <v-list-tile
+          v-show="$store.state.user.user.tier === 'diamond'"
+          :to="{name: item.href}"
+          :key="index"
+          class="sidetitle"
+        >
           <v-list-tile-action>
             <v-icon color="#ff6f61" v-html="item.icon"></v-icon>
           </v-list-tile-action>
@@ -64,6 +69,12 @@ export default {
           router: true,
           title: "포트폴리오",
           icon: "folder"
+        },
+        {
+          href: "adminpage",
+          router: true,
+          title: "관리자페이지",
+          icon: "insert_chart_outlined"
         }
       ]
     };
@@ -74,11 +85,11 @@ export default {
     signupDialog: state => state.modal.signupDialog
   }),
   methods: {
+    ...mapMutations(["openSignModal", "showLogoutBar"]),
     logOut() {
-      alert("로그아웃되었습니다.");
+      this.showLogoutBar();
       firebaseService.logout();
-    },
-    ...mapMutations(["openSignModal"])
+    }
   }
 };
 </script>

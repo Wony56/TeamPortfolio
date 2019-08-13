@@ -1,4 +1,6 @@
 module.exports = {
+	outputDir:"backend/public",
+	assetsDir:"assets",
 	configureWebpack: {
 		devtool: 'source-map'
 	},

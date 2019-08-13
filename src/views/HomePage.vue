@@ -59,7 +59,7 @@ import GitCommitLine from "../components/gitlab/GitCommitLine.vue";
 import PostList from "../components/post/PostList";
 
 // Gitlab API
-import GitlabAPI from "../components/gitlab/GitlabApi.vue";
+//import GitlabAPI from "../components/gitlab/GitlabApi.vue";
 import GitlabUserProject from "../components/gitlab/GitlabUserProjects";
 
 export default {
@@ -74,7 +74,7 @@ export default {
     PostList,
 
     GridImage,
-    GitlabAPI,
+    //GitlabAPI,
     GitlabUserProject,
     GitCommitLine
   }

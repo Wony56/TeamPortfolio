@@ -2,21 +2,23 @@
   <div>
     <section>
       <div class="con">
-        <div class="box" v-for="(portfolio, i) in portfolios" :key="i">
-          <router-link class="hover_img" :to="{ name: 'portfolioview', params: { articleId: portfolio.id }}">
-            <img :src="portfolio.img[0]" alt="">
-              <h1>{{portfolio.title}}</h1>
-              <p>{{portfolio.content}}</p>
+        <div class="box" v-for="index in portfolios.length > limit ? limit : portfolios.length" :key="index">
+          
+          <router-link class="hover_img" :to="{ name: 'portfolioview', params: { articleId: portfolios[index - 1].id }}">
+            
+            <img :src="portfolios[index - 1].img[0]" alt="">
+              <h1>{{portfolios[index - 1].title}}</h1>
+              <p>{{portfolios[index - 1].content}}</p>
           </router-link>
         </div>
       </div>
     </section>
 
     <v-flex xs12 text-xs-center round my-5>
-      <v-btn v-if="flag" style="background-color:#ff6f61; color:#ffff;" to="/portfoliowriter">
+      <v-btn v-if="flag" color="#ff6f61" flat outline to="/portfoliowriter">
         <v-icon size="25" class="mr-2 notranslate">fa-pencil</v-icon>글쓰기
       </v-btn>
-      <v-btn style="background-color:#ff6f61; color:#ffff;" v-if="load" @click="loadMorePortfolios()">
+      <v-btn color="#ff6f61" flat outline v-if="loadMore" @click="loadMorePortfolios()">
         <v-icon size="25" class="mr-2 notranslate">fa-plus</v-icon>더 보기
       </v-btn>
     </v-flex>
@@ -30,14 +32,13 @@ import { mapState } from "vuex";
 export default {
   name: "PortfoliosList",
   props: {
-    limits: { type: Number, default: 5 },
+    limits: { type: Number, default: 7 },
     loadMore: { type: Boolean, default: false }
   },
   data() {
     return {
       portfolios: [],
       limit: this.limits,
-      load: this.loadMore,
       flag: true
     };
   },
@@ -51,11 +52,12 @@ export default {
     async getPortfolios() {
       this.portfolios = await FirebaseService.getPortfolios();
 
-      console.log(this.portfolios[1].img);
+      if(this.portfolios.length > 7)
+        this.loadMore = true;
     },
     loadMorePortfolios() {
 
-      this.limit += 5;
+      this.limit += 7;
     }
   }
 };

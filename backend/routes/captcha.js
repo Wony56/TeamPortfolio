@@ -1,6 +1,6 @@
 // 네이버 캡차 API 예제 - 키발급
 var express = require('express');
-var app = express();
+var app = express.Router();
 var client_id = 'g6QamGJQjl_AbO9jwcpL';
 var client_secret = 'sjo5yYUSkx';
 var fs = require('fs');
@@ -22,7 +22,7 @@ app.get('/captcha/nkey', function (req, res) {
      }
    });
  });
-
+ 
 // 네이버 캡차 API 예제 - 이미지수신
 app.get('/captcha/image', function (req, res) {
    var api_url = 'https://openapi.naver.com/v1/captcha/ncaptcha.bin?key=' + req.query.key;

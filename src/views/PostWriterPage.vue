@@ -6,18 +6,6 @@
       </div>
     </ImgBanner>
 
-    <v-dialog v-model="dialog" persistent max-width="290">
-
-      <v-card>
-        <v-card-title class="headline">글쓰기 성공</v-card-title>
-        <v-card-text>정상적으로 등록 되었습니다.</v-card-text>
-        <v-card-actions>
-          <v-spacer></v-spacer>
-          <v-btn color="green darken-1" flat to="/post">Close</v-btn>
-        </v-card-actions>
-      </v-card>
-    </v-dialog>
-
     <v-container>
       <form>
         <v-text-field v-model="title" placeholder="제목을 입력해주세요." required></v-text-field>
@@ -29,21 +17,37 @@
         </v-layout>
       </form>
     </v-container>
+<!--============================================================================-->
+    <v-dialog v-model="dialog" persistent max-width="290">
+      <v-card>
+        <v-card-title class="headline">{{modalTitle}}</v-card-title>
+        <v-card-text>{{modalContent}}</v-card-text>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn v-if="!modifyFlag" color="green darken-1" flat to="/post">Close</v-btn>
+          <v-btn v-if="modifyFlag" color="green darken-1" flat @click="dialog = false">Close</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+<!--============================================================================-->
   </div>
-
 </template>
 
 <script>
 import ImgBanner from "../components/base/ImgBanner";
 import MarkdownEditor from "vue-simplemde/src/markdown-editor";
 import FirebaseService from "@/services/FirebaseService";
-import {mapState} from 'vuex';
+import { mapState } from "vuex";
 
 export default {
   data: () => ({
     title: "",
     content: "",
-    dialog: false
+
+    modalTitle: "",
+    modalContent: "",
+    dialog: false,
+    modifyFlag: false
   }),
   components: {
     ImgBanner,
@@ -54,22 +58,35 @@ export default {
   }),
   methods: {
     postPost() {
-      
-      let author = {
+      if (this.title === "") {
+        this.modifyFlag = true;
+        this.setModalContent("알림", "제목을 입력해주세요.");
+      } else if (this.content === "") {
+        this.modifyFlag = true;
+        this.setModalContent("알림", "내용을 입력해주세요.");
+      } else {
+        let author = {
+          name: this.user.displayName,
+          uid: this.user.uid
+        };
+        let msg = FirebaseService.postPost(this.title, this.content, author);
 
-        name: this.user.displayName,
-        uid: this.user.uid
-      };
+        console.log(msg);
 
-      let msg = FirebaseService.postPost(
-        this.title,
-        this.content,
-        author
-      );
+        if (msg == "fail") {
 
-      if(msg == 'fail')
-        return;
+          this.setModalContent("Server Error", "관리자에게 문의하세요.");
+          return;
+        }
+        this.modifyFlag = false;
+        this.setModalContent("성공", "정상적으로 Post가 작성되었습니다.");
+      }
+    },
+    setModalContent(title, content) {
+
       this.dialog = true;
+      this.modalTitle = title;
+      this.modalContent = content;
     }
   }
 };

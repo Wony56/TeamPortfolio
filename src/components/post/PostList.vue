@@ -2,9 +2,9 @@
   <v-data-table  :headers="headers" :items="desserts">
     <template class="row" slot="items" slot-scope="props">
       <tr @click="viewpost(props.item)">
-      <td style="background-color:#ff6f61; color:#fff" class="text-xs-left">{{ props.item.author.name }}</td>
-      <td class="text-xs-right post-title">{{ props.item.title }}</td>
-      <td class="text-xs-right">{{ props.item.date }}</td>
+      <td style="background-color:#ff6f61; color:#fff" class="text-xs-left"><span id="post-author-view">{{ props.item.author.name }}</span></td>
+      <td class="text-xs-right post-title"><span id="post-title-view">{{ props.item.title }}</span></td>
+      <td class="text-xs-right"><span id="post-date-view">{{ props.item.date }}</span></td>
       </tr>
     </template>
     <template text-xs-left
@@ -79,3 +79,20 @@ export default {
 .post-title {
   text-overflow: clip;
 }
+
+#post-title-view {
+
+  font-size: 1.5em;
+}
+
+#post-author-view {
+
+  font-size: 1.5em;
+  font-weight: bold;
+}
+
+#post-date-view {
+
+  font-size: 1em;
+}
+</style>

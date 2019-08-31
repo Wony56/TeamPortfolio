@@ -239,6 +239,8 @@ export default {
     },
     async getCaptcha() {
       
+      console.log("TEST");
+
       await this.$axios.get("api/captcha/nkey").then(ret => {
         this.captchaKey = ret.data.key;
       });

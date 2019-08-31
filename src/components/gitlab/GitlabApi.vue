@@ -10,49 +10,26 @@
       </div>
 
       <v-tabs-items v-model="tab">
-        <div class="calendarContainer" style="margin-top: 70px;">
-          <div class="calendarBox" id="calendar_basic" style="width: 1000px; height: 350px;"></div>
-        </div>
+        <div id="chart" />
       </v-tabs-items>
     </v-card>
-
   </div>
 </template>
 
 <script>
+import ApexCharts from "apexcharts";
+
 const converter = require("../../services/CurlToNodeJS");
 const BASE_URL = "https://lab.ssafy.com/api/v4";
 
-google.charts.load("current", { packages: ["calendar"] });
-google.charts.setOnLoadCallback(drawChart);
-
-function drawChart(name, username, data) {
-  var dataTable = new google.visualization.DataTable();
-  dataTable.addColumn({ type: "date", id: "Date" });
-  dataTable.addColumn({ type: "number", id: "Won/Loss" });
-
-  if(data == undefined)
-    dataTable.addRows([]);
-  else
-    dataTable.addRows(data);
-
-  var chart = new google.visualization.Calendar(
-    document.getElementById("calendar_basic")
-  );
-  var optionsTitle = name + " " + username;
-  var options = {
-    title: optionsTitle,
-    height: 500,
-    colorAxis: { colors: ["white", "#ff6f61"] }
-  };
-  chart.draw(dataTable, options);
-}
+var chart;
 
 export default {
   data() {
     return {
-      userReposInfo: {type:Array},
+      
       username: "",
+      userCommitCount: { type: Map },
       name: "",
       loaded: false,
       page: -1,
@@ -62,26 +39,25 @@ export default {
     };
   },
   mounted() {
-
-    // let user = "Taylous";
-    // let token = "zAw5-XwKyMhRkQJuQ4fQ";
-
-    // this.getRepos(user, token, true);
+    let user = "Taylous";
+    let token = "zAw5-XwKyMhRkQJuQ4fQ";
+    this.getRepos(user, token, true);
   },
   watch: {
     loaded: function(newVal, oldVal) {
       if (newVal && !oldVal) {
-        drawChart(this.name, this.username, this.userReposInfo);
+        this.drawChart(this.name, this.username);
       }
     }
   },
   methods: {
     initiateUserRepo(user, tokens) {
+      chart.destroy();
+
       this.loaded = false;
       this.getRepos(user, tokens, true);
     },
     getRepos(id, token, isEnd) {
-
       this.userReposInfo = new Array();
       this.flag = false;
 
@@ -92,8 +68,8 @@ export default {
       });
     },
     getData(id, token, totalPage, isEnd) {
-
       var dateObj = new Map();
+      var monthObj = new Map();
 
       let currentDate = new Date();
       let year = currentDate.getFullYear();
@@ -112,33 +88,209 @@ export default {
               let str = data[i].created_at;
 
               let action_name = new String(data[i].action_name);
-              if (action_name.indexOf(new String("comment")) >= 0) continue;
+              // if (action_name.indexOf(new String("comment")) >= 0) continue;
               if (str == null || str.substring(0, 4) != year) continue;
 
               let y = str.substring(0, 4);
               let m = str.substring(5, 7) - 1;
               let d = str.substring(8, 10);
 
-              let monthDaySet = m + "" + d;
+              let monthDaySet = m + " " + d;
 
-              if (dateObj.get(monthDaySet) == undefined) {
+              if (dateObj.get(monthDaySet) == undefined)
                 dateObj.set(monthDaySet, 1);
-
-                timeline.push([new Date(y, m, d), 1]);
-              } else {
-                dateObj.set(monthDaySet, dateObj.get(monthDaySet) + 1);
-                timeline.push([new Date(y, m, d), dateObj.get(monthDaySet)]);
-              }
+              else dateObj.set(monthDaySet, dateObj.get(monthDaySet) + 1);
             }
             count++;
             if (count == totalPage && isEnd) {
               this.loaded = true;
-              this.userReposInfo = timeline;
               this.username = data[0].author.username;
               this.name = data[0].author.name;
+              this.userCommitCount = dateObj;
             }
           });
       }
+    },
+    generateData(count, yrange, month) {
+
+      var i = 1;
+      var series = [];
+      let temp, key;
+
+      while (i <= count) {
+        var x = i.toString();
+        if (i < 10) key = (month - 1) + " 0" + i;
+        else key = (month - 1) + " " + i;
+
+        var y =
+          this.userCommitCount.get(key) === undefined
+            ? 0
+            : this.userCommitCount.get(key);
+
+        series.push({
+          x: x,
+          y: y
+        });
+        i++;
+      }
+      return series;
+    },
+    drawChart(name, username, data) {
+      let color = "#000000";
+
+      if (username == "Taylous") color = "#0057FF";
+      else if (username == "Eomazing") color = "#C600FF";
+      else if (username == "ryuhojin") color = "#FF00FB";
+      else if (username == "blackmonkey9256") color = "#00E232";
+      else if (username == "hyeonjin23") color = "#FF9600";
+
+      var options = {
+        chart: {
+          height: 350,
+          type: "heatmap"
+        },
+        dataLabels: {
+          enabled: false
+        },
+        colors: [color],
+        series: [
+          {
+            name: "Jan",
+            data: this.generateData(
+              31,
+              {
+                min: 0,
+                max: 30
+              },
+              1
+            )
+          },
+          {
+            name: "Feb",
+            data: this.generateData(
+              28,
+              {
+                min: 0,
+                max: 30
+              },
+              2
+            )
+          },
+          {
+            name: "Mar",
+            data: this.generateData(
+              31,
+              {
+                min: 0,
+                max: 30
+              },
+              3
+            )
+          },
+          {
+            name: "Apr",
+            data: this.generateData(
+              30,
+              {
+                min: 0,
+                max: 30
+              },
+              4
+            )
+          },
+          {
+            name: "May",
+            data: this.generateData(
+              31,
+              {
+                min: 0,
+                max: 30
+              },
+              5
+            )
+          },
+          {
+            name: "Jun",
+            data: this.generateData(
+              30,
+              {
+                min: 0,
+                max: 30
+              },
+              6
+            )
+          },
+          {
+            name: "Jul",
+            data: this.generateData(
+              31,
+              {
+                min: 0,
+                max: 30
+              },
+              7
+            )
+          },
+          {
+            name: "Aug",
+            data: this.generateData(
+              31,
+              {
+                min: 0,
+                max: 30
+              },
+              8
+            )
+          },
+          {
+            name: "Sep",
+            data: this.generateData(
+              30,
+              {
+                min: 0,
+                max: 30
+              },
+              9
+            )
+          },
+          {
+            name: "Oct",
+            data: this.generateData(
+              31,
+              {
+                min: 0,
+                max: 30
+              },
+              10
+            )
+          },
+          {
+            name: "Nov",
+            data: this.generateData(
+              30,
+              {
+                min: 0,
+                max: 30
+              },
+              11
+            )
+          },
+          {
+            name: "Dec",
+            data: this.generateData(
+              31,
+              {
+                min: 0,
+                max: 30
+              },
+              12
+            )
+          }
+        ]
+      };
+      chart = new ApexCharts(document.querySelector("#chart"), options);
+
+      chart.render();
     }
   }
 };
@@ -154,7 +306,6 @@ export default {
 }
 
 .calendarContainer div {
-
   top: 17%;
   left: 20%;
 }
@@ -165,54 +316,54 @@ export default {
 .subtitles:hover {
   color: #ff6f61;
 }
-*{
-   font-family: 'Do Hyeon', sans-serif;
+* {
+  font-family: "Do Hyeon", sans-serif;
 }
 
-.link{
-	color: #000000;
-	font-size: 16px;
-	font-weight: 700;
-	text-decoration: none;
-	text-transform: uppercase;
+.link {
+  color: #000000;
+  font-size: 16px;
+  font-weight: 700;
+  text-decoration: none;
+  text-transform: uppercase;
 }
 
-.link{
-	position: relative;
-	z-index: 1;
-	display: inline-flex;
+.link {
+  position: relative;
+  z-index: 1;
+  display: inline-flex;
 
-	padding-left: 10px;
-	padding-bottom: 5px;
-	padding-right: 10px;
+  padding-left: 10px;
+  padding-bottom: 5px;
+  padding-right: 10px;
 }
 
-.link::before{
-	content: "";
-	width: 100%;
-	height: 100%;
-	background-image: linear-gradient(to top, #ff6f61 25%, rgba(0, 0, 0, 0) 40%);
+.link::before {
+  content: "";
+  width: 100%;
+  height: 100%;
+  background-image: linear-gradient(to top, #ff6f61 25%, rgba(0, 0, 0, 0) 40%);
 
-	position: absolute;
-	left: 0;
-	bottom: 2px;
-	z-index: -1;
+  position: absolute;
+  left: 0;
+  bottom: 2px;
+  z-index: -1;
 
-	will-change: width;
-	transform: rotate(-2deg);
-	transform-origin: left bottom
+  will-change: width;
+  transform: rotate(-2deg);
+  transform-origin: left bottom;
 }
 
-.link:hover::before{
-	width: 0;
+.link:hover::before {
+  width: 0;
 }
 
-.link::before{
-	transition: width .1s ease-out;
+.link::before {
+  transition: width 0.1s ease-out;
 }
 
-.link:hover::before{
-	transition-duration: .15s;
+.link:hover::before {
+  transition-duration: 0.15s;
 }
 
 .center {
@@ -220,7 +371,7 @@ export default {
   border: 3px solid #ff6f61;
   padding: 10px;
 }
-*{
-  font-family: 'Nanum Gothic', sans-serif;
+* {
+  font-family: "Nanum Gothic", sans-serif;
 }
 </style>

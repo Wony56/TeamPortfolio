@@ -23,7 +23,7 @@
           <v-divider></v-divider>
 
           <v-layout justify-end>
-            <v-card-title style="color:#bcbcbc;">작성자  : {{postInfo.author.name}} / 작성일 : {{postInfo.created_at}}</v-card-title>
+            <v-card-title style="color:#7C7C7C;">작성자  : {{postInfo.author.name}} / 작성일 : {{postInfo.created_at}}</v-card-title>
           </v-layout>
           <v-divider></v-divider>
 

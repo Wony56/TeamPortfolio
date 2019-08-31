@@ -41,11 +41,11 @@ export default {
     },
     userColor(author_name) {
 
-      if(author_name === "Kim ChangYoon")
+      if(author_name === "Kim ChangYoon" || author_name === "김창윤")
         return "blue";
       else if(author_name === "엄윤주" || author_name === "Yoonju Eom")
         return "purple";
-      else if(author_name === "Ryuhojin")
+      else if(author_name === "Ryuhojin" || author_name === "류호진")
         return "pink";
       else if(author_name === "이석원")
         return "green";

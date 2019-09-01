@@ -17,8 +17,8 @@ app.get('/captcha/nkey', function (req, res) {
        res.writeHead(200, {'Content-Type': 'text/json;charset=utf-8'});
        res.end(body);
      } else {
-       res.status(response.statusCode).end();
-       console.log('error = ' + response.statusCode);
+      //  res.status(response.statusCode).end();
+      //  console.log('error = ' + response.statusCode);
      }
    });
  });

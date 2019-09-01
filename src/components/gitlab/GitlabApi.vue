@@ -38,11 +38,6 @@ export default {
       tab: null
     };
   },
-  mounted() {
-    let user = "Taylous";
-    let token = "zAw5-XwKyMhRkQJuQ4fQ";
-    this.getRepos(user, token, true);
-  },
   watch: {
     loaded: function(newVal, oldVal) {
       if (newVal && !oldVal) {
@@ -52,7 +47,9 @@ export default {
   },
   methods: {
     initiateUserRepo(user, tokens) {
-      chart.destroy();
+
+      if(chart != null)
+        chart.destroy();
 
       this.loaded = false;
       this.getRepos(user, tokens, true);
@@ -88,7 +85,6 @@ export default {
               let str = data[i].created_at;
 
               let action_name = new String(data[i].action_name);
-              // if (action_name.indexOf(new String("comment")) >= 0) continue;
               if (str == null || str.substring(0, 4) != year) continue;
 
               let y = str.substring(0, 4);

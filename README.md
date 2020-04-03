@@ -21,8 +21,7 @@
 
 
 ## Architecture
-
-<img src="product_specification/architecture.png" width="700" height="300" align="center">
+["Architecture"](/product_specification/architecture.pnh)
 
 ### Front-end
 

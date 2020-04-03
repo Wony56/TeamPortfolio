@@ -21,7 +21,7 @@
 
 
 ## Architecture
-!["Architecture"](results/architecture.png)
+!["Architecture"](/results/architecture.png)
 
 ### Front-end
 

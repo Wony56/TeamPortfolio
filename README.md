@@ -21,7 +21,7 @@
 
 
 ## Architecture
-["Architecture"](product_specification/architecture.png)
+!["Architecture"](product_specification/architecture.png)
 
 ### Front-end
 

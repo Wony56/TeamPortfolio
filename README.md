@@ -22,7 +22,7 @@
 
 ## Architecture
 
-<img src="product_specification/architecture.png" width="700" height="300" align="center">
+<img src="./product_specification/architecture.png" width="700" height="300" align="center">
 
 ### Front-end
 

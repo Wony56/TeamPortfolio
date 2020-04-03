@@ -21,7 +21,7 @@
 
 
 ## Architecture
-!["Architecture"]('/산출물/architecture.png')
+!["Architecture"](results/architecture.png)
 
 ### Front-end
 
